@@ -1,7 +1,7 @@
 # Performative thoroughness vs. actual utility — why "looks intelligent" and "is useful to an agent" pull apart
 
 ```toml
-schema  = "zoo-topic-entry/2.0"
+schema  = "zoo-topic-entry/typed/0.1"
 id      = "performative-thoroughness-and-reward-bias"
 kind    = "synthesis"
 status  = "active"

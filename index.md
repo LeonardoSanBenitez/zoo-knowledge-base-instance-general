@@ -12,7 +12,7 @@ Status: `active` (trust it), `superseded by <path>`, `seed` (thin, needs work).
 ## philosophy-of-science/
 
 - `active` `philosophy-of-science/construct-validity-and-formalization.md`
-  (id `construct-validity-and-formalization`, zoo-topic-entry/2.0) —
+  (id `construct-validity-and-formalization`, zoo-topic-entry typed-0.1) —
   Freiesleben & Zezulka (2025) "thinning the world" + construct validity
   failure, applied to the question of whether explicit formalization brings
   a field closer to truth or just relocates its blind spots — relevant to
@@ -49,6 +49,19 @@ Status: `active` (trust it), `superseded by <path>`, `seed` (thin, needs work).
   fetcher `tools/fetch_benchmark_papers.sh`. Started by maria 2026-08-13,
   **multi-session, many entries still `desk-research` — check the
   `verification` line before quoting anything.**
+
+- `active` `information-retrieval/evaluating-your-own-knowledge-base.md`
+  (id `evaluating-your-own-knowledge-base`, zoo-topic-entry typed-0.1) — how to
+  tell whether a knowledge base is actually working, and the four ways the
+  measurement lies to you: a reader that skips what it cannot parse (and so
+  manufactures evidence for its own format); triggers written after seeing the
+  test queries; reporting a rate when leave-one-out shows 67% of the effect is
+  one query; and being your own assessor. Carries the resolving-power argument
+  transferred from the public-benchmark catalogue — a 6-query internal gold set
+  whose floor on p is 0.125 cannot demonstrate anything at 0.05. Relevant to
+  anyone claiming a documentation, retrieval or note-format change helped, and
+  to anyone about to quote an absolute number off their own gold set.
+  Companion tool: `tools/retrieval_eval.py significance`.
 
 ## software-engineering/
 
@@ -87,7 +100,7 @@ Status: `active` (trust it), `superseded by <path>`, `seed` (thin, needs work).
 ## llm-agent-cognition/
 
 - `active` `llm-agent-cognition/performative-thoroughness-and-reward-bias.md`
-  (id `performative-thoroughness-and-reward-bias`, zoo-topic-entry/2.0) — reward
+  (id `performative-thoroughness-and-reward-bias`, zoo-topic-entry typed-0.1) — reward
   models measurably favor responses that *look* thorough/convincing over ones that are
   actually correct or useful (2026 sycophancy/reward-hacking literature); names the
   mechanism behind why an agent drifts toward writing comprehensive-looking KB entries,
@@ -246,7 +259,7 @@ unusually explicit process. See `operating-systems/linux-kernel/INDEX.md`.
 ## psychology-of-meditation/
 
 - `active` `psychology-of-meditation/lutz-taxonomy-and-cat.md`
-  (id `meditation-lutz-taxonomy-and-cat`, zoo-topic-entry/2.0) — Lutz et al.
+  (id `meditation-lutz-taxonomy-and-cat`, zoo-topic-entry typed-0.1) — Lutz et al.
   FA/OM meditation taxonomy vs. the CAT project's 10 continuous dimensions.
   **This row said until 2026-08-17 that the entry "argues CAT is dimensional
   where Lutz is categorical". The entry itself retracted exactly that framing

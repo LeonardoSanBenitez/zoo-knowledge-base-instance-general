@@ -1,7 +1,7 @@
 # Construct validity and formalization — does making assumptions explicit bring us closer to truth?
 
 ```toml
-schema  = "zoo-topic-entry/2.0"
+schema  = "zoo-topic-entry/typed/0.1"
 id      = "construct-validity-and-formalization"
 kind    = "synthesis"
 status  = "active"

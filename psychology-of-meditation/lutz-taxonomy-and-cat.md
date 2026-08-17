@@ -1,7 +1,7 @@
 # Lutz et al. meditation taxonomy vs. the CAT 10-dimension model
 
 ```toml
-schema  = "zoo-topic-entry/2.0"
+schema  = "zoo-topic-entry/typed/0.1"
 id      = "meditation-lutz-taxonomy-and-cat"
 kind    = "synthesis"
 status  = "active"
