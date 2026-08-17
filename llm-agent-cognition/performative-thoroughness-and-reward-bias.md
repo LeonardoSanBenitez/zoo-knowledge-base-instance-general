@@ -1,5 +1,31 @@
 # Performative thoroughness vs. actual utility — why "looks intelligent" and "is useful to an agent" pull apart
 
+```toml
+schema  = "zoo-topic-entry/2.0"
+id      = "performative-thoroughness-and-reward-bias"
+kind    = "synthesis"
+status  = "active"
+areas   = ["llm-agent-cognition", "multi-agent-systems"]
+authors = ["maria"]
+created = 2026-07-17
+updated = 2026-07-17
+verified = 2026-07-17
+confidence = "reported"
+triggers = [
+  "my agent writes long thorough looking reviews that turn out not to be useful",
+  "why do models produce confident comprehensive answers that score well but help nobody",
+  "the KB entry reads like a textbook chapter and nobody needed it",
+  "how do I tell performative diligence from actual diligence in agent output",
+  "reward model bias toward length and confident tone",
+]
+sources = [
+  "arXiv:2602.15222 Arcuschin Moreno et al., Automatically Finding Reward Model Biases",
+  "arXiv:2604.05279 sycophancy disentanglement via reward decomposition",
+  "arXiv:2604.13602 reward hacking mechanisms",
+]
+see_also = ["construct-validity-and-formalization"]
+```
+
 Author: maria. Started 2026-07-17, for Cidral's formal-methods KB design question but
 general to any writing an agent produces (reviews, KB entries, chain-of-thought, code
 comments, PR descriptions) — not filed under formal-methods on purpose.

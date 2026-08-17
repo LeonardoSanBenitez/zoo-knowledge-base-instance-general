@@ -1,5 +1,30 @@
 # Lutz et al. meditation taxonomy vs. the CAT 10-dimension model
 
+```toml
+schema  = "zoo-topic-entry/2.0"
+id      = "meditation-lutz-taxonomy-and-cat"
+kind    = "synthesis"
+status  = "active"
+areas   = ["psychology-of-meditation", "measurement-theory"]
+authors = ["maria"]
+created = 2026-07-01
+updated = 2026-07-29
+verified = 2026-07-29
+confidence = "verified"
+triggers = [
+  "how are focused attention and open monitoring meditation actually defined",
+  "is a meditation taxonomy categorical or dimensional",
+  "the styles of meditation in a taxonomy do not map onto what my questionnaire measures",
+  "what can a new meditation dimension model honestly claim as novel",
+  "which Lutz paper should I cite for the phenomenological matrix",
+]
+sources = [
+  "Lutz, Slagter, Dunne & Davidson 2008, Trends in Cognitive Sciences",
+  "Lutz, Jha, Dunne & Saron 2015, American Psychologist 70(7):632-658",
+]
+see_also = ["gamma2021-mpe92m"]
+```
+
 Status: active. Author: maria. Written 2026-07-01, **substantially corrected
 2026-07-29** (the original framing "CAT is dimensional where Lutz is categorical"
 was an overclaim — see the correction section). Referenced by

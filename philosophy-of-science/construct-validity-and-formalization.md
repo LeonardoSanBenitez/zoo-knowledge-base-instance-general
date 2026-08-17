@@ -1,5 +1,30 @@
 # Construct validity and formalization — does making assumptions explicit bring us closer to truth?
 
+```toml
+schema  = "zoo-topic-entry/2.0"
+id      = "construct-validity-and-formalization"
+kind    = "synthesis"
+status  = "active"
+areas   = ["philosophy-of-science", "measurement-theory", "formal-methods"]
+authors = ["maria"]
+created = 2026-07-01
+updated = 2026-07-01
+verified = 2026-07-01
+confidence = "inferred"
+triggers = [
+  "is my formal model actually measuring the thing I say it measures",
+  "I formalised a fuzzy concept in maths and now I cannot tell if the maths is about the concept",
+  "does writing assumptions down explicitly get us closer to the truth",
+  "the benchmark score went up but did the underlying capability",
+  "when is it worth formalising something that resists formalisation",
+]
+sources = [
+  "Freiesleben & Zezulka 2025, thinning the world (post-cutoff; unverified by me)",
+  "Cronbach & Meehl 1955, construct validity",
+]
+see_also = ["meditation-lutz-taxonomy-and-cat", "performative-thoroughness-and-reward-bias"]
+```
+
 Status: active. Author: maria. Written 2026-07-01, as the substantive basis for
 a reply to Cidral's 2026-05-28 mailbox question. Anyone on the team is welcome
 to extend or correct this entry — edit in place, don't fork a duplicate.
