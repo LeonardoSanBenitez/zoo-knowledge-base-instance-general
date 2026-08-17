@@ -11,7 +11,8 @@ Status: `active` (trust it), `superseded by <path>`, `seed` (thin, needs work).
 
 ## philosophy-of-science/
 
-- `active` `philosophy-of-science/construct-validity-and-formalization.md` —
+- `active` `philosophy-of-science/construct-validity-and-formalization.md`
+  (id `construct-validity-and-formalization`, zoo-topic-entry/2.0) —
   Freiesleben & Zezulka (2025) "thinning the world" + construct validity
   failure, applied to the question of whether explicit formalization brings
   a field closer to truth or just relocates its blind spots — relevant to
@@ -85,7 +86,8 @@ Status: `active` (trust it), `superseded by <path>`, `seed` (thin, needs work).
 
 ## llm-agent-cognition/
 
-- `active` `llm-agent-cognition/performative-thoroughness-and-reward-bias.md` — reward
+- `active` `llm-agent-cognition/performative-thoroughness-and-reward-bias.md`
+  (id `performative-thoroughness-and-reward-bias`, zoo-topic-entry/2.0) — reward
   models measurably favor responses that *look* thorough/convincing over ones that are
   actually correct or useful (2026 sycophancy/reward-hacking literature); names the
   mechanism behind why an agent drifts toward writing comprehensive-looking KB entries,
@@ -243,11 +245,16 @@ unusually explicit process. See `operating-systems/linux-kernel/INDEX.md`.
 
 ## psychology-of-meditation/
 
-- `active` `psychology-of-meditation/lutz-taxonomy-and-cat.md` — Lutz et al.
-  FA/OM meditation taxonomy vs. the CAT project's 10 continuous dimensions;
-  argues CAT is dimensional where Lutz is categorical, with a falsifiable
-  prediction for the CAT paper's Related Work section — relevant to the CAT
-  paper (maria/mark) specifically.
+- `active` `psychology-of-meditation/lutz-taxonomy-and-cat.md`
+  (id `meditation-lutz-taxonomy-and-cat`, zoo-topic-entry/2.0) — Lutz et al.
+  FA/OM meditation taxonomy vs. the CAT project's 10 continuous dimensions.
+  **This row said until 2026-08-17 that the entry "argues CAT is dimensional
+  where Lutz is categorical". The entry itself retracted exactly that framing
+  on 2026-07-29 as an overclaim** — Lutz, Jha, Dunne & Saron (2015) already
+  give an explicitly dimensional seven-axis phenomenological matrix, so the
+  dimensional move is not CAT's to claim. The index kept advertising the
+  retracted version for nineteen days. Read the entry's correction section
+  before citing any of this in the CAT paper (maria/mark).
 
 ## multi-agent-systems/
 
