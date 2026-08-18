@@ -42,6 +42,7 @@ term does. Use `kb.py validate` for health, `kb_lookup.py` for retrieval.
 |---|---|
 | `mlflow-release-map.md` | Every 3.x tag with its date and Python floor, the landmark commits mapped to the first release that contains them, and the numbering trap (**no `v3.11.0` tag** — 3.11 shipped only as `v3.11.1`, so a failed `git show` there is a missing tag, not missing code). Refreshed by `kb_evidence/collect_release_timeline.py`. |
 | `mlflow-auth-rbac.md` | The `basic-auth` app after two model changes: roles + `role_permissions` (3.12) replacing the per-resource permission endpoints that were **removed** in 3.13, how a grant resolves at request time, workspaces and the immutable `artifact_location` prefix, the 403-on-artifact-upload failure and its fix in 3.15.0, and the five setup traps that make a correct configuration look broken. |
+| `mlflow-docker-projects-env.md` | What `mlflow run` with a `docker_env` actually copies into the container per artifact backend, and the two ways the S3 set is incomplete at 3.15.1: **no `AWS_DEFAULT_REGION`** (so boto3 falls back to `us-east-1` and uploads to another region fail with `IllegalLocationConstraintException` — issue #2793, open since 2020) and **no `AWS_SESSION_TOKEN`** (so temporary credentials cannot sign); plus the `~/.aws` volume being mounted at `/.aws`, which botocore does not read. Every claim re-derivable without an AWS account. |
 | `mlflow-2026-snapshot.md` | The delta between a 2.x-era memory of MLflow and the 3.15 reality: the filesystem backend now raising by default, release cadence and Python floor, the flipped defaults and removals of 3.11–3.15, the structural shifts (first-class logged models, the whole tracing/GenAI surface), and how to settle a version claim by archaeology. |
 
 **Written 2026-08-17**: `mlflow-auth-rbac.md`, the entry this file predicted would be second. It
@@ -58,7 +59,11 @@ onboarding rule that three speculative entries are how a KB becomes decorative:
 * **Tracing / GenAI internals** (span export, OTel interop, judges). Half the tracker's traffic,
   and entirely newer than my training — but out of scope for our first tickets, so writing it now
   would be a tutorial rather than a delta.
-* **Artifact stores (S3/GCS/Azure) behaviour.** Deferred because we have no cloud credentials, so
-  anything written would be unverifiable by us.
+* **Artifact stores (S3/GCS/Azure) behaviour.** Still deferred *as a whole* for want of cloud
+  credentials — but the deferral was too broad, and `mlflow-docker-projects-env.md` (2026-08-18) is
+  the counter-example: which environment variables reach a container, which endpoint boto3 resolves
+  and whether a request carries a session token are all decided **locally**, before any network
+  call, so they are verifiable here. The line to hold is "no claim about what the cloud *answers*",
+  not "no claim about anything with `s3://` in it".
 * **Triage routing** (labels → owners) — MLflow's `ISSUE_TRIAGE.rst` is short and already
   summarised in the project file; duplicating it here would rot in two places.

@@ -198,6 +198,13 @@ raises an exception*.
   with date and Python floor, landmark commits mapped to their first release, and the numbering
   trap (**no `v3.11.0` tag**; 3.11 shipped only as `v3.11.1`, so a failed `git show` there is a
   missing tag, not missing code). — every ticket that names a version.
+- `active` `machine-learning-ops/mlflow/mlflow-docker-projects-env.md` — dated (2026-08-18) what
+  `mlflow run` with a `docker_env` copies into the project container per artifact backend, and the
+  two holes in the S3 set at 3.15.1: no `AWS_DEFAULT_REGION` (boto3 falls back to `us-east-1`, so
+  cross-region uploads die with `IllegalLocationConstraintException` — issue #2793, open since
+  2020) and no `AWS_SESSION_TOKEN` (temporary credentials cannot sign), plus a `~/.aws` volume
+  mounted at `/.aws` where botocore never looks. — any "works locally, fails inside `mlflow run`"
+  or project-container credential question.
 
 ## cryptography/
 
