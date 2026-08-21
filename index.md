@@ -133,6 +133,14 @@ lemma names) + dated post-cutoff facts + our own artifacts.
 What we have already mechanized, and its status, is **not** in the knowledge base: it
 is `dev-science-ops/math-formalizations/STATUS.md`.
 
+## logic-and-abstraction/
+
+- `active` `logic-and-abstraction/closure-completeness-determinacy.md` — three translations that
+  prevent false novelty claims: equivalence-class may/must is rough approximation; target-relative
+  losslessness is both query determinacy and heterogeneous abstract completeness; and standard
+  completeness is weaker than commutation, with closure-valued counterexamples already in the
+  literature — relevant whenever deduction, lossy observation, or two closure operators are combined.
+
 ## python-web/
 
 Python web frameworks and their ecosystems (FastAPI, Starlette, Pydantic). Organized

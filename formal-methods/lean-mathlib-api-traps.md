@@ -62,6 +62,10 @@ shape), not to guess a second spelling.
 
 ## SYMPTOM: "failed to synthesize <instance>" / basic real-number lemma won't typecheck
 
+- **A plausible umbrella such as `Mathlib.LinearAlgebra.Basic` may not exist at all** (confirmed
+  absent at the shared `v4.31.0` pin on 2026-08-20). Do not infer module paths from namespace names.
+  Search the source tree or use the verified `import Mathlib` umbrella while a private prototype's
+  dependency surface is still moving; narrow imports only after the declarations compile.
 - **`le_min_iff`, `min_le_left/right`, `min_eq_left/right`** and friends need a
   `LinearOrder` instance; for `ℝ` that means the import chain must reach
   `Mathlib.Data.Real.Basic` (or something pulling it in). `Mathlib.Order.Basic` alone
