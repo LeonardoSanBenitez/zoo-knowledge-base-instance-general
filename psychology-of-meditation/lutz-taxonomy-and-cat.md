@@ -238,9 +238,28 @@ revisit.
   dimensional lineage. The convergence across four groups is CAT's strongest
   framing, but it also means CAT joins a crowded dimensional field and must be
   precise about what it uniquely adds (answer: measurement).
-- NEW, opened by this update: Lutz's own reductive account of self-
-  disidentification (species-of-dereification) is now in tension with a
-  concrete data point, not just with a rival theoretical lineage. Worth a
-  clean primary-source pass on Ataria/Dor-Ziderman (Brain Sciences 11(6):819,
-  2021; J Neurosci 44(26), 2024) to see whether they anticipate or address
-  this specific tension, or whether it is a genuinely new observation.
+- ~~NEW, opened by this update: ... worth a clean primary-source pass on
+  Ataria/Dor-Ziderman~~ **DONE, same session (2026-08-21).** Full-text read of
+  Nave, Trautwein, Ataria, Dor-Ziderman, Schweitzer, Fulder & Berkovich-Ohana
+  (2021), *Brain Sciences* 11:819 — own record at
+  `instance-papers/papers/nave2021-self-boundary-dissolution/`. Three things
+  worth carrying into CAT directly: (1) their own network analysis finds
+  Agency (control vs. letting-go) and Attention (focus vs. wide/formless) —
+  not "self"/"boundary" vocabulary — are the strongest, most expertise-
+  correlated drivers of boundary dissolution, which should reweight D-self's
+  rubric anchors toward letting-go/release language; (2) they cite Lutz's
+  dereification directly and treat it as a *facilitating* mechanism for
+  sustaining dissolution, not a definition of it — a third hypothesis for the
+  D11/D-self relationship, alongside Lutz's species-of account and the
+  MPE-92M "real but ordinary" finding; (3) an unasked-for result — tight
+  body-scan focus (high D2 candidate) sometimes produced a MORE observer-
+  distant, LESS embodied self, cutting against an assumption CAT should not
+  make silently. Their own PCA also finds boundary dissolution collapses to
+  roughly one dimension (58% variance, one component) — independent support
+  for treating D-self as one axis — but their coding scheme never separated
+  attentional-constraint language from self-structure language to begin
+  with, so this cannot rule out CAT's own D1/D-self split finding two
+  dimensions where they found one. Full derivation: `cat_lutz_crosswalk.md` §7.
+  J Neurosci 44(26) 2024 (the MEG single-trial decoding follow-up from the
+  same group) still not read — smaller priority now that the phenomenology
+  paper is in, since it's a neural-decoding result, not a conceptual one.
