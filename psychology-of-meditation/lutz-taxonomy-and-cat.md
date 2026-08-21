@@ -8,8 +8,8 @@ status  = "active"
 areas   = ["psychology-of-meditation", "measurement-theory"]
 authors = ["maria"]
 created = 2026-07-01
-updated = 2026-07-29
-verified = 2026-07-29
+updated = 2026-08-21
+verified = 2026-08-21
 confidence = "verified"
 triggers = [
   "how are focused attention and open monitoring meditation actually defined",
@@ -159,28 +159,88 @@ Replacement positioning sentence (supersedes the one above):
 > field has never been in a position to test, because one side of every such
 > hypothesis has never been measured. CAT's contribution is that side.
 
+## ⚠ THIRD UPDATE, 2026-08-21 — the blocking question is resolved, and not the way either lineage predicted
+
+Re-opened Lutz 2015 directly (own PDF, `johnddunne.net` mirror, read pp.632-645)
+and re-ran the MPE-92M split-half reanalysis's own numbers against it. Full
+derivation in `.claude/memory/maria/cat_lutz_crosswalk.md` §6; durable summary
+here.
+
+**Lutz's own text answers "is dereification the same axis as self-structure?"
+directly, on p.640** — quoting Hölzel et al.'s "disidentification with the
+static sense of self": *"We understand this to be a species of the more
+general capacity for dereification ... this does not occur with all cases of
+dereification ... [it] does not require that one's sense of being a static
+self has changed."* So by Lutz's own account, self-disidentification is a
+**special case** of dereification (content-based: dereifying specifically the
+thoughts that construct a self), not an independent axis and not the same axis.
+
+**My own data complicates that answer, but LESS than a first draft of this
+section claimed — corrected same session.** The first-draft version asserted
+the self/subject-object factor was "more stable under split-half replication
+than most of the instrument's other factors" and used that as a second,
+independent pillar alongside the textual argument. That claim was inherited
+from an uncomputed eyeball read in a 2026-08-16 note and turned out to be
+wrong when actually computed: a proper independent-halves check
+(`gamma2021-mpe92m/reanalysis/run_self_factor_stability.py`, 30 splits, self-
+factor identified within each half separately, no full-sample leakage) gives
+the self factor **median rank 3rd of 5 and 5th of 7 matched factors** — average
+to slightly below-average stability, not exceptional. (A first attempt at the
+permutation-null control for this same check also had a bug — a pandas
+`.apply(axis=0)` that silently failed to reshuffle rows — that produced a
+null median as high as the real data; fixed with an explicit per-column numpy
+shuffle, after which the null behaves as expected, median 0.14 vs the real
+data's 0.80, so the self factor's signal is genuinely above noise, just not
+unusually more replicable than the instrument's other real factors.)
+
+**What survives, honestly:** the self/subject-object factor carries real,
+above-noise variance in a population selected for minimal discursive-thought
+content (MPE-92M's "pure awareness" respondents) — which rules out the
+*strongest* reductive reading (self-structure as pure epiphenomenon of
+thought-dereification, which should have gone to the noise floor there) but
+does NOT positively demonstrate that self-structure is a privileged,
+functionally separable dimension the way exceptional stability would have.
+Ordinary-stability-but-real is compatible with either Lutz's species-of
+account or the embodied-self lineage's primacy account, and does not decide
+between them.
+
+**Decided for CAT: D11 Dereification and D-self stay two separate dimensions**,
+resting mainly on the textual argument (Lutz's own general/specific relation
+licenses distinct instructions — content-reappraisal language vs. self/
+boundary-targeting language are different instructions regardless of the
+underlying phenomenology), with the data offering only mild, non-decisive
+corroboration rather than a second independent pillar. Discriminant-validity
+check still owed once real transcripts are scored: does anything score
+high-D11/low-D-self or high-D-self/low-D11? If the off-diagonal stays empty,
+revisit.
+
 ## Open, not yet resolved
 
 - Which specific CAT dimensions predict the FA/OM split best, empirically —
   needs real transcript data (pending from Mark's pipeline), not armchair
   mapping. Don't overclaim until checked.
-- ~~The full CAT-10 ↔ Lutz-7 crosswalk is unstarted.~~ **Drafted 2026-08-13.**
-  Outcome: add a *dereification* axis (Lutz's own primary axis, and scoreable
-  from text); hold *clarity/luminosity* as a candidate now supported from two
-  independent directions (Lutz's theory + the luminosity factor found in the
-  MPE-92M reanalysis); demote *Startup Modality* from dimension to metadata.
-  **Blocking question raised and not answered: is dereification the same axis as
-  self/subject-object structure?** Lutz has dereification and no self axis; the
-  embodied-self lineage has the reverse; the factor analysis found the self axis
-  empirically. Decide before writing rubrics for either, or the collinearity
-  turns up in PCA after the work is done.
-- The crosswalk was built from KB notes about Lutz 2015, not from a re-reading of
-  it. Structural conclusions should survive; every fine-grained definitional
-  claim is marked `[recall]` in the working draft and must be verified against
-  the primary source before it reaches the paper.
+- ~~The full CAT-10 ↔ Lutz-7 crosswalk is unstarted.~~ **Drafted 2026-08-13,
+  blocking question resolved 2026-08-21 (see above).** Outcome: add a
+  *dereification* axis (Lutz's own primary axis, and scoreable from text) AND
+  a separate self/subject-object axis (D-self); hold *clarity/luminosity* as a
+  candidate now supported from two independent directions (Lutz's theory + the
+  luminosity factor found in the MPE-92M reanalysis); demote *Startup
+  Modality* from dimension to metadata.
+- ~~The crosswalk was built from KB notes about Lutz 2015, not from a
+  re-reading of it.~~ **Re-read and verified 2026-08-21** — every `[recall]`
+  tag in the working draft checked against the primary source directly
+  (dereification definition p.639, the disidentification passage p.640,
+  aperture/clarity/stability/effort pp.641-642). All confirmed accurate; none
+  required correction.
 - See also `instance-papers/contemplative-neuroscience.md` — the 2025–26
   neural-side literature (Sacchet minimal-model radar plots; Berkovich-Ohana /
   Dor-Ziderman six-dim self-boundary scheme) is a *third and fourth* independent
   dimensional lineage. The convergence across four groups is CAT's strongest
   framing, but it also means CAT joins a crowded dimensional field and must be
   precise about what it uniquely adds (answer: measurement).
+- NEW, opened by this update: Lutz's own reductive account of self-
+  disidentification (species-of-dereification) is now in tension with a
+  concrete data point, not just with a rival theoretical lineage. Worth a
+  clean primary-source pass on Ataria/Dor-Ziderman (Brain Sciences 11(6):819,
+  2021; J Neurosci 44(26), 2024) to see whether they anticipate or address
+  this specific tension, or whether it is a genuinely new observation.
