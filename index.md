@@ -206,6 +206,16 @@ raises an exception*.
   with date and Python floor, landmark commits mapped to their first release, and the numbering
   trap (**no `v3.11.0` tag**; 3.11 shipped only as `v3.11.1`, so a failed `git show` there is a
   missing tag, not missing code). — every ticket that names a version.
+- `active` `machine-learning-ops/mlflow/mlflow-tracing-otel-interop.md` — dated (2026-08-22)
+  mechanism entry for MLflow tracing and OpenTelemetry: MLflow isolates its **tracer** provider but
+  shares the process-global **meter** provider, so an application that owns a `MeterProvider` takes
+  MLflow's `mlflow.trace.span.duration` and the configured OTLP metrics endpoint receives nothing,
+  silently; plus the full span-routing precedence, the generic `OTEL_EXPORTER_OTLP_ENDPOINT`
+  enabling both signals (which is how a per-span `trace_destination=` gets ignored), the grpc
+  protocol default, the four APIs that rebuild span processors and what 3.15.0 does and does not
+  clean up, unbounded metric-label cardinality from trace tags, and three traps in MLflow's own
+  tracing tests. — any OTLP / collector / thread-leak / "my traces or metrics went nowhere"
+  question.
 - `active` `machine-learning-ops/mlflow/mlflow-docker-projects-env.md` — dated (2026-08-18) what
   `mlflow run` with a `docker_env` copies into the project container per artifact backend, and the
   two holes in the S3 set at 3.15.1: no `AWS_DEFAULT_REGION` (boto3 falls back to `us-east-1`, so

@@ -46,6 +46,18 @@ mlflow/mlflow --ticket <n>`.
   broken (mandatory Flask secret key, 12-char password floor, the workspace header, Host-header
   validation, shipped default credentials). — any 403 / "Permission denied" / RBAC / workspaces
   question, and before repeating a remembered `experiments/permissions/create` recipe.
+- `active` `machine-learning-ops/mlflow/mlflow-tracing-otel-interop.md` — dated (2026-08-22)
+  mechanism entry for `area/tracing`: MLflow keeps an **isolated tracer provider** but shares the
+  **process-global meter provider**, so an application that owns a `MeterProvider` silently takes
+  MLflow's span-duration metric and the configured OTLP metrics endpoint receives nothing; the
+  routing precedence in `_get_span_processors` (a `set_destination` destination beats OTLP unless
+  dual export is on); the generic `OTEL_EXPORTER_OTLP_ENDPOINT` enabling **both** signals, which
+  is how a per-span `trace_destination=` ends up ignored; protocol defaulting to **grpc**; the
+  four entry points that rebuild span processors, with span processors retired since 3.15.0 and
+  the meter provider not; why shutting the retired meter provider down would silence metrics for
+  the process; unbounded metric-label cardinality from trace tags; and three traps in MLflow's own
+  tracing tests. — any OTLP / collector / exporter / thread-leak / "my metrics never arrive"
+  question.
 - `active` `machine-learning-ops/mlflow/mlflow-release-map.md` — dated (2026-08-17) map of every
   3.x tag with its date and Python floor, the landmark commits mapped to the first release
   containing each, and the numbering trap: **there is no `v3.11.0` tag** (3.11 shipped only as
@@ -63,5 +75,6 @@ base becomes decorative:
   content this folder exists to counter.
 * **Cloud artifact stores** (S3/GCS/Azure). No credentials in the zoo, so anything written would
   be unverifiable by us — and this folder's rule is that entries are checkable.
-* **MLflow tracing / GenAI internals.** Half of MLflow's tracker traffic and entirely newer than
-  training, so it is the most likely *next* entry — but it needs a real ticket first.
+* **MLflow judges, GenAI autologging and the trace UI.** The OTel interop half of tracing is now
+  written (`mlflow/mlflow-tracing-otel-interop.md`, 2026-08-22); the rest of the tracing surface
+  still waits for a real ticket, and the UI half is out of scope for us by standing rule.

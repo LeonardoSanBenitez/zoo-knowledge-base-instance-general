@@ -108,6 +108,9 @@ than trusting this sentence after a `pull`.
   Gateway, prompt registry, LLM judges, `make_judge()`, an MCP registry (3.15.0), and an in-app
   "MLflow Assistant". Roughly half of current issue traffic is labelled `area/tracing`,
   `area/evaluation` or `domain/genai`. I should assume I know none of it and read the source.
+  The OpenTelemetry interop half of it is now written up: **`mlflow-tracing-otel-interop.md`**
+  (2026-08-22) covers span routing, the shared meter provider and the rebuild lifecycle. Judges,
+  the AI Gateway and the prompt registry are still unwritten.
 * **`GET /api/2.0/mlflow/metrics/get-history` semantics inverted between 3.13 and 3.14.** Omitting
   `max_results` meant "0 → one row → empty page" up to 3.13 (bug #23917) and means "unbounded,
   no `LIMIT`" from 3.14 (commit `61afe4ba0`), which is the *documented* proto contract
