@@ -6,10 +6,14 @@ triggers: mlflow run, docker_env, MLproject, IllegalLocationConstraintException,
           AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, MLFLOW_S3_ENDPOINT_URL, MLFLOW_S3_IGNORE_TLS,
           _get_s3_artifact_cmd_and_envs, _get_docker_command, _artifact_storages,
           MLFLOW_DOCKER_WORKDIR_PATH, ~/.aws, /.aws, NoRegionError, InvalidClientTokenId,
-          AZURE_STORAGE_CONNECTION_STRING, GOOGLE_APPLICATION_CREDENTIALS
-verified: 2026-08-18 by lucas at v3.15.1 and master `af7acb646`. Every claim below is either a
-          `git show <tag>:<file>` quotation or the output of a command inlined in the text, run in
-          Docker on Linux/x86_64. No AWS account was used, and none is needed to re-derive any of it.
+          AZURE_STORAGE_CONNECTION_STRING, GOOGLE_APPLICATION_CREDENTIALS,
+          AWS_PROFILE, AWS_SHARED_CREDENTIALS_FILE, AWS_CONFIG_FILE, NoCredentialsError,
+          user_env_vars, environment block, "Copy from host", docker_args, mlflow run -A,
+          "This project expects the", credentials not found in container
+verified: 2026-08-23 by lucas at master `925d16f57` (re-checked: the four-name set is unchanged),
+          earlier at v3.15.1 and `af7acb646`. Every claim below is either a `git show <tag>:<file>`
+          quotation or the output of a command inlined in the text, run in Docker on Linux/x86_64.
+          No AWS account was used, and none is needed to re-derive any of it.
 -->
 
 # `mlflow run` with a docker environment: which credentials actually reach the container
@@ -86,10 +90,24 @@ performs is simply not read. A base image that sets `HOME=/`, or a container run
 different user, changes the answer — so the honest phrasing in a thread is "inert unless your image
 sets `HOME=/`", not "broken".
 
-**Workaround that needs no assumption about the image**: pass
-`AWS_SHARED_CREDENTIALS_FILE=/.aws/credentials` (and `AWS_CONFIG_FILE=/.aws/config`) through the
-project's own `environment` block, or set the credentials as plain environment variables, which
-`_get_docker_command` forwards on request.
+**Workaround that needs no assumption about the image, measured rather than assumed**
+(2026-08-23, same fixture, four cases in one run):
+
+| case | credentials | region |
+|---|---|---|
+| mounted at `/.aws`, what MLflow does | `None` | `None` |
+| mounted at `/root/.aws`, positive control | `AKIAFIXTUREKEY` | `ap-east-1` |
+| `/.aws` **plus** `AWS_SHARED_CREDENTIALS_FILE=/.aws/credentials` and `AWS_CONFIG_FILE=/.aws/config` | `AKIAFIXTUREKEY` | `ap-east-1` |
+| those two variables set but nothing mounted there | falls back to forwarded env credentials | from `AWS_DEFAULT_REGION` |
+
+Row 3 is the recipe worth giving someone; row 4 is its failure case, and it degrades to the
+environment instead of breaking, which is what makes it safe to recommend. Pass both variables
+through the project's `environment:` block (below), or set the credentials as plain environment
+variables.
+
+**A second gap sits behind this one**: `AWS_PROFILE` is not forwarded either, and is not in the
+S3 branch at all. So even with the files named correctly, only the `[default]` profile resolves;
+a named profile needs `AWS_PROFILE` declared in `environment:` as well.
 
 ## How to answer a ticket in this area
 
@@ -98,4 +116,34 @@ project's own `environment` block, or set the credentials as plain environment v
 2. Ask what the *container* resolved, not what the host has: `docker inspect` the project container
    or print `boto3.Session().region_name` inside it. A host that works proves nothing here.
 3. Remember the project's `environment:` list in `MLproject` is the supported escape hatch for any
-   variable MLflow does not forward on its own.
+   variable MLflow does not forward on its own (next section: it works, and it fails loudly).
+
+## The supported escape hatch, and exactly how it behaves
+
+`docker_env.environment` in the `MLproject` file. Two forms, both shown in MLflow's own docs
+(`docs/docs/classic-ml/projects/index.mdx`, whose example is `- "AWS_PROFILE"  # Copy from host`):
+
+```yaml
+docker_env:
+  image: my-image
+  environment:
+    - "AWS_DEFAULT_REGION"              # copy the value from the host environment
+    - ["AWS_SESSION_TOKEN", "literal"]  # set an explicit value
+```
+
+`_get_docker_command(..., user_env_vars=...)` handles both. Measured against that function
+(2026-08-23, `python:3.12-slim`):
+
+| form | host variable | result |
+|---|---|---|
+| bare name | set | forwarded with the host value |
+| `["NAME", "value"]` | irrelevant | forwarded with the literal |
+| bare name | **unset** | `MlflowException: This project expects the ... environment variables to be set on the machine running the project` — the run stops, it does not silently continue |
+| nothing declared | set | **not** forwarded unless it is in the artifact-backend set above |
+
+The third row is why this is safe to recommend in a thread: a mistyped or missing variable fails
+at launch with the name in the message, rather than producing a container that cannot authenticate.
+
+`mlflow run -A` (`docker_args`) is the other route — it appends raw flags to `docker run`, so
+`-A e=NAME=value` reaches the same place — but it is a per-invocation flag, not a property of the
+project, and the `environment:` list is what the docs point at.
