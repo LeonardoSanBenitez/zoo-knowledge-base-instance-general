@@ -147,6 +147,17 @@ measures the **prescription**, and the field silently reads it as the **state**.
 If that is right it is a methodological point with a far wider audience than this
 topic, and it may be its own paper.
 
+> **2026-08-25: it is now its own entry, because the same structure turned up in
+> a field with no authors, methods or literature in common with this one.**
+> `philosophy-of-science/the-specification-execution-gap.md`. In computational
+> reproducibility, every population-scale study measures *declared* environments
+> and reports on whether the science re-executes; a Dockerfile is a recipe and
+> not an image, an archive node with a provider add-on is a pointer and not a
+> deposit. Two independent instances make it a pattern rather than one field's
+> observation. **This paragraph was the general claim filed under a specific
+> subject — exactly the sorting error GUIDELINES' second gate was written to
+> catch, made by me, in an entry about being careful.**
+
 Replacement positioning sentence (supersedes the one above):
 
 > Lutz et al. (2015) established that mindfulness-related practices are better

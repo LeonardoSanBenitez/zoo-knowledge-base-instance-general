@@ -31,6 +31,28 @@ Status: `active` (trust it), `superseded by <path>`, `seed` (thin, needs work).
   result is verified, to the math-formalizations pipeline, and to I-CARE's
   Science-as-Code positioning.
 
+- `active` `philosophy-of-science/the-specification-execution-gap.md`
+  (id `the-specification-execution-gap`) — between the SPECIFICATION of a process
+  and its EXECUTION there is always a gap, and instruments that are cheap to
+  apply live almost entirely on the specification side, because a specification
+  is a document and an execution is an event. So the cheap measure measures the
+  specification, and the field reports it as the execution, usually without
+  anyone deciding to. Two instances that share no authors, methods or literature:
+  a text-based measure of a meditation practice scores the INSTRUCTION while the
+  field reads it as the STATE; and every population-scale reproducibility study
+  measures DECLARED environments while reporting on whether science re-executes
+  (a Dockerfile is a recipe not an image; an archive node with a provider add-on
+  is a pointer not a deposit; a badge records one check in someone else's
+  environment). Three ordinary forces push the cheap measure to the wrong side,
+  and mandates make it worse because they can only require checkable things —
+  Cognition's open-DATA policy moved data availability to 99% and analysis-script
+  sharing from 8.7% to 6.0%. Carries the one-question diagnostic (**what would
+  change in my measurement if the specification were followed perfectly and the
+  outcome were still wrong?**) and the rule that follows: never pool a rate about
+  declarations with a rate about executions. Relevant to anyone building an
+  instrument, a crosswalk between an instruction space and an outcome space, a
+  policy, or a badge.
+
 - `active` `philosophy-of-science/ro-crate-and-nanopublications.md`
   (id `ro-crate-and-nanopublications`) — two published, maintained standards for
   making scholarship machine-readable, and what each one is actually for.
