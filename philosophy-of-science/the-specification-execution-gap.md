@@ -57,6 +57,14 @@ missing in the same way:
   AJPS runs mandatory third-party verification and 29.1% of its R files
   re-execute in a clean container.
 
+- **"open access" itself.** Unpaywall reports `is_oa: true` for Artner et al.
+  (2021) and gives exactly one location: a KU Leuven bitstream path that returns
+  **404**, because the repository migrated to a new discovery system and the
+  index still holds the pre-migration deep link. The *specification* of openness
+  is intact and indexed; the *execution* — can a reader get the bytes — fails.
+  Found 2026-08-25 while trying to verify a cost figure, and the figure is still
+  unverified because of it.
+
 Two more instances the pattern predicts and which I have not checked:
 **protocol-fidelity instruments** in clinical trials score the manual, and
 **preregistration** scores the plan.
