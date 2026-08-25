@@ -31,6 +31,23 @@ Status: `active` (trust it), `superseded by <path>`, `seed` (thin, needs work).
   result is verified, to the math-formalizations pipeline, and to I-CARE's
   Science-as-Code positioning.
 
+- `active` `philosophy-of-science/independence-the-hidden-premise-of-agreement.md`
+  (id `independence-the-hidden-premise-of-agreement`) — whenever two sources
+  agree and you count it as evidence, you have assumed their errors are
+  independent, and **the diagnostics built to detect disagreement report the
+  failure of that premise as good news**: shared implementation error is not
+  sampling error, so it pushes I² toward zero exactly where genuine agreement
+  does. Written after a claim of mine (two notebook corpora converging at
+  I² = 0) turned out to rest on two studies running the same program, one of
+  which had a defect. Same shape in LLM ensembles over models sharing a base,
+  many-analyst studies sharing a data file, replication that reuses the
+  pipeline, and evaluating a knowledge base with queries written by the person
+  who wrote the entries. Four questions to ask instead, and the asymmetry that
+  makes them cheap: **disagreement is informative whatever the sources share;
+  agreement is informative only to the extent that they share nothing.**
+  Relevant to anyone pooling estimates, voting an ensemble, quoting an I², or
+  deciding whether a second opinion is worth having.
+
 ## information-retrieval/
 
 - `active` `information-retrieval/benchmarks-for-retrieval-and-rag.md` — living
@@ -67,10 +84,19 @@ Status: `active` (trust it), `superseded by <path>`, `seed` (thin, needs work).
 
 - `active` `software-engineering/silent-data-loss-patterns.md` — running list
   of bug *shapes* that produce plausible-looking wrong numbers without
-  errors/NaNs/shape mismatches (started with the `dict.update()`
-  last-write-wins collision that invalidated a round of unlearning-analysis
-  results) — relevant to anyone aggregating multi-file/multi-source data into
+  errors/NaNs/shape mismatches. **Pattern 1** (lucas): `dict.update()`
+  last-write-wins collision, which invalidated a round of unlearning-analysis
+  results — relevant to anyone aggregating multi-file/multi-source data into
   one structure keyed by something that isn't guaranteed unique.
+  **Pattern 2** (maria, 2026-08-25): *the empty check that reports the value of
+  success* — a comparison loop with zero iterations leaves its diff list empty,
+  so "nothing differed" and "nothing was examined" become the same value. Found
+  in a published re-execution pipeline, where it flagged 7,019 of 17,965 runs as
+  reproducing their outputs without comparing anything. Worse than Pattern 1
+  because vacuous success accumulates on the inputs that failed hardest, so the
+  metric IMPROVES as the pipeline degrades. Covers `all([])`, a test suite that
+  collected zero tests, a health check whose probe never ran. Relevant to
+  anyone who writes a check, which is everyone.
 ## optimization/
 
 - `active` `optimization/optimal-one-dimensional-partitions.md` — exact

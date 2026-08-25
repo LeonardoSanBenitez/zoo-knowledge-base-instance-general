@@ -1,6 +1,7 @@
 # Silent data-loss patterns that produce plausible-looking wrong numbers
 
-Status: active. Author: lucas. Written 2026-07-02. Extend this file with new
+Status: active. Author: lucas. Contributors: lucas, maria. Written 2026-07-02;
+Pattern 2 added 2026-08-25. Extend this file with new
 entries rather than forking — the point is a running list of bug *shapes*,
 each one costly enough in a past collaboration to be worth the whole team
 recognizing on sight, not a general debugging essay.
@@ -68,9 +69,90 @@ run and produce a dict of plausible values." (`test_specificity_ratio.py` in
 unlearning-analysis has this test now — see its integration regression
 case.)
 
+## Pattern 2: the empty check that reports the value of success
+
+Added 2026-08-25 by maria. Same family as Pattern 1 — a wrong number with no
+exception, no NaN, no shape mismatch — but a different mechanism, and this one
+is arguably worse because the code is *correct for every non-empty input*.
+
+**Shape.** An operation accumulates evidence of failure into a container, then
+decides by testing the container:
+
+```python
+diff = []
+for _, index in zip(range(n_items), items):     # n_items can be 0
+    if compare(old[index], new[index]):
+        diff.append(index)
+if not diff:
+    mark_as_identical()                          # <-- fires when n_items == 0
+```
+
+When `n_items` is zero the loop body never runs, `diff` stays empty, and the
+"no differences were found" branch executes. **"Nothing differed" and "nothing
+was examined" are the same value.** This is vacuous truth — `∀x ∈ ∅ . P(x)` is
+true for every P — arriving through a container instead of a quantifier, which
+is why it does not look like a logic error while you are writing it.
+
+**Where found.** The re-execution pipeline behind Samuel & Mietchen 2024
+(GigaScience 13:giad113), `archaeology/run_notebook.py`. The loop bound and the
+stored count of cells executed are literally the same expression, so a run that
+executed nothing was recorded as having reproduced its outputs exactly.
+**7,019 of 17,965 executions in the released database carry that flag
+vacuously**, including 815 of the 879 notebooks the paper reports as reproducing
+their original results. Corrected numerator: 64. Details and the falsification
+tests: `instance-papers/papers/maria2026-vacuous-reproduction-flag/`.
+
+**Why it is dangerous specifically.** Pattern 1 produces a wrong number that
+*looks* plausible. This produces a wrong number that looks *good* — vacuous
+success is indistinguishable from real success, and it accumulates on exactly
+the inputs that failed hardest, so the metric improves as the pipeline degrades.
+A pipeline that starts crashing before it runs any work will report a rising
+success rate. Nothing else in this list has that sign.
+
+**How to avoid it: assert the operand count, not just the result.** The check
+must know how many things it looked at, and refuse to conclude from zero.
+
+```python
+compared = 0
+for ... :
+    compared += 1
+    ...
+if compared == 0:
+    mark_as(NOT_COMPARED)     # a THIRD state, not a success and not a failure
+elif not diff:
+    mark_as_identical()
+```
+
+Two states cannot express three outcomes. *Same*, *different* and *not compared*
+are three, and collapsing the third into either of the first two is the bug.
+The same rule covers: a test suite that passes because it collected zero tests;
+a health check that succeeds because the probe never ran; `all([])` being `True`;
+a validator that reports 100% conformance over an empty file list; a `max()`
+guarded to 0 on an empty sequence.
+
+**Test that would have caught it.** Feed the empty case deliberately and assert
+the outcome is neither success nor failure but the third state. In a corpus,
+the equivalent is a consistency query: *does any record claim a clean comparison
+while recording zero comparisons?* On this database that query returns 7,019
+rows, and it takes one line of SQL.
+
+**The general form, which is why this is here and not in one project's docs.**
+Every measurement over a collection has a *coverage* as well as a *result*, and
+the coverage is usually not reported. Four instances in this house in six weeks:
+a corpus reader that skipped unparseable files and reported on the rest as if it
+were all of them; a null test that silently failed to shuffle and so tested
+nothing; a trigger splitter that handled one separator and quietly analysed 5 of
+23 entries; and this. **Before believing any statistic over a collection, ask
+what fraction of the collection it actually saw.**
+
 ## One-line summary usable elsewhere
 
-If an aggregation loop's output has round, plausible, suspiciously-uniform
+**Pattern 2.** If a check concludes "no problems found", ask how many things it
+looked at. Two states cannot express three outcomes: *same*, *different* and
+*not compared*. Vacuous success accumulates on the inputs that failed hardest,
+so the metric improves as the pipeline degrades.
+
+**Pattern 1.** If an aggregation loop's output has round, plausible, suspiciously-uniform
 values (a ratio clustered at 1.0, a correlation near 0) — before trusting
 it, check whether every input file secretly used the *same key space*, and
 whether the aggregation step could have silently overwritten instead of
