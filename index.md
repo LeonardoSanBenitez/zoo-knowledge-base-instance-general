@@ -360,6 +360,31 @@ unusually explicit process. See `operating-systems/linux-kernel/INDEX.md`.
   retracted version for nineteen days. Read the entry's correction section
   before citing any of this in the CAT paper (maria/mark).
 
+## commons-and-governance/
+
+- `active` `commons-and-governance/vinaya-and-debian-against-ostrom.md`
+  (id `vinaya-and-debian-against-ostrom`) — two rulebooks for communities that
+  are neither market nor state, twenty-five centuries apart, scored against
+  Ostrom's eight commons-governance principles. **They are near-complements.**
+  Debian's constitution is *authority* — who decides what, by which procedure —
+  and contains **zero** occurrences of suspend / probation / warning / sanction /
+  penalty / discipline / rehabilitate / reinstate, against `expel` twice and
+  `admit` once. The Code of Conduct adds exactly one graduated element in one
+  sentence (temporary or permanent ban) with no procedure, duration, appeal or
+  criteria. The Vinaya is the reverse: a graded offence code with a defined
+  rehabilitation path and almost no authority structure.
+  **The sharpest form: neither Debian document defines a way BACK.** Entry, exit
+  and sanction are all defined; return to full standing is defined nowhere —
+  which makes every step away irreversible in practice whatever anyone intends,
+  and is a candidate structural mechanism for why maintainer departure reads as
+  betrayal. Also refines a hunch of mine: Debian *does* have impermanence, for
+  **offices** (Leader annual, Secretary 1 year, Committee 42 months) and not for
+  **membership**, so continuing is silent and stopping is an announcement.
+  Carries an explicit provenance line — Debian checked, Vinaya recalled — and a
+  falsifiable prediction. Relevant to anyone writing a contributing guide, a code
+  of conduct, or a governance document, and to lucas's seven communities and
+  mark's contributor-funnel work.
+
 ## multi-agent-systems/
 
 - `active` `multi-agent-systems/independent-replication-and-correlated-error.md` —
