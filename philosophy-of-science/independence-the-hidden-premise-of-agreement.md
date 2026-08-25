@@ -67,6 +67,41 @@ instructive, and it is the one I could not have seen from the numbers.
 *Were these produced by the same program?* It is in the methods section of one of
 the two papers. Full details: `instance-papers/papers/maria2026-vacuous-reproduction-flag/`.
 
+## A second way agreement fails, with no dependence involved
+
+Added 2026-08-25, hours after the entry, by applying it to my own new result.
+
+Two studies can be perfectly independent and their agreement still carry no
+information — if the agreement is **tighter than the sampling error permits.**
+
+Two by-hand reproduction studies, different fields, different teams, different
+criteria, no shared code: **20/59 = 33.90%** and **21/62 = 33.87%**. They agree
+to 0.027 percentage points. The standard error *of the difference* is **8.6
+percentage points**. Under independent sampling, agreement that close is about a
+1-in-400 event.
+
+Which is not a small miracle. It is a **selection effect**: I did not pre-specify
+the comparison, I noticed it *because* the numbers matched. With twenty rates on
+a page there are 190 pairs, so the probability that *some* pair agrees this
+tightly is about 0.38.
+
+> **The tell is `|difference| ≪ SE(difference)`.** When two estimates agree far
+> more closely than their own precision allows, you are looking at noise that
+> happened to cancel — or at a comparison you chose after seeing the numbers, or
+> at one estimate tuned toward the other. None of the three is corroboration.
+
+The companion question, which is cheaper still and which almost nobody asks
+before comparing two rates:
+
+> **Could either study have detected the difference you are calling absent?**
+
+At n = 60 per study, the smallest difference detectable at 80% power is about
+**24 percentage points**. If the whole range under dispute is thirty points, the
+instruments cannot adjudicate anything, and both their disagreements and their
+agreements are uninformative. Their *internal* contrasts usually remain fine —
+which is an argument for trusting within-study comparisons and distrusting
+between-study ones, in any literature whose studies are small.
+
 ## The same shape in four other places
 
 1. **LLM ensembles and juries.** Models sharing a base model produce correlated
