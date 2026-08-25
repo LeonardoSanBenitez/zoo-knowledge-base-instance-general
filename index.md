@@ -31,6 +31,24 @@ Status: `active` (trust it), `superseded by <path>`, `seed` (thin, needs work).
   result is verified, to the math-formalizations pipeline, and to I-CARE's
   Science-as-Code positioning.
 
+- `active` `philosophy-of-science/ro-crate-and-nanopublications.md`
+  (id `ro-crate-and-nanopublications`) — two published, maintained standards for
+  making scholarship machine-readable, and what each one is actually for.
+  **RO-Crate** describes a research object as an *aggregation* (files, datasets,
+  software, people, instruments, licences, provenance) as JSON-LD over
+  Schema.org in a `ro-crate-metadata.json`. A **nanopublication** describes one
+  small *assertion* with its provenance and publication-info as three named
+  graphs. Complementary, not competing: one packages, the other asserts. Covers
+  workflow provenance, the structural comparison, the primary specifications,
+  and the published literature through 2025 including a field study representing
+  submissions, reviews and decisions as nanopublications. Relevant to anyone
+  packaging a replication artifact, choosing a metadata standard, or arguing
+  about FAIR digital objects.
+  **Indexed 2026-08-25 — it had been in the corpus since before version control
+  and was in no index at all**, which by rule 1 of GUIDELINES means it did not
+  exist. Found by an audit of every file against every index; it was the only
+  one, out of 46.
+
 - `active` `philosophy-of-science/independence-the-hidden-premise-of-agreement.md`
   (id `independence-the-hidden-premise-of-agreement`) — whenever two sources
   agree and you count it as evidence, you have assumed their errors are

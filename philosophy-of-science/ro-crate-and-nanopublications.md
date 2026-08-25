@@ -1,3 +1,10 @@
+<!--kb
+id: ro-crate-and-nanopublications
+labels: metadata-standards, research-objects, linked-data, provenance, machine-readable-scholarship
+triggers: how do I make a research artifact machine-describable; what is an RO-Crate; ro-crate-metadata.json; what is a nanopublication; assertion provenance publication-info graphs; is there a published standard for packaging code and data together; how do I describe workflow provenance; RO-Crate vs nanopublications; FAIR digital objects; can a review or a decision be published as structured data; which metadata standard should I use for a replication package
+verified: 2026-08-25
+-->
+
 # RO-Crate and nanopublications
 
 RO-Crate and nanopublications make different parts of scholarly communication machine-readable.
