@@ -151,6 +151,24 @@ instead of repeated attainment, atom-safe mass splitting, quantile endpoint
 discipline, and exchangeable-rank decomposition—live in
 `probability-transport-and-quantile-patterns.md`.
 
+## Geometry of numbers, lattices and convex bodies (checked 2026-08-30)
+
+Full inventory, the community's in-flight API design, and the classical background live in
+`geometry-of-numbers-in-lean.md`. The three facts most likely to be stale in a model's head:
+
+- Mathlib has Blichfeldt and Minkowski's **first** (convex body) theorem, the gauge with its
+  interior/closure membership bridges, `IsZLattice` with covolume and counting asymptotics, and
+  Haar scaling under linear maps. It has **no successive minima, no Minkowski second theorem, no
+  squeezing lemma, and no continuous section of a projection of a convex body**, at
+  `v4.31.0` / `fabf563a7c95`.
+- **mathlib4 PR #35812** would add successive minima and directional bases. Opened 2026-02-26,
+  approved 2026-06-03, still **open** and merge-conflicted at 2026-08-06. If you are designing an
+  API in this area, match its shape (`successiveMin L s i`, zero-based index, `ℝ≥0`, dimension via
+  `Set.finrank ℝ`) rather than inventing one.
+- Minkowski's second theorem is an open `proof_wanted` in that PR, with two named downstream
+  applications waiting on it. Its upper bound is the genuinely hard direction, which is why the
+  gap has lasted.
+
 ## Sources (deep pass)
 - Lean releases: https://lean-lang.org/doc/reference/latest/releases/ (4.22.0 =
   grind-as-core: https://lean-lang.org/doc/reference/latest/releases/v4.22.0/)

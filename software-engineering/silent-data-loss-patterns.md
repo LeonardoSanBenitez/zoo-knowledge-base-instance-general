@@ -1,7 +1,23 @@
+<!--kb
+id: se-silent-data-loss-patterns
+labels: kind:pattern-catalogue, area:software-engineering, status:active
+triggers: my check passed but did it read anything, a gate reported ok having read nothing,
+          empty result reads as success, no problems found but nothing was compared,
+          zero iterations passing test, vacuous success, all([]) is True,
+          fallback default indistinguishable from a real answer, json.loads(s or "{}"),
+          dict.get with a default feeding a decision, except return None treated as no,
+          subprocess text=True wrong encoding on windows, cp1252 UnicodeDecodeError from gh,
+          emoji in tool output breaks parsing, exit code 0 but no output,
+          aggregation overwrote instead of combining, dict.update last write wins,
+          ratio suspiciously exactly 1.0, plausible wrong numbers with no error,
+          how much of the collection did this statistic actually see
+verified: 2026-08-30
+-->
+
 # Silent data-loss patterns that produce plausible-looking wrong numbers
 
 Status: active. Author: lucas. Contributors: lucas, maria. Written 2026-07-02;
-Pattern 2 added 2026-08-25. Extend this file with new
+Pattern 2 added 2026-08-25; Pattern 3 (lucas) 2026-08-30. Extend this file with new
 entries rather than forking — the point is a running list of bug *shapes*,
 each one costly enough in a past collaboration to be worth the whole team
 recognizing on sight, not a general debugging essay.
@@ -145,7 +161,77 @@ nothing; a trigger splitter that handled one separator and quietly analysed 5 of
 23 entries; and this. **Before believing any statistic over a collection, ask
 what fraction of the collection it actually saw.**
 
+## Pattern 3: the fallback default that is indistinguishable from a legitimate answer
+
+**Where found:** `communities/tools/ledger.py`, the gate that reads a ticket's live state from
+GitHub before a contribution may be pitched (found and fixed 2026-08-30, lucas).
+
+**Shape.** A function fetches data, and on the path where the fetch produces nothing it falls back
+to a default that is *also a valid answer*:
+
+```python
+out = subprocess.run(["gh"] + args, capture_output=True, text=True)
+if out.returncode != 0:
+    raise ...
+return json.loads(out.stdout or "{}")      # <- the whole bug
+```
+
+The caller then asks the questions a gate asks: is it closed, is it assigned, what are its
+labels. Against `{}` those answer *not closed*, *not assigned*, *no labels*, which is exactly
+what a healthy unassigned open ticket looks like. **The gate passed having read nothing**, and
+printed the same line it prints on a real pass.
+
+**Why it survived review, which is the transferable part.** Three signals that normally catch
+this all pointed the other way:
+
+* **The exit code was 0.** `gh` succeeded; the failure was downstream, in Python's decoding of
+  the pipe.
+* **A traceback WAS printed** to stderr, and was ignored, because the command it belonged to
+  then reported success. A traceback followed by a success line reads as noise.
+* **The conclusion happened to be right.** The ticket really was open and unassigned, so
+  re-running the fixed check changed nothing about the outcome. A correct conclusion is not
+  evidence that a check ran.
+
+**The trigger in this case, which is a Windows trap worth knowing on its own:**
+`subprocess.run(..., text=True)` decodes the child's output with the **locale** codec, which is
+`cp1252` on a default Windows install, not UTF-8. GitHub serves UTF-8; one emoji in a pull
+request title was enough to raise `UnicodeDecodeError` inside the pipe decode, print that
+traceback, and hand back an empty `stdout`. Always name the encoding:
+`subprocess.run(..., encoding="utf-8", errors="replace")`. The same trap applies to any
+`text=True` over `git log`, `docker`, `kubectl` or any tool whose output can carry a name, an
+emoji or an accent.
+
+**The fix, in two halves, and the second is the general one.**
+
+1. Name the encoding, so the decode cannot fail into silence.
+2. **Refuse the empty case explicitly.** An empty result is not a passing result:
+
+```python
+body = (out.stdout or "").strip()
+if not body:
+    raise Refused("`gh ...` exited 0 and returned NOTHING, so this check read no data "
+                  "and cannot pass. An empty answer is not a passing answer.")
+```
+
+**Relation to Pattern 2.** Same family, different cause, and worth separating because the
+defences differ. Pattern 2 is *zero iterations*: the loop ran over nothing, so the diff list is
+empty. Pattern 3 is *a default standing in for missing data*: the loop had something to look at,
+and what it looked at was a fabrication. Pattern 2 is caught by counting what was examined;
+Pattern 3 is not, because the count is 1. It is caught only by making "I read nothing" a
+distinct, loud outcome at the point of the read.
+
+**Where else this idiom lives.** `json.loads(s or "{}")`, `d.get(key, {})` feeding a policy
+decision, `except Exception: return None` with a caller that treats `None` as "no", a config
+loader that returns `{}` when the file is missing, and every `||`/`or` fallback whose default is
+also a legal value. The question to ask of each: *if this default appears, can the caller tell
+whether it was measured or manufactured?* If not, the default is a lie with a plausible face.
+
 ## One-line summary usable elsewhere
+
+**Pattern 3.** If a gate passes, ask what it read. A fallback default that is also a legal
+answer (`{}`, `None`, `[]`, an empty string) makes "I read nothing" and "I read a clean result"
+the same value, and exit code 0 will not tell them apart. Make the empty case its own loud
+failure at the point of the read, and never let `text=True` pick the encoding for you.
 
 **Pattern 2.** If a check concludes "no problems found", ask how many things it
 looked at. Two states cannot express three outcomes: *same*, *different* and

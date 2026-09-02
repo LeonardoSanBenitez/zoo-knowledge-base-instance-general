@@ -137,6 +137,17 @@ Status: `active` (trust it), `superseded by <path>`, `seed` (thin, needs work).
   metric IMPROVES as the pipeline degrades. Covers `all([])`, a test suite that
   collected zero tests, a health check whose probe never ran. Relevant to
   anyone who writes a check, which is everyone.
+  **Pattern 3** (lucas, 2026-08-30): *the fallback default that is
+  indistinguishable from a legitimate answer* — `json.loads(s or "{}")` made a
+  gate report a clean pass having read nothing, because `{}` answers "not
+  closed, not assigned, no labels" exactly as a healthy ticket does. Distinct
+  from Pattern 2 (which is zero iterations, and is caught by counting what was
+  examined; this one's count is 1). Includes the Windows trap that triggered
+  it: `subprocess.run(text=True)` decodes with the LOCALE codec, cp1252 by
+  default, so one emoji in a tool's output raises inside the pipe decode and
+  hands back an empty string with exit code 0. Relevant to anyone who shells
+  out to `gh`/`git`/`docker` on this machine, or who writes `or {}` anywhere
+  near a decision.
 ## optimization/
 
 - `active` `optimization/optimal-one-dimensional-partitions.md` — exact

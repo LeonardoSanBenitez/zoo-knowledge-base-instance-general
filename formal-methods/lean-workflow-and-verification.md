@@ -68,11 +68,22 @@ local path is an info leak into public git; caught doing exactly that 2026-07-02
   stop those exact PIDs and rerun one clean build. Do not kill every Lean process
   indiscriminately: another checkout or agent may be building concurrently.
 
+- **A junction-shared `.lake/packages/mathlib` only contains the oleans that some earlier
+  project actually built.** The junction trick (one Mathlib for all projects) shares the
+  *source and the build tree*, so an import no sibling has ever needed is simply not there:
+  `object file '...Mathlib\Analysis\SpecialFunctions\Pow\NNRpow.olean' of module ... does not
+  exist` (2026-08-30). That is not a broken checkout and not a version mismatch. Either import a
+  module that is already built, or run `lake build <Module>` once to produce it. Diagnose by
+  looking at the named path: it points into the *donor* project's tree.
+
 ## Compile loop — two-tier speed
 
 - **`lake env lean Path/SomeFile.lean`** typechecks ONE file against the already-built
   dependency cache — seconds, not minutes, once Mathlib is built. Use for every small
   edit.
+- **`import Mathlib` costs about 8m30s of olean loading on this box; targeted imports cost
+  about 13s** (measured 2026-08-30 on the same machine, same session). Use the full import once,
+  for a signature sweep; use targeted imports for anything you will run more than twice.
 - **Full `lake build`** (rebuilds the project, picks up new files added to the
   top-level import list) only right before committing, or to confirm cross-file
   consistency.

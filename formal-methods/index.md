@@ -28,6 +28,7 @@ The triggers, and the file each maps to:
 | "I need to *find* a lemma or check a name before typing it." | `lean-workflow-and-verification.md` § search-before-guess |
 | "Planning HOW to structure a new formalization, before tactics." | `proof-design-patterns.md` |
 | "Formalizing probability laws, couplings, transport ambiguity, quantiles, or conformal ranks." | `probability-transport-and-quantile-patterns.md` |
+| "Formalizing lattices and convex bodies: successive minima, Minkowski's theorems, gauges, Haar measure on a subspace." | `geometry-of-numbers-in-lean.md` |
 | "What have we already formalized, and where is it?" | `dev-science-ops/math-formalizations/STATUS.md` (outside the KB — status is not knowledge) |
 
 ## The inversion this folder is built on
@@ -102,6 +103,18 @@ glance at the dates on the way past**, not just at the entry I came for.
   contraction, atom-safe lower quantiles and extremizers, exchangeable ranks with
   ties, and the population-containment obligation behind empirically selected
   ambiguity radii.
+
+- `active` `geometry-of-numbers-in-lean.md` — lattices and convex bodies: what Mathlib
+  has at `v4.31.0` (Blichfeldt, Minkowski's first theorem, gauge, `IsZLattice`, Haar
+  scaling and the `U ⊕ V` disintegration template) and what it does **not** (successive
+  minima, Minkowski's *second* theorem, the Tao-Vu squeezing lemma, continuous sections
+  of projections of convex bodies); the live mathlib4 PR #35812 whose API design you
+  should match rather than reinvent; the classical background (successive minima, which
+  direction of the second theorem is hard, the Betke-Henk-Wills conjecture and the chain
+  of known bounds); and four formalization consequences that transfer, including the
+  fibrewise-homothety Haar identity and using the gauge as the working vocabulary.
+  — for anyone starting a geometry-of-numbers or lattice-point formalization. Dated
+  2026-08-30; sections 1 and 2 rot.
 
 Our own formalizations — locations, coverage and contribution state — are recorded in
 `dev-science-ops/math-formalizations/STATUS.md`, not here. By the decision tree in

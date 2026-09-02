@@ -204,8 +204,41 @@ Fix proactively for a clean log; these are mechanical:
 - **`ContinuousLinearMap.{zero,add,smul}_apply` → plain `{zero,add,smul}_apply`**
   (namespace-only rename).
 - **`Expr.updateLet!` → `Expr.updateLetE!`**; `let_fun`/`letFun` deprecated → `have`.
+- **`le_or_lt` is gone at v4.31.0** (checked 2026-09-02); the trichotomy lemma is
+  **`le_or_gt (a b) : a ≤ b ∨ b < a`**. The failure is loud but the second error hides the
+  first: `Unknown identifier 'le_or_lt'` is followed by ``rcases failed: `x✝ : ?m` is not an
+  inductive datatype``, which reads like a `rcases` problem and is not. Note the second
+  disjunct is `b < a`, so `rcases le_or_gt x c with h | h` gives `x ≤ c` then `c < x`.
 - General move: look it up on **`mathlib-changelog.org`** rather than guessing the new
   name — deprecations rot this file fast, the changelog is live.
+
+## SYMPTOM: a definition by `sInf`/`sSup` over ℝ that is "obviously positive" and proves to be 0
+
+**`Real.sInf_empty : sInf ∅ = 0`** and **`Real.sInf_of_not_bddBelow : ¬BddBelow s → sInf s = 0`**
+(both checked at v4.31.0). `Real` is a *conditionally* complete lattice, so `sInf` is total by
+junk-value convention rather than partial. Consequences that bite:
+
+- A quantity defined as `sInf {r > 0 | P r}` **silently equals 0 for every index where `P` is
+  unsatisfiable**, so `0 < myInf` is not provable in general and every lemma about it needs an
+  explicit non-emptiness hypothesis. Write that hypothesis into the statement at definition time;
+  discovering it three files later means rewriting every downstream signature.
+- The mistake does not announce itself: the definition elaborates, the file compiles, and a
+  theorem quantified over all indices is simply false at the junk ones.
+- Because ℝ is only *conditionally* complete, the applicable lemmas are the `c`-prefixed ones,
+  and each carries the side condition the junk convention forces (signatures checked 2026-08-30):
+  `IsClosed.csInf_mem : IsClosed s → s.Nonempty → BddBelow s → sInf s ∈ s` for attainment,
+  `le_csInf : s.Nonempty → (∀ b ∈ s, a ≤ b) → a ≤ sInf s` for a lower bound,
+  `csInf_le : BddBelow s → a ∈ s → sInf s ≤ a`, and
+  `exists_lt_of_csInf_lt : s.Nonempty → sInf s < b → ∃ a ∈ s, a < b`.
+- Mathlib's own convention for indexed families, worth copying: shift the index so the junk
+  range is outside the intended one and prove the junk values equal 0 as `@[simp]` lemmas
+  (`successiveMin_of_finrank_le` in mathlib4 PR #35812 does exactly this).
+- One positive lemma that saves an `IsGLB` argument when such a definition is rescaled:
+  **`Real.sInf_smul_of_nonneg (ha : 0 ≤ a) (s : Set ℝ) : sInf (a • s) = a • sInf s`**
+  (`Mathlib/Data/Real/Pointwise.lean`, checked 2026-09-02; `Real.sInf_smul_of_nonpos` swaps to
+  `sSup`). So "this infimum scales with the parameter" reduces to proving the *defining set*
+  scales, which is usually a set identity and often `Set.smul_set_inter₀`. It needs no
+  non-emptiness: the junk value 0 scales correctly.
 
 ## SYMPTOM: `omit`/attribute placement parse errors
 
