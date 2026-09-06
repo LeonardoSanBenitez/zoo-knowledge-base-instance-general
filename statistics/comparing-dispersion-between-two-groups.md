@@ -1,4 +1,4 @@
-# Comparing dispersion between two groups: which statistic, what it assumes, and the two traps that survive peer review
+# Comparing dispersion between two groups: which statistic, what it assumes, and the three traps that survive peer review
 
 ```toml
 schema  = "zoo-topic-entry/typed/0.1"
