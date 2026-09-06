@@ -1,0 +1,210 @@
+# Comparing dispersion between two groups: which statistic, what it assumes, and the two traps that survive peer review
+
+```toml
+schema  = "zoo-topic-entry/typed/0.1"
+id      = "comparing-dispersion-between-two-groups"
+kind    = "synthesis"
+status  = "active"
+areas   = ["statistics"]
+authors = ["maria"]
+created = 2026-09-06
+updated = 2026-09-06
+verified = 2026-09-06
+confidence = "verified"
+triggers = [
+  "is group A more variable than group B",
+  "variability ratio versus coefficient of variation ratio",
+  "when should I use lnCVR instead of lnVR",
+  "is the coefficient of variation meaningful for this outcome",
+  "my CVR is below 1 and I do not know why",
+  "the SD is correlated with the mean, should I normalise",
+  "meta-analysis of variances not means",
+  "how do I pool a difference of two variances",
+  "inverse variance weighting when the weight contains the effect",
+  "does this intervention change the spread or only the average",
+  "how much of a mean-SD correlation is scale mixing",
+  "how do I know whether my estimate describes a corpus or one study",
+]
+sources = [
+  "Nakagawa et al. 2015, Meta-analysis of variation, Methods Ecol Evol 6:143-152 (eq. 9-13)",
+  "instance-papers/areas/treatment-effect-heterogeneity.md and the records under it",
+]
+see_also = ["the-specification-execution-gap", "construct-validity-and-formalization"]
+```
+
+Author: maria, 2026-09-06. Domain-neutral. Everything here was measured on a
+51,396-patient clinical corpus (`instance-papers/papers/ploderl2019-personalised-antidepressants`,
+`mccutcheon2022-reappraising-variability`), but nothing in it is clinical: the
+same three statistics appear whenever two groups are compared on spread rather
+than on location — A/B tests on variance, benchmark score dispersion across
+seeds, latency tails, model-output variability.
+
+Working code: `zoo-knowledge-base/tools/statlib.py` — `lnvr`, `lncvr`,
+`var_diff`, `max_loo_influence`, `re_meta`. Tested in `tools/test_statlib.py`.
+
+## The three statistics, and what each one assumes
+
+For two groups with means `m1, m2`, SDs `s1, s2`, sizes `n1, n2`:
+
+| | statistic | null it tests |
+|---|---|---|
+| **lnVR** | `ln(s1/s2)` + small-sample correction | *additive* homogeneity: the treatment shifts everyone by the same amount |
+| **lnCVR** | `ln((s1/m1)/(s2/m2))` + the same correction | *multiplicative* homogeneity: the treatment multiplies everyone by the same factor |
+| **D** | `s1² − s2²` | nothing; it is the raw identified quantity |
+
+They are not three views of one thing. Each is unbiased under its own null and
+badly wrong under the other's. On a corpus with **zero** individual variation by
+construction, an additive truth returns lnVR 0.999 / lnCVR 1.204, and a
+multiplicative truth returns lnVR 0.829 / lnCVR 0.999. **A 17–20% apparent
+effect can be manufactured by the choice alone.**
+
+## Trap 1: lnCVR is the mean ratio in disguise
+
+The small-sample corrections in Nakagawa eq. 9 and eq. 11 are **identical** and
+therefore cancel. So, per unit of analysis, exactly:
+
+    lnCVR − lnVR = ln(m2 / m1)
+
+Measured over 169 real studies, the largest absolute deviation from that
+identity is **2.8e-16** — machine epsilon. lnCVR carries no information beyond
+lnVR and the ratio of the two group means. If the groups differ in mean because
+the treatment works, **CVR is the treatment effect wearing a denominator.**
+
+### The consequence nobody notices until you look for it
+
+Because the mean ratio is doing the work, **the sign of a CVR result is set by
+the reporting convention, not by the data.** In one paper, on the same drugs,
+the same authors, the same statistic:
+
+| how the outcome was summarised | k | VR | CVR |
+|---|---|---|---|
+| pre–post **change** (treated group changes more) | 169 | 1.01 | **0.82** |
+| **endpoint** level (treated group ends lower) | 84 | 0.98 | **1.15** |
+| one subgroup, change | 11 | 1.04 | **0.65** |
+| the same subgroup, endpoint | 13 | 0.93 | **1.37** |
+
+VR is stable. CVR crosses 1, and moves by a factor of 2.1 in the subgroup.
+Nothing about the units of observation changed — only which of two
+mathematically equivalent summaries got published. The authors interpreted the
+0.82 substantively and wrote that it had "no immediately plausible explanation";
+the 1.15 was in a supplement and was not discussed.
+
+**Rule.** Before reporting any statistic, ask what it would do under an
+equivalent restatement of the same data. A quantity whose sign depends on a
+free choice of summary is measuring the choice.
+
+### "But the SD is correlated with the mean, so I should normalise"
+
+This is the standard justification and it needs two checks before it licenses
+anything.
+
+1. **Is the correlation within your unit of measurement, or across units?** In
+   the corpus above, r(mean, SD) across all studies was **+0.55**; pooled
+   *within* measurement instrument it was **+0.135**. **75% of it was
+   between-instrument mixing** — longer scales have both larger means and larger
+   SDs for reasons that have nothing to do with the treatment.
+2. **Is it even the right correlation?** An *across-study* correlation cannot
+   license a *within-study, between-group* division. The statistic that would is
+   `r(ln(m1/m2), ln(s1/s2))`, and there it was **+0.110, p = 0.154**.
+
+### What to do instead: estimate how much the SD scales with the mean
+
+Model `SD ∝ mean^λ`, so `lnVR = λ · ln(m1/m2)`. Then lnVR assumes λ = 0 and
+lnCVR assumes λ = 1, and **λ is estimable** instead of assumed.
+
+**The raw regression slope is not λ.** Regress lnVR on `ln(m1/m2)` in simulated
+worlds where λ is 0 and 1 by construction: the slopes come back +0.002 and
++0.517, so the estimator's own scale is **0.515**, not 1 — an uncalibrated slope
+understates λ roughly twofold (regression dilution: the observed log mean ratio
+carries its own sampling error). Rescale against both anchors:
+
+    λ̂ = (b_observed − b_at_λ=0) / (b_at_λ=1 − b_at_λ=0)
+
+with a bootstrap over units for the interval. On the corpus above,
+**λ = 0.098 [−0.024, 0.241]**: lnVR's assumption inside, lnCVR's far outside,
+and the published lnCVR applied **10.2×** the correction the data supported.
+
+Two simulated worlds and one regression. It is cheap, and it converts a silent
+assumption into a measured parameter with an interval.
+
+## Trap 2: pooling `D = s1² − s2²` by inverse-variance weighting is biased
+
+D is the attractive statistic — unbiased, sampling distribution known,
+**legitimately negative**, no square root, no branch choice. Then you pool it
+across studies and the obvious weight breaks it.
+
+The textbook normal-theory variance of a difference of sample variances is
+
+    v = 2 s1⁴/(n1−1) + 2 s2⁴/(n2−1)
+
+which makes the weight **a function of the same draw as the numerator**. When
+the two groups differ in size, the smaller group's `s⁴` dominates `v`, so
+whichever side is smaller has its deviations shrunk harder, and the pool drifts
+the other way.
+
+Measured on a real 169-study corpus where D was **0 by construction**:
+
+| | bias | coverage of a nominal 95% interval |
+|---|---|---|
+| naive weight, control group smaller | **+0.514** | 90.2% |
+| same, group sizes forced equal | +0.064 | 95.6% |
+| same, groups swapped | **−0.567** | 90.8% |
+| weight from the across-group pooled variance | **−0.003** | 96.6% |
+
+Three falsifiable predictions of the mechanism, all confirmed. **The fix** is a
+weight built from a quantity that does not contain the difference:
+
+    v = 2 s_p⁴ (1/(n1−1) + 1/(n2−1)),   s_p² = the across-group pooled variance
+
+verified at D = 0, +5 and −5. `statlib.var_diff(..., weight="pooled")`. A
+common-scale weight also works and is less efficient.
+
+**D carries units.** Squared points of one instrument are not squared points of
+another. On a corpus mixing four instruments, the unit-mixed pool moved further
+than any difference between the groups did — and the unit string in the record
+literally read "squared HAMD/MADRS points", two units in one field, which is
+what a unit error looks like when nothing checks units.
+
+## The check that neither simulation nor validation will do for you
+
+A contaminated-null simulation was built specifically to test whether the
+corrected weight had lost robustness — 129 studies at D = 0, one of them given a
+true SD ratio up to 2.7, 300 replicates. **It caught nothing**: both weights
+stayed near zero at every contamination level.
+
+On the real data the two weights differed by 1.46 on one subset, and **one study
+explained all of it** — deleting it moved the pooled D by 73% of its own CI
+half-width and flipped the sign.
+
+> **Simulation validates the estimator. Only leave-one-out validates the
+> corpus.** A simulated corpus departs from the null only where you made it, and
+> a real one departs where you did not think to look.
+
+Report `max |leave-one-out delta| / CI half-width` beside every pooled estimate
+(`statlib.max_loo_influence`). Above ~1 the estimate is describing one study, not
+a corpus. Do NOT assert a threshold in a test, though: one wild study also
+inflates τ² and widens the interval, so the ratio can stay under 1 while the
+estimate is still hostage to that study. It is a number to report, not a gate.
+
+## And the identification question, which comes first
+
+`VR` and `D` bound the dispersion of individual effects; they do not measure it.
+Write the variance of a treated outcome as
+
+    Var(Y1) = Var(Y0) + Var(δ) + 2ρ·SD(Y0)·SD(δ)
+
+where δ is the per-unit effect and ρ its correlation with the untreated outcome.
+`D = Var(δ) + 2ρ·SD(Y0)·SD(δ)`. **ρ is not observable in a between-group design
+at all** — no unit is seen under both conditions — and the implied SD(δ) moved
+by a factor of six across the ρ values one literature had used, on the same data.
+
+Two arms with identical means and SDs are equally consistent with a uniform
+effect and with a mixture in which a third of the units are transformed and the
+rest untouched. For a two-point mixture where a fraction p gets an extra δ,
+`Var(effect) = p(1−p)δ²`, so the whole "how big a subgroup could be hiding here"
+question is the single inequality `p(1−p)δ² ≤ D_upper` — closed form, no
+simulation grid.
+
+**Ask what the design identifies before auditing the estimator.** If the target
+is not identified, a reanalysis is about the estimator's behaviour, not about
+the world, and its first sentence should say so.

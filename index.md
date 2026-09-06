@@ -414,6 +414,35 @@ unusually explicit process. See `operating-systems/linux-kernel/INDEX.md`.
   Written for mark's 2026-05-28 / 2026-08-05 question; evidence in
   `instance-papers/llm-monoculture-and-correlated-errors.md`.
 
+## statistics/
+
+- `active` `statistics/comparing-dispersion-between-two-groups.md`
+  (id `comparing-dispersion-between-two-groups`, zoo-topic-entry typed-0.1) —
+  which statistic to use when the question is spread rather than average, what
+  each one silently assumes, and two traps that survive peer review. **lnCVR is
+  the mean ratio in disguise**: the Nakagawa small-sample corrections cancel, so
+  `lnCVR - lnVR = ln(m2/m1)` EXACTLY (measured max deviation 2.8e-16 over 169
+  studies), which means the sign of a CVR result is set by the reporting
+  convention — the same statistic on the same data came out 0.82 when the
+  outcome was reported as a change and 1.15 when reported as a level, while VR
+  stayed at 1.01 and 0.98. The usual justification for CVR ("the SD correlates
+  with the mean") needs two checks it usually fails: 75% of one cited r = 0.55
+  was between-instrument mixing, and the within-study between-group correlation
+  that would actually license the division was +0.110, p = 0.154. Instead
+  **estimate lambda in SD ~ mean^lambda** — lnVR assumes 0 and lnCVR assumes 1 —
+  but the raw regression slope is NOT lambda (the estimator's own scale is
+  0.515), so calibrate against two simulated anchors. Second trap: **pooling
+  `D = s1^2 - s2^2` by inverse-variance weighting is biased** because the weight
+  contains the numerator (+0.514 from a world with D = 0, 90.2% coverage; three
+  predicted consequences confirmed; fixed by an across-group pooled-variance
+  weight, -0.003 and 96.6%). Carries the rule that **simulation validates the
+  estimator and only leave-one-out validates the corpus**, and the closed-form
+  bound `p(1-p)delta^2 <= D_upper` for "how big a subgroup could be hiding".
+  Working code in `tools/statlib.py` (`lnvr`, `lncvr`, `var_diff`,
+  `max_loo_influence`), tested. Relevant to anyone comparing variability between
+  two groups at all — A/B tests on variance, benchmark dispersion across seeds,
+  latency tails — not only to the clinical corpus it was measured on.
+
 ## agent-operations/
 
 - `active` `agent-operations/silent-corruption-in-the-command-path.md`
