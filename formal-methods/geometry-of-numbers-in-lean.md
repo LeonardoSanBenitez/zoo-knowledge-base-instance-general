@@ -1,13 +1,13 @@
 <!--kb
 id: geometry-of-numbers-in-lean
 labels: lean, mathlib, geometry-of-numbers, lattices, convex-bodies, successive-minima, minkowski, haar-measure, gauge
-triggers: I am about to formalize something about lattices and convex bodies; does Mathlib have successive minima; is Minkowski's second theorem in Mathlib; what is in Mathlib's geometry of numbers file; how do I state a successive minimum in Lean; is there a Lean squeezing lemma; who in the Lean community is working on lattice point counting; what is the difference between Minkowski's first and second theorems; what is the Betke-Henk-Wills conjecture; how do I get a Haar measure on a subspace in Lean; how do I bridge set dilations and the gauge in Mathlib; is there a continuous section of a projection of a convex body in Mathlib
-verified: 2026-09-02
+triggers: I am about to formalize something about lattices and convex bodies; does Mathlib have successive minima; is Minkowski's second theorem in Mathlib; what is in Mathlib's geometry of numbers file; how do I state a successive minimum in Lean; is there a Lean squeezing lemma; who in the Lean community is working on lattice point counting; what is the difference between Minkowski's first and second theorems; what is the Betke-Henk-Wills conjecture; how do I get a Haar measure on a subspace in Lean; how do I bridge set dilations and the gauge in Mathlib; is there a continuous section of a projection of a convex body in Mathlib; how can I apply a measurable-set lattice counting theorem to a non-Borel convex body
+verified: 2026-09-04
 -->
 
 # Geometry of numbers in Lean: what exists, what does not, and how the classical objects are shaped
 
-Status: **active**. Author: lucas, 2026-08-30; section 4 extended 2026-09-02. Companion to `ecosystem-landscape.md`
+Status: **active**. Authors: lucas, 2026-08-30; cidral, section 4 corrected 2026-09-04. Companion to `ecosystem-landscape.md`
 (general tooling snapshot) and `proof-design-patterns.md` (domain-neutral architecture).
 
 Trigger for this file: **"I am about to formalize an argument about lattices and convex
@@ -161,15 +161,17 @@ lattice-and-convex-body argument.
   instance search. The proof of the scaling law is three set identities and
   `Real.sInf_smul_of_nonneg`: `(t • D) ∩ rΛ = r • ((r⁻¹t • D) ∩ Λ)`, dilation by a nonzero factor
   does not change a span, so the defining set of admissible scales scales, so its infimum does.
-* **A convex body is null-measurable, not measurable, and the distinction decides whether a
-  library theorem applies.** `Convex.addHaar_frontier` gives `μ (frontier s) = 0` for free, so a
+* **A convex body is null-measurable, not necessarily measurable; before adding `MeasurableSet`,
+  try a null-frontier sandwich.** `Convex.addHaar_frontier` gives `μ (frontier s) = 0` for free, so a
   paper's hypothesis "convex body with boundary of measure zero" is redundant and should be
-  dropped rather than assumed. But a convex set can differ from its interior by a non-Borel subset
-  of that frontier, so `MeasurableSet` does **not** follow, and every counting or volume theorem
-  stated with `MeasurableSet s` (the `tendsto_card_div_pow` family, for one) needs it as an added
-  hypothesis. It holds for any open or closed body, which is what concrete instances use. Trading
-  the paper's stated hypothesis for a different one is the honest move here, not a strengthening
-  to hide.
+  dropped rather than assumed. A convex set can still differ from its interior by a non-Borel
+  subset of that frontier, so `MeasurableSet s` does **not** follow and the
+  `tendsto_card_div_pow` family cannot be applied to `s` directly. For a monotone quantity such as
+  lattice-point count, apply the theorem separately to the measurable sets `interior s` and
+  `closure s`, sandwich the quantity for `s` between them, and use
+  `measure_interior_of_null_frontier` and `measure_closure_of_null_frontier` to identify both
+  limits. This removes the extra measurability hypothesis entirely; add one only when the target
+  quantity admits no such squeeze.
 * **`Set.finrank ℝ` over `ℝ` and over `ℤ` agree on subsets of a discrete subgroup**
   (`Real.finrank_eq_int_finrank_of_discrete` at the v4.31.0 pin; renamed to
   `setFinrank_real_eq_setFinrank_int_of_discrete` on master since 2026-05-31). Needed whenever a
