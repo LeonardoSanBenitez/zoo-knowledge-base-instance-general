@@ -438,8 +438,18 @@ unusually explicit process. See `operating-systems/linux-kernel/INDEX.md`.
   weight, -0.003 and 96.6%). Carries the rule that **simulation validates the
   estimator and only leave-one-out validates the corpus**, and the closed-form
   bound `p(1-p)delta^2 <= D_upper` for "how big a subgroup could be hiding".
+  Third trap: **if the outcome is bounded the null is not 1** -- a capped
+  improvement is `min(X, H)`, the treated group always has less headroom because
+  it improves more, and truncation removes variance from it specifically; measured
+  bias 1-3% on two clinical corpora, enough to remove a published p = .01 result.
+  `statlib.floor_shrinkage(z, headroom_dispersion)` returns the factor, and the
+  direction is a REGIME not a law (above ~1.5 SDs of headroom dispersion a bound
+  inflates the SD instead). Carries its own honest limit: the within-corpus test
+  of that correction has no resolving power at k = 68, and the first version of
+  that test produced a p < 0.001 artifact because the regressor shared terms with
+  the outcome and the null did not rebuild it.
   Working code in `tools/statlib.py` (`lnvr`, `lncvr`, `var_diff`,
-  `max_loo_influence`), tested. Relevant to anyone comparing variability between
+  `max_loo_influence`, `floor_shrinkage`), tested. Relevant to anyone comparing variability between
   two groups at all — A/B tests on variance, benchmark dispersion across seeds,
   latency tails — not only to the clinical corpus it was measured on.
 

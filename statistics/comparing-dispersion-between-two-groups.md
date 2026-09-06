@@ -24,6 +24,10 @@ triggers = [
   "does this intervention change the spread or only the average",
   "how much of a mean-SD correlation is scale mixing",
   "how do I know whether my estimate describes a corpus or one study",
+  "my outcome has a floor, does that bias the variance comparison",
+  "truncation at a scale minimum and the standard deviation",
+  "what is the null for a variability ratio on a bounded scale",
+  "my regressor and my outcome share a term, how do I build the null",
 ]
 sources = [
   "Nakagawa et al. 2015, Meta-analysis of variation, Methods Ecol Evol 6:143-152 (eq. 9-13)",
@@ -164,6 +168,54 @@ another. On a corpus mixing four instruments, the unit-mixed pool moved further
 than any difference between the groups did — and the unit string in the record
 literally read "squared HAMD/MADRS points", two units in one field, which is
 what a unit error looks like when nothing checks units.
+
+## Trap 3: if the outcome is bounded, the null is not 1
+
+An outcome with a floor (a symptom scale that stops at zero, a count, any capped
+improvement) is measured as an improvement `X` from a starting point, and cannot
+exceed the **headroom** `H = start - floor`. What gets recorded is `min(X, H)`.
+Truncation removes variance, and one dimensionless number governs how much:
+
+    z = (mean headroom - mean improvement) / SD(improvement)
+
+**The treated group always has the smaller z, because it improves more.** So a
+bounded scale moves the variability ratio away from 1 in a fixed direction,
+before any difference between the groups exists.
+
+`statlib.floor_shrinkage(z, headroom_dispersion)` returns
+`SD(recorded)/SD(true)`, where `headroom_dispersion` is `SD(H)` in units of
+`SD(X)`:
+
+| z | hd=0 | hd=0.5 | hd=1.0 | hd=1.5 | hd=2.0 |
+|---|---|---|---|---|---|
+| 0.5 | 0.744 | 0.761 | 0.839 | 0.997 | **1.208** |
+| 1.0 | 0.867 | 0.857 | 0.872 | 0.962 | **1.127** |
+| 1.5 | 0.942 | 0.928 | 0.913 | 0.950 | **1.065** |
+| 2.0 | 0.981 | 0.968 | 0.948 | 0.954 | **1.025** |
+| 3.0 | 1.000 | 0.998 | 0.988 | 0.976 | 0.993 |
+
+**The direction is a regime, not a law.** A headroom that varies across subjects
+adds variance of its own, and above roughly 1.5 improvement-SDs of dispersion the
+addition wins and the bound *inflates* the recorded SD. I asserted "a floor biases
+variability downward" as a law before computing this table, and the table refuted
+it.
+
+Measured on two clinical corpora at z between 1.5 and 2.5, the bias in VR is
+**1 to 3%** — which happened to be the size of every effect either literature had
+ever reported. In one of them the published, significant result (VR = 0.97,
+p = .01) stops excluding 1 once the bias is subtracted.
+
+**Two things this does not license.** It is a *model* — a normal improvement
+truncated at a normal headroom — and the within-corpus test that would confirm it
+had **no resolving power** on the only corpus that could support it: the
+simulated no-mechanism and mechanism-only anchors were separated by 0.52 of their
+own noise at k = 68, because the predicted per-trial bias spans 0.11 log units
+against a per-trial sampling SD of 0.10. Any correction from this table must be
+labelled model-based. And the first version of that test *did* produce a
+`p < 0.001` result, which was an artifact: the regressor `z` contains the same
+group SDs as `lnVR = log(s1/s2)`, and holding the regressor fixed across
+simulated replicates broke that coupling in the null only. **When a regressor is
+built from the same quantities as the outcome, the null must rebuild it too.**
 
 ## The check that neither simulation nor validation will do for you
 
