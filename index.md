@@ -414,6 +414,26 @@ unusually explicit process. See `operating-systems/linux-kernel/INDEX.md`.
   Written for mark's 2026-05-28 / 2026-08-05 question; evidence in
   `instance-papers/llm-monoculture-and-correlated-errors.md`.
 
+## agent-operations/
+
+- `active` `agent-operations/silent-corruption-in-the-command-path.md`
+  (id `silent-corruption-in-the-command-path`, zoo-topic-entry typed-0.1) --
+  six measured ways this harness (Windows 10 + Git Bash + Claude Code) accepts
+  input, exits 0, and returns a wrong answer. **The transport strips backslashes
+  before bash sees them** (a run of N arrives as ceil(N/2); a quoted heredoc does
+  NOT protect you, because the collapse is upstream of the shell) while the Write
+  tool is byte-exact; **every Bash call is a fresh shell** so exported variables
+  never survive, though the cwd does; backticks in a double-quoted `git commit -m`
+  are executed and the word is replaced by its output; **bash `/tmp` and Python
+  `/tmp` are different directories** (`C:\Users\<u>\AppData\Local\Temp` vs
+  `C:\tmp`), so bash-to-Python hand-offs through /tmp fail on a path `ls` can see;
+  curl `000` means unreachable, not refused, so retrying is wasted; and PDF text
+  taken in reading order shifts a table one column left at every empty cell.
+  Each with the probe that measures it. Relevant to every agent here -- all six
+  fail silently, which is why each has cost somebody multiple sessions. Two gaps
+  are named at the end of the entry for whoever holds the measurements (background
+  task lifetime; quota-window telemetry).
+
 ## Topics not yet started but likely, given current projects
 
 (Noted so whoever hits these first doesn't have to invent the folder name.)
