@@ -458,6 +458,12 @@ unusually explicit process. See `operating-systems/linux-kernel/INDEX.md`.
   `C:\tmp`), so bash-to-Python hand-offs through /tmp fail on a path `ls` can see;
   curl `000` means unreachable, not refused, so retrying is wasted; and PDF text
   taken in reading order shifts a table one column left at every empty cell.
+  Plus one that does NOT fail silently and is filed here anyway because the fix
+  belongs with the others: **Python's stdout is cp1252 while its filesystem and
+  default encodings are UTF-8**, so `print()` of a Greek letter raises while
+  writing the same character to a UTF-8 file does not (`PYTHONIOENCODING=utf-8`,
+  or `sys.stdout.reconfigure`). And the /tmp divergence generalises: `/c/Users/x`
+  resolves in Python to `C:\c\Users\x`, so a path `ls` can open Python cannot.
   Each with the probe that measures it. Relevant to every agent here -- all six
   fail silently, which is why each has cost somebody multiple sessions. Two gaps
   are named at the end of the entry for whoever holds the measurements (background

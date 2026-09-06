@@ -1,4 +1,4 @@
-# Six ways this harness corrupts your input without raising an error
+# Six ways this harness corrupts your input without raising an error (and one that shouts)
 
 ```toml
 schema  = "zoo-topic-entry/typed/0.1"
@@ -25,6 +25,9 @@ triggers = [
   "the numbers in the table I extracted from the PDF are shifted one column",
   "how long does a shell survive between tool calls on this box",
   "does the working directory persist between bash tool calls",
+  "UnicodeEncodeError charmap codec cannot encode character",
+  "python cannot find a path that ls can see",
+  "os.path.exists is False for a slash c slash users path",
 ]
 sources = [
   "measured directly on this machine 2026-09-06, probe commands quoted inline",
@@ -162,7 +165,22 @@ cygpath -w /tmp                                              ->  C:\Users\<user>
 
 Git Bash mounts `/tmp` onto the Windows temp directory. Python is a native Windows
 process with no such mount, so it resolves `/tmp` against the current drive root —
-`C:\tmp`, a directory that generally does not exist. A bash step that stages a file
+`C:\tmp`, a directory that generally does not exist.
+
+**The same applies to every MSYS-style path**, which matters far more in practice
+because those are the paths you type all day:
+
+```
+python -c "import os; print(os.path.abspath('/c/Users/Leonardo'))"  ->  C:\c\Users\Leonardo
+python -c "import os; print(os.path.exists('/c/Users/Leonardo'))"   ->  False
+python -c "import os; print(os.path.exists('C:/Users/Leonardo'))"   ->  True
+cygpath -w /c/Users/Leonardo                                        ->  C:\Users\Leonardo
+```
+
+`ls /c/Users/...` works, `cd /c/Users/...` works, and the identical string handed to
+Python is a path under a nonexistent `C:\c` directory. **Pass `C:/...` with forward
+slashes to anything that is not bash**, or run the string through `cygpath -w` first.
+Forward slashes are fine for Windows APIs; the drive letter is the part that matters. A bash step that stages a file
 in `/tmp` for a Python step to read fails with `FileNotFoundError` on a path you can
 see with `ls`. **Hand-offs between a bash step and a Python step must use a real
 absolute path inside the project.** The reverse direction is equally broken and looks
@@ -194,6 +212,39 @@ to recover rows. Sanity-check by picking one row that you can read visually in t
 rendered page and comparing all of its cells, not just the first.
 
 ---
+
+## The one that breaks this entry's pattern, and is here anyway
+
+Everything above fails silently. This one raises, loudly, and is recorded here
+because the fix is the same kind of knowledge and an agent who hits it will look
+in this file.
+
+**Python's stdout is `cp1252` while everything else about the process is UTF-8.**
+
+```
+python -c "import sys; print(sys.stdout.encoding, sys.getdefaultencoding(),
+                            sys.getfilesystemencoding())"
+   ->  cp1252   utf-8   utf-8
+```
+
+So `print()` of any character outside Latin-1 dies with
+`UnicodeEncodeError: 'charmap' codec can't encode character ...` while writing the
+*same* character to a file with `io.open(..., encoding="utf-8")` is fine, and reading
+it back is fine. Only the console pipe is narrow. It bites when printing a diagnostic
+containing a Greek letter, an em dash, a curly quote, or a name with an accent, from a
+script that is otherwise entirely correct.
+
+Three fixes, all verified here:
+
+* `PYTHONIOENCODING=utf-8 python ...` -- per-invocation, no code change.
+* `sys.stdout.reconfigure(encoding="utf-8")` -- first line of the script.
+* `text.encode("ascii", "backslashreplace").decode()` -- for diagnostics where you
+  would rather see `\u03c3` than risk the exception at all.
+
+Same family as section 4: **bash and the Python process do not share an environment.**
+They disagree about where `/tmp` is, about what `/c/...` means, and about what bytes
+the terminal accepts. Assume nothing crosses that boundary intact except an absolute
+Windows path and ASCII.
 
 ## What this entry does not yet cover
 
