@@ -24,6 +24,8 @@ triggers = [
   "does this intervention change the spread or only the average",
   "how much of a mean-SD correlation is scale mixing",
   "how do I know whether my estimate describes a corpus or one study",
+  "what variability ratio could this meta-analysis have detected",
+  "minimum detectable effect for a variance comparison",
   "my outcome has a floor, does that bias the variance comparison",
   "truncation at a scale minimum and the standard deviation",
   "what is the null for a variability ratio on a bounded scale",
@@ -220,6 +222,20 @@ labelled model-based. And the first version of that test *did* produce a
 group SDs as `lnVR = log(s1/s2)`, and holding the regressor fixed across
 simulated replicates broke that coupling in the null only. **When a regressor is
 built from the same quantities as the outcome, the null must rebuild it too.**
+
+## Before anything else: what could this design have seen?
+
+`var(lnVR) = 1/(2(n1−1)) + 1/(2(n2−1))` per study depends on **group sizes only**
+— not on the SDs, not on the effect, not on the scale. So the resolving power of a
+dispersion comparison is fixed the moment the studies are counted, and it can be
+computed from an abstract. `statlib.mde_variability_ratio(k, n_total, split)`.
+
+Measured across four clinical literatures that all report "no difference in
+variability": the largest corpora resolve **1.016–1.018**, the mid-sized ones
+**1.031–1.038**, and a 2026 application with 15 studies and 1,141 participants
+resolves **1.126** — which cannot see any effect that field has ever argued
+about. A null result says nothing about any ratio below its own limit, and that
+limit is almost never reported.
 
 ## The check that neither simulation nor validation will do for you
 
