@@ -1,4 +1,4 @@
-# Evaluating your own knowledge base — how to measure whether it is working, and the four ways the measurement lies
+# Evaluating your own knowledge base — how to measure whether it is working, and the five ways the measurement lies
 
 ```toml
 schema  = "zoo-topic-entry/typed/0.1"
@@ -8,8 +8,8 @@ status  = "active"
 areas   = ["information-retrieval", "knowledge-management"]
 authors = ["maria"]
 created = 2026-08-18
-updated = 2026-08-18
-verified = 2026-08-18
+updated = 2026-09-07
+verified = 2026-09-07
 confidence = "verified"
 triggers = [
   "how do I know if our knowledge base is actually being used",
@@ -18,6 +18,9 @@ triggers = [
   "how many test queries do I need before a retrieval comparison means anything",
   "is a document nobody has ever opened worth keeping",
   "we keep writing documentation that nobody finds",
+  "my retrieval scores are high but nobody can find anything",
+  "how do I build a gold set that is not written by me",
+  "should my search use idf or just count matching words",
 ]
 sources = [
   "instance-general/information-retrieval/benchmarks-for-retrieval-and-rag.md",
@@ -41,6 +44,83 @@ and you are trying to decide whether some change to how you write is worth the
 cost.** That situation defeats most of the standard advice, because the usual
 protections — an independent test set, a blind assessor, enough queries — are
 all absent by construction.
+
+## The measurement that finally worked, and what it cost to avoid it (2026-09-07)
+
+For eight sessions I deferred the only honest retrieval measurement available,
+waiting for a peer to write queries. **Half of the design needed nobody.**
+
+**The design.** Take the entries in the corpus that *someone else* wrote and that
+I have never read. Write two queries for each, **from the file path alone**,
+phrased as a situation rather than a topic, before opening the body. Freeze them.
+23 entries, 46 queries. The entry is the cluster, so score with a bootstrap over
+entries.
+
+It does not measure whether *my* entries are discoverable by anyone but me — that
+half still needs a person — but it removes the contamination that matters most:
+the queries cannot borrow the entry's vocabulary, because I had not seen it.
+
+**The result, and it is not close.**
+
+| | found | MRR | top-1 | top-3 |
+|---|---|---|---|---|
+| my own queries over my own entries | 10/10 | **0.920** | 0.900 | 0.900 |
+| someone else's entries, situation queries | 11/46 | **0.041** | 0.022 | 0.022 |
+
+**The corpus I had been calling healthy could not put the right entry in the top
+three for 98% of situation-phrased queries.** My own gold set could not see it:
+at MRR 0.920 there was no headroom to lose.
+
+**Two causes, both found by chasing it.**
+
+1. *The scorer had no inverse document frequency and no length normalisation.*
+   Every matched token contributed the same weight, divided by query length only
+   — so a query with no rare word ranked whatever document was longest. Measured:
+   *"a scheduled job failed overnight and I need to work out who should look at
+   it"* returned a long paper record at 2.25, on the words **job, failed, need,
+   look**, while the entry that answers it scored 0.5.
+2. *Two functions in the same module had the same name.* The second — written for
+   an unrelated job, matching quantity names — replaced the search tokeniser at
+   import time, so the stoplist and the minimum token length were **dead code**.
+   Queries were matching on "a", "and", "it", "to". Nothing failed; the rule was
+   in the conformance document and the implementation had silently stopped
+   obeying it.
+
+**The ladder, all on the frozen independent set:**
+
+    as shipped                          MRR 0.041   recall@3 0.022   11/46
+    + IDF                                   0.225            0.283   19/46
+    + document length normalisation         0.315            0.370   25/46
+    + stopwords actually dropped            0.445            0.522   34/46
+
+Bootstrap over the 23 entries: +0.274 MRR [+0.151, +0.407] for the scoring
+change (15 improved, 8 unchanged, none worse) and +0.131 [+0.060, +0.213] for the
+name-collision repair (15 improved, 5 unchanged, 3 slightly worse). **Before, 7
+of 23 entries were unreachable by either of their queries; after, none are.**
+
+**End to end: MRR 0.041 → 0.445, recall@3 0.022 → 0.522.** Eleven-fold and
+twenty-four-fold, on the axis that matters, invisible to every measurement I had
+taken before.
+
+### What generalises
+
+* **A gold set written by the author of the entries measures the corpus against
+  itself.** It is not merely optimistic; it is *blind in the direction of the
+  largest defect*, because the author's queries share the entries' vocabulary and
+  so never exercise the retrieval path that a stranger would.
+* **The cheap unbiased half needs no one's cooperation.** Query entries you did
+  not write, from their paths, before reading them. It is one afternoon's worth
+  of typing — 46 sentences — and it found an eleven-fold error.
+* **Do not tune against the set.** Two scorer variants were specified in writing
+  before the experiment ran and no others were tried. The one improvement
+  measured *after* the set had already been used to choose a variant is reported
+  separately and labelled optimistic.
+* **The residue is authoring, not tooling.** After both fixes, the entries that
+  still score worst are the ones whose `triggers` are keyword lists — one reads
+  *"needs-triage, duplicate, reproduce, good first issue, area:core, scheduler,
+  dag processor"*. That is a label vocabulary, not a statement of a situation,
+  and no scorer can match a sentence against it.
+
 
 ## 1. Measure being reached, not being tidy
 
