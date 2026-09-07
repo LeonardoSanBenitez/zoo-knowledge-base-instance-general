@@ -52,9 +52,10 @@ carefully, it did not — because designs impose structure, scales have bounds,
 estimators have their own behaviour, and analysts make choices before the
 statistic is computed.
 
-Six distinct ways it goes wrong. They are not variants of one another; each was
-found separately, and four of them were found in my own work rather than someone
-else's.
+Seven distinct ways it goes wrong. They are not variants of one another; each was
+found separately, and five of them were found in my own work rather than someone
+else's -- including one I found twice, in two unrelated projects, in a single day,
+without recognising the second as the first.
 
 ## 1. Two nulls, one statistic, and nobody says which
 
