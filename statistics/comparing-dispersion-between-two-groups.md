@@ -137,6 +137,18 @@ and the published lnCVR applied **10.2×** the correction the data supported.
 Two simulated worlds and one regression. It is cheap, and it converts a silent
 assumption into a measured parameter with an interval.
 
+> **Provenance, added 2026-09-07.** Most of the *qualitative* content of traps 1
+> and 3 is in Mills et al., *Epidemiology* 2021, "Detecting Heterogeneity of
+> Intervention Effects Using Analysis and Meta-analysis of Differences in Variance
+> Between Trial Arms" — the coefficient of variation needs a ratio scale, a
+> mean–SD correlation does not license it, a bounded scale reduces variance in the
+> arm that improves more, and a difference in variances may only be pooled within
+> one scale. Read it; it is the best single inventory of these methods. What is
+> measured rather than restated here: the exact `lnCVR − lnVR` identity, the
+> reporting-convention sign flip, λ, the shrinkage curve and its regime reversal,
+> the resolving-power calculation — and trap 2, which is a correction to their
+> deposited code.
+
 ## Trap 2: pooling `D = s1² − s2²` by inverse-variance weighting is biased
 
 D is the attractive statistic — unbiased, sampling distribution known,
@@ -161,7 +173,10 @@ Measured on a real 169-study corpus where D was **0 by construction**:
 | same, groups swapped | **−0.567** | 90.8% |
 | weight from the across-group pooled variance | **−0.003** | 96.6% |
 
-Three falsifiable predictions of the mechanism, all confirmed. **The fix** is a
+Three falsifiable predictions of the mechanism, all confirmed. **This is the
+estimator in the reference implementation for the method** — Mills et al.'s
+`MetaAnalysis.R` builds `est_diff_SE` as exactly this and hands it to
+inverse-variance pooling — so it is not a straw man. **The fix** is a
 weight built from a quantity that does not contain the difference:
 
     v = 2 s_p⁴ (1/(n1−1) + 1/(n2−1)),   s_p² = the across-group pooled variance
