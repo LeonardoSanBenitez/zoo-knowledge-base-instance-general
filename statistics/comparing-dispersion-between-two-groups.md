@@ -1,4 +1,4 @@
-# Comparing dispersion between two groups: which statistic, what it assumes, and the three traps that survive peer review
+# Comparing dispersion between two groups: which statistic, what it assumes, and the four traps that survive peer review
 
 ```toml
 schema  = "zoo-topic-entry/typed/0.1"
@@ -28,6 +28,10 @@ triggers = [
   "truncation at a scale minimum and the standard deviation",
   "what is the null for a variability ratio on a bounded scale",
   "my regressor and my outcome share a term, how do I build the null",
+  "does improvement depend on baseline severity",
+  "is my correlation between baseline and change spurious",
+  "mathematical coupling Oldham 1962",
+  "proportional recovery rule",
 ]
 sources = [
   "Nakagawa et al. 2015, Meta-analysis of variation, Methods Ecol Evol 6:143-152 (eq. 9-13)",
@@ -237,6 +241,53 @@ Report `max |leave-one-out delta| / CI half-width` beside every pooled estimate
 a corpus. Do NOT assert a threshold in a test, though: one wild study also
 inflates τ² and widens the interval, so the ratio can stay under 1 while the
 estimate is still hostage to that study. It is a number to report, not a gate.
+
+## The fourth trap, which is the same trap: correlating a change with its own baseline
+
+Everything above compares two groups. The same algebra governs a design that looks
+unrelated — one group, measured twice, asking whether *how much you improve*
+depends on *where you started*. Write baselines `X`, follow-ups `Y`, change
+`D = Y − X`. Then
+
+    r(X,D) = [s_Y·r(X,Y) − s_X] / sqrt(s_Y² + s_X² − 2·s_X·s_Y·r(X,Y))
+
+so `r(X,D)` is a function of `r(X,Y)` and the **same variability ratio**
+`s_Y/s_X` this entry has been about all along. Consequences:
+
+* **When `s_Y/s_X` is small, `r(X,D)` is driven toward −1 whatever `r(X,Y)` is.**
+  At `s_Y/s_X = 0.158`, `r(X,D)` cannot exceed −0.987 for any non-negative
+  `r(X,Y)`. A "correlation of −0.97 between initial severity and improvement" is
+  then not a finding; it is the ratio.
+* **The canonical case:** X and Y independent with equal variance gives
+  `r(X,D) = −1/sqrt(2) = −0.707`. Oldham noticed this in 1962 and it keeps being
+  rediscovered.
+* **A bound makes `s_Y/s_X` small** — which is trap 3 arriving from the other
+  direction. So a ceiling manufactures a strong baseline–change correlation with
+  no differential response anywhere.
+* **`r(X,Y)` and `r(X,D)` have identical residuals.** Fitting change instead of
+  outcome does not change which cases are outliers; it only inflates the effect
+  size.
+
+**And this is the same identity as the treatment-effect one.** In a two-arm trial,
+write a participant's treated outcome as `Y1 = Y0 + δ`. Then the correlation
+between the individual effect and the control-arm outcome *is* `r(X,D)`, and the
+variability ratio *is* `s_Y/s_X` — verified as functions to machine zero on a
+40×40 grid. Two literatures have been arguing about one theorem under two names,
+one tracing to Oldham (1962), the other to Nakagawa (2015), neither citing the
+other.
+
+**The difference that matters is observability, not mathematics.** When both
+measurements are taken on the same unit, `r(X,Y)` is estimable and the identity
+*pins* the answer: the correlation is spurious and you can prove it. When one of
+the two is counterfactual — the participant is never observed under both
+conditions — `r(X,Y)` is not estimable, and the same parameter is not merely
+mis-estimated but **unidentified**. Same equation, remediable by reporting in one
+case and requiring a different experiment in the other.
+
+**Practical rule.** Never report `r(baseline, change)` alone. Report
+`r(X,Y)`, `r(X,D)` and `s_Y/s_X` together, on the *whole* sample before any
+subgroup split — and if you are comparing two arms rather than two timepoints,
+know that you are reporting two of the three and assuming the missing one.
 
 ## And the identification question, which comes first
 

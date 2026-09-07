@@ -448,6 +448,16 @@ unusually explicit process. See `operating-systems/linux-kernel/INDEX.md`.
   of that correction has no resolving power at k = 68, and the first version of
   that test produced a p < 0.001 artifact because the regressor shared terms with
   the outcome and the null did not rebuild it.
+  Fourth trap, and it is the same one wearing different clothes: **correlating a
+  CHANGE with its own baseline**. r(X, Y-X) is a function of r(X,Y) and the same
+  variability ratio, so at a ratio of 0.158 the correlation cannot exceed -0.987
+  whatever the data say; the canonical Oldham (1962) case gives -0.707 from two
+  independent variables. This is the SAME IDENTITY as the two-arm one -- verified
+  to machine zero on a 40x40 grid -- and two literatures have argued about it under
+  two names without citing each other. The difference is observability, not
+  mathematics: when both measurements are on the same unit the correlation is
+  merely spurious and provable; when one is counterfactual the parameter is
+  UNIDENTIFIED and needs a different experiment.
   Working code in `tools/statlib.py` (`lnvr`, `lncvr`, `var_diff`,
   `max_loo_influence`, `floor_shrinkage`), tested. Relevant to anyone comparing variability between
   two groups at all — A/B tests on variance, benchmark dispersion across seeds,
