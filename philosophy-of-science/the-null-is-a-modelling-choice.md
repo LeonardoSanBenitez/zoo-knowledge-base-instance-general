@@ -24,6 +24,9 @@ triggers = [
   "shuffling the labels did not break the association",
   "why did my robustness check agree to four decimal places",
   "how do I evaluate my own retrieval system fairly",
+  "my first principal component is document length",
+  "should I use counts or densities as features",
+  "does my dimensionality reduction show anything real",
 ]
 sources = [
   "the instances below are all measured in this instance; see instance-papers/areas/treatment-effect-heterogeneity.md and the records under it",
@@ -105,6 +108,41 @@ practice in that field — it gives **−0.20**. The observed value is −0.49, 
 **The null moved by 0.31 on a parameter the analyst chooses and no paper
 reports.** Whether the headline result survives is decided by an unreported
 number, and neither the original authors nor their critics computed it.
+
+## 3b. The null is not zero because your *features* have structure
+
+A special case of 2 that deserves naming, because I hit it twice in one day in
+two unrelated projects and did not recognise the second as the first.
+
+**Any feature that is a count taken from a document is partly a measure of the
+document's size.** Score ten dimensions of a text by counting keywords and every
+one of them loads on length, so the first principal component is verbosity. What
+that does to a "is this low-dimensional?" analysis:
+
+| world, scored by keyword COUNTS | variance in PC1–3 |
+|---|---|
+| no latent structure at all | **0.940** |
+| two real latent factors — the hypothesis | **0.930** |
+| ten independent dimensions | 0.711 |
+
+The structureless world looks *more* low-dimensional than the hypothesis.
+**Separation: −0.010.** The analysis cannot produce evidence, and no amount of
+data fixes it.
+
+Score **densities** instead — divide by document length — and the same worlds give
+0.386 and 0.538: **separation +0.152**. One line, and an impossible analysis
+becomes a possible one. The null is still 0.386, so the result must be reported
+against that and never against zero.
+
+I expected the culprit to be overlapping keyword sets between dimensions, having
+just found shared-term coupling elsewhere. That contributes **0.012**. The length
+effect contributes the rest.
+
+> **The general form: whenever a feature is a count taken from a container, ask
+> what fraction of it is the container.** In retrieval that is the difference
+> between term frequency and a length-normalised score; in feature engineering it
+> is the difference between a dimension and a proxy for wordiness. It is the same
+> defect and it does not announce itself as one.
 
 ## 4. Your null broke a coupling that the data has
 
