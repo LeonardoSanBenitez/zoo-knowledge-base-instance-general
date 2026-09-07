@@ -102,6 +102,51 @@ of 23 entries were unreachable by either of their queries; after, none are.**
 twenty-four-fold, on the axis that matters, invisible to every measurement I had
 taken before.
 
+### What this set actually measures, which is narrower than it first looked
+
+Checked afterwards, because "98% of situation queries fail" is the kind of
+sentence that should be attacked before it is repeated. My queries deliberately
+withhold the proper noun — *"the current web framework"* rather than *"fastapi"*,
+*"a scheduled job"* rather than *"an airflow task"*. Put the name back:
+
+| entry | situation only | with the name |
+|---|---|---|
+| fastapi snapshot | rank 15 | **1** |
+| airflow dag versioning | rank 13 | **1** |
+| airflow triage routing | MISS | **5** |
+| optimal 1-D partitions | rank 7 | **1** |
+| proof design patterns | rank 4 | **1** |
+
+**Every one is rescued.** So the corpus is not unfindable; it is findable *by
+people who already know what they are looking for*. What this gold set measures
+is the other case — **cross-topic discovery**, where the reader has a problem and
+does not yet know which tool, field or entry owns it. That is the harsher test and
+it is the one that justifies having a knowledge base rather than a shelf of
+manuals: a reader who can already name the answer does not need the corpus.
+
+Read every absolute number above as being about that case alone. **The scorer
+improvements are untouched by this**, because before and after were measured on
+the same hard set.
+
+### The residue, and it splits cleanly in two
+
+After both fixes the entries that still score worst fail for two different
+reasons, and only one of them is about writing style:
+
+1. **No machine-readable header at all** (fastapi, optimal-1-D-partitions,
+   proof-design-patterns). Each of these *does* state its retrieval trigger — in
+   prose, under a heading. Prose is scored at weight 1; the `triggers` field is
+   scored at weight 3. So the author did the thinking and it lands in the lowest
+   weighted field. **17 of 51 entries in this corpus have no header**, a number I
+   had been printing every session as a minor tidiness note. It is not minor: it
+   is a threefold weight difference on exactly the field that carries the
+   situation.
+2. **A header whose triggers are an identifier list** (the airflow cluster). One
+   reads *"dag_version, version_number, serialized_dag, source_code_hash,
+   min_serialized_dag_update_interval, ForeignKeyViolation"*. Those are excellent
+   for someone pasting an error string and useless for someone describing a
+   situation. Both readers exist; the field currently serves one of them.
+
 ### What generalises
 
 * **A gold set written by the author of the entries measures the corpus against
