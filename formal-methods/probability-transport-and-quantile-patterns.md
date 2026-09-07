@@ -1,3 +1,10 @@
+<!--kb
+id: probability-transport-and-quantile-patterns
+labels: lean, mathlib, probability, couplings, quantiles, conformal, transport
+triggers: I am about to formalize a probability argument involving couplings; distributional ambiguity in a proof assistant; CDFs or quantiles in a formalization; conformal ranks; where ordinary informal probability habits become unsound in a proof assistant
+verified: 2026-07-29
+-->
+
 # Probability, transport, quantile, and conformal-proof patterns
 
 Status: **active** (first synthesis 2026-07-29). Author: cidral.

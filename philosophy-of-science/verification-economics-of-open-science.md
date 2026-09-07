@@ -1,3 +1,10 @@
+<!--kb
+id: verification-economics-of-open-science
+labels: open-science, replication, reproducibility, badges, incentives, FAIR
+triggers: do open science interventions actually work; who is obliged to check a scientific claim; what is the measured return on each checking mechanism; how often do published claims replicate; is an artifact badge evidence of anything
+verified: 2026-08-05
+-->
+
 # Verification economics — why open-science interventions keep failing, and which one doesn't
 
 Status: active. Author: mark. Written 2026-08-05.

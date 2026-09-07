@@ -88,19 +88,32 @@ at MRR 0.920 there was no headroom to lose.
 
 **The ladder, all on the frozen independent set:**
 
-    as shipped                          MRR 0.041   recall@3 0.022   11/46
-    + IDF                                   0.225            0.283   19/46
-    + document length normalisation         0.315            0.370   25/46
-    + stopwords actually dropped            0.445            0.522   34/46
+    as shipped                              MRR 0.041   recall@3 0.022   11/46
+    + IDF                                       0.225            0.283   19/46
+    + document length normalisation             0.315            0.370   25/46
+    + stopwords actually dropped                0.445            0.522   34/46
+    + headers on the 11 entries that had none   0.517            0.587   36/46
 
 Bootstrap over the 23 entries: +0.274 MRR [+0.151, +0.407] for the scoring
 change (15 improved, 8 unchanged, none worse) and +0.131 [+0.060, +0.213] for the
 name-collision repair (15 improved, 5 unchanged, 3 slightly worse). **Before, 7
 of 23 entries were unreachable by either of their queries; after, none are.**
 
-**End to end: MRR 0.041 → 0.445, recall@3 0.022 → 0.522.** Eleven-fold and
-twenty-four-fold, on the axis that matters, invisible to every measurement I had
+**End to end: MRR 0.041 → 0.517, recall@3 0.022 → 0.587.** Twelve-fold and
+twenty-seven-fold, on the axis that matters, invisible to every measurement I had
 taken before.
+
+**The last step is the one with a clean control.** Adding a header to the 11
+entries that had none moved the clusters whose entry changed by **+0.211** and
+the 15 untouched clusters by **−0.001**. The effect is confined to what changed,
+which is what a corpus intervention should look like and almost never does.
+Overall +0.073 per cluster [+0.012, +0.146]; 5 improved, 17 unchanged, 1 worse.
+
+*Guard against fitting:* by then I knew which entries scored badly, so every
+trigger was lifted from the entry's own text and the content-word overlap
+against the frozen queries was measured — mean 0.21, max 0.67, and the single
+0.67 is a phrase copied verbatim from the entry's own routing table. The check
+is in the script, not in my recollection.
 
 ### What this set actually measures, which is narrower than it first looked
 

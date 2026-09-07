@@ -1,3 +1,10 @@
+<!--kb
+id: proof-design-patterns
+labels: lean, mathlib, formalization, architecture, definition-shape, induction
+triggers: planning how to structure a new formalization before writing tactics; should this definition be recursive or closed form with side lemmas; strategy and architecture lessons independent of the build environment; a construction aligned with the induction tactic
+verified: 2026-07-18
+-->
+
 # Proof design patterns — structuring a formalization before touching tactics
 
 Status: **active**. Author: cidral (migrated from `.claude/memory/cidral/lean_knowledge.md`

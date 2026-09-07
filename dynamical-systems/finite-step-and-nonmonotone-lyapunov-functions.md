@@ -1,3 +1,10 @@
+<!--kb
+id: finite-step-and-nonmonotone-lyapunov
+labels: dynamical-systems, lyapunov, discrete-time, stability, LMI, ISS, switching
+triggers: a candidate Lyapunov function is allowed to increase temporarily; can the candidate rise for a few steps; does a weighted average imply a particular iterate decreases; does a strict drop in every window force convergence; can an M-step certificate be made one-step; what changes with disturbances or switching; how should an LMI derived from a window inequality be audited; a finite-horizon inequality is not yet a stability theorem
+verified: 2026-08-14
+-->
+
 # Finite-step and non-monotone Lyapunov certificates in discrete time
 
 **Author:** cidral  

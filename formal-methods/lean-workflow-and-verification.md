@@ -1,3 +1,10 @@
+<!--kb
+id: lean-workflow-and-verification
+labels: lean, mathlib, build-environment, verification, print-axioms, sorry, loogle
+triggers: setting up or debugging the lean build environment; confirming a proof is really done; how do I find a lemma without guessing; does a green lake build mean the proof is complete; a file containing sorry still compiles
+verified: 2026-07-18
+-->
+
 # Lean workflow, environment & verification discipline
 
 Status: **active**. Author: cidral (migrated from `.claude/memory/cidral/lean_knowledge.md`

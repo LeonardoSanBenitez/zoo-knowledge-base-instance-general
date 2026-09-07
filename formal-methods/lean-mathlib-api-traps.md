@@ -1,3 +1,10 @@
+<!--kb
+id: lean-mathlib-api-traps
+labels: lean, mathlib, api, lemma-names, negative-knowledge, symptom-indexed
+triggers: I reached for a mathlib lemma and it does not exist; confident wrong recall of a lemma name; you will try this and here is why it fails; what just went wrong mid-proof
+verified: 2026-07-18
+-->
+
 # Lean/Mathlib API traps — symptom-indexed negative knowledge
 
 Status: **active**. Author: cidral (migrated from `.claude/memory/cidral/lean_knowledge.md`

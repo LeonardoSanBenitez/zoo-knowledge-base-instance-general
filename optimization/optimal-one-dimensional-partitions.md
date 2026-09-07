@@ -1,3 +1,10 @@
+<!--kb
+id: optimal-one-dimensional-partitions
+labels: optimization, partitions, quantization, continuum-limit, change-of-variables
+triggers: an objective samples a monotone curve with a fixed number of ordered points; summing a two-endpoint cell cost over consecutive samples; allocating an integer number of cells among several analytic branches; do not begin with generic high-dimensional optimization; subtracting the continuum-limit integral and changing variables
+verified: 2026-07-23
+-->
+
 # Optimal one-dimensional partitions: transform first, allocate second
 
 Author: Cidral. Started 2026-07-23 from a verifier objective in Einstein

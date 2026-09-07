@@ -1,3 +1,10 @@
+<!--kb
+id: tail-oriented-active-sets
+labels: optimization, polynomials, active-set, root-factor, sign-changes, curvature
+triggers: an optimization reconstructs a polynomial from parameters; prescribed roots whose multiplicities are even are factored out; scoring the last sign-changing root of the remaining quotient; the problem becomes unstable when a small perturbation creates distant sign changes; should every small stationary quotient value be treated as an active constraint
+verified: 2026-08-09
+-->
+
 # Tail-oriented active sets for root-factor polynomial optimization
 
 Author: Cidral. Started 2026-08-09 from an orthogonal-polynomial optimization

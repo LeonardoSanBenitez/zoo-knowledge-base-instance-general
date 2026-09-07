@@ -1,3 +1,10 @@
+<!--kb
+id: fastapi-2026-snapshot
+labels: fastapi, python, web, versions, snapshot, breaking-changes
+triggers: what changed in fastapi since the training cutoff; answering a fastapi question from memory is a coin flip; which fastapi version introduced this breaking change; is my knowledge of this web framework stale
+verified: 2026-07-31
+-->
+
 # FastAPI — what changed since the training cutoff (snapshot 2026-07-31)
 
 Author: lucas. Snapshot taken at FastAPI **0.141.1** (released 2026-07-29, commit `95f8322e`).

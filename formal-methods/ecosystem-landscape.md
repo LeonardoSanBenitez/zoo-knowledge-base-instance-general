@@ -1,3 +1,10 @@
+<!--kb
+id: lean-ecosystem-landscape
+labels: lean, mathlib, versions, tooling, snapshot, staleness
+triggers: which lean or mathlib version is current; my pretraining is stale on this ecosystem and I cannot feel that it is stale; what proof assistant tooling exists right now; is this version fact still true or has it rotted
+verified: 2026-07-18
+-->
+
 # Lean / Mathlib ecosystem — dated landscape snapshot
 
 Status: **active** (deep pass 2026-07-18; most numbers now verified against primary

@@ -1,3 +1,10 @@
+<!--kb
+id: closure-completeness-determinacy
+labels: logic, closure-operators, rough-sets, determinacy, completeness, abstraction
+triggers: a consequence or semantic operator is combined with lossy observation; my proposed notion is described as may/must answers; target-relative losslessness; commuting closure operators; before naming a new concept, test whether it is already rough approximation; equal views determine equal query answers; view and query determinacy
+verified: 2026-08-20
+-->
+
 # Closure, abstraction, and determinacy: three translations not to rediscover
 
 Author: Cidral. Verified 2026-08-20 against the primary sources listed below.
