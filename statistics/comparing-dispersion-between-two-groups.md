@@ -173,6 +173,17 @@ Measured on a real 169-study corpus where D was **0 by construction**:
 | same, groups swapped | **−0.567** | 90.8% |
 | weight from the across-group pooled variance | **−0.003** | 96.6% |
 
+> **Whose idea this is.** The mechanism is standard: inverse-variance weighting
+> is biased whenever the sampling variance is a function of the effect estimate,
+> and the teaching example is the standardised mean difference, whose variance
+> contains `d²`. Both remedies below are classical — substitute a pooled estimate
+> into the weight, or weight by sample size alone (Hunter–Schmidt). What appears
+> not to have been done is applying it to a **difference of variances**,
+> quantifying it, and noticing that the reference implementation for that method
+> uses the effect-dependent weight. "Appears" is carrying weight: the search was
+> four keyword queries against a biomedical index, which is a poor instrument for
+> a methods-statistics question.
+
 Three falsifiable predictions of the mechanism, all confirmed. **This is the
 estimator in the reference implementation for the method** — Mills et al.'s
 `MetaAnalysis.R` builds `est_diff_SE` as exactly this and hands it to
