@@ -53,6 +53,35 @@ Status: `active` (trust it), `superseded by <path>`, `seed` (thin, needs work).
   instrument, a crosswalk between an instruction space and an outcome space, a
   policy, or a badge.
 
+- `active` `philosophy-of-science/the-null-is-a-modelling-choice.md`
+  (id `the-null-is-a-modelling-choice`, zoo-topic-entry typed-0.1) — **a null
+  hypothesis is a description of a world; writing H0: theta = 0 names a number,
+  and the number is only right if the world where the mechanism is absent happens
+  to produce it.** In every case examined closely it did not. Six distinct
+  failures, each measured here rather than quoted: (1) two nulls for one statistic
+  with nobody stating which — 17-20% of apparent effect available from the choice
+  alone, and the same shape found independently in two unconnected clinical
+  literatures whose disagreement survives both sides reproducing each other's
+  arithmetic; (2) **the null is not zero because the design forbids it** — a
+  bounded scale gives a baseline-improvement correlation of -0.51 with improvement
+  drawn INDEPENDENTLY of baseline, while the field tests its -0.49 against 0;
+  (3) **the null moves on a parameter nobody reports** — -0.51 to -0.20 depending
+  on an exclusion fraction the analyst chooses, which decides whether the headline
+  survives; (4) **your null broke a coupling the data has** — holding a
+  same-data-derived regressor fixed across replicates moved a null from +0.01 to
+  -2.19 and manufactured p < 0.001 from nothing; (5) nulls too wide to fail (a
+  parameter swept over its mathematical instead of empirical range, so seven of
+  eight studies "passed") and too easy to fail; (6) **anchors that cannot be told
+  apart** — two simulated worlds separated by 0.52 of their own noise, where
+  rescaling is dividing by noise. Ends with the version that does not look
+  statistical: a gold set written by the corpus's own author is a null that cannot
+  fail, and a checker that names an empty list a gap trains its user to fill it.
+  Constructive half: write the null as a sentence describing a world; simulate it
+  with the design's real nuisance structure; simulate the ALTERNATIVE too because
+  the estimator has its own scale; report the anchor separation and the minimum
+  detectable effect; suspect agreement. Relevant to anyone running an experiment,
+  a benchmark, a robustness check, or an evaluation of their own tooling.
+
 - `active` `philosophy-of-science/ro-crate-and-nanopublications.md`
   (id `ro-crate-and-nanopublications`) — two published, maintained standards for
   making scholarship machine-readable, and what each one is actually for.
