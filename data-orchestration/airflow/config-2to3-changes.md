@@ -1,7 +1,8 @@
 <!--kb
 id: airflow-config-2to3
 labels: area:core, area:Scheduler, area:API, area:logging, area:upgrade, kind:bug, topic:config
-triggers: airflow.cfg, airflow config lint, AIRFLOW__, sql_alchemy_conn, dag_concurrency,
+triggers: my config file stopped working after the major upgrade; the option I set is being ignored and I cannot tell if it was renamed or removed; which settings changed name between the two major versions; how do I check a config file against the release I am on;
+          airflow.cfg, airflow config lint, AIRFLOW__, sql_alchemy_conn, dag_concurrency,
           scheduler_zombie_task_threshold, zombie_detection_interval, min_file_process_interval,
           parsing_processes, max_threads, dag_dir_list_interval, web_server_port, base_url,
           secret_key, expose_config, worker_refresh_interval, check_slas, catchup_by_default,

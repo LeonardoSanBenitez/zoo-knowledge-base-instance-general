@@ -1,7 +1,8 @@
 <!--kb
 id: mlflow-auth-rbac
 labels: area:server-infra, area:tracking, area:artifacts, kind:version-fact, kind:howto, version:3.x
-triggers: basic-auth, --app-name basic-auth, mlflow.server.auth, basic_auth.ini, default_permission,
+triggers: the permissions endpoint I remember returns 404; how do I give a user read only access to one experiment; a correct looking auth configuration behaves as if it were ignored; how does this tracking server decide who may see what;
+          basic-auth, --app-name basic-auth, mlflow.server.auth, basic_auth.ini, default_permission,
           MLFLOW_AUTH_CONFIG_PATH, admin_username, password1234, grant_default_workspace_access,
           "Permission denied", 403, RBAC, role_permissions, roles/create, roles/permissions/add,
           roles/assign, users/permissions/grant, users/permissions/get, experiments/permissions/create,

@@ -1,7 +1,8 @@
 <!--kb
 id: airflow-docker-image
 labels: area:core, area:dev-env, area:helm-chart, kind:feature, kind:bug, topic:image, topic:deployment
-triggers: apache/airflow:3.3.0, docker image, Dockerfile, AIRFLOW_UID, 50000, /opt/airflow,
+triggers: what is actually inside the official image and do I need to build my own; my container cannot find a database client or a provider package; which user id does the container run as and why can it not write to my volume;
+          apache/airflow:3.3.0, docker image, Dockerfile, AIRFLOW_UID, 50000, /opt/airflow,
           AIRFLOW_EXTRAS, prod_image_installed_providers, extending the image,
           customizing the image, apt-get install, airgapped, air-gapped, odbc, odbcinst.ini,
           unixODBC, pyodbc, libtdsodbc.so, tdsodbc, FreeTDS, msodbcsql18, "Can't open lib",

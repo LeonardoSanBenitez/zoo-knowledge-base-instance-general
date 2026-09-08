@@ -1,7 +1,8 @@
 <!--kb
 id: postgresql-2026-snapshot
 labels: kind:meta, topic:versions, topic:support-policy, topic:reproduction, area:packaging
-triggers: PostgreSQL 18, PostgreSQL 19, 19beta, 20devel, postgres EOL, PostgreSQL supported
+triggers: which versions of this database are supported today and which are out of support; what does a remembered answer about this database get wrong now; where do I report a database bug and who actually reads it; how do I check a version claim about this database cheaply;
+          PostgreSQL 18, PostgreSQL 19, 19beta, 20devel, postgres EOL, PostgreSQL supported
           versions, pg_upgrade, SELECT version(), REL_18_STABLE, pgdg, pgdg-redhat-repo,
           postgresql18-server, pgsql-bugs, pgsql-hackers, pgsql-general, BUG #, message-id,
           asking-for-help postgres, "No match for argument", commitfest, uuidv7, io_method,

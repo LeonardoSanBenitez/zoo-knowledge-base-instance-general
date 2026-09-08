@@ -1,7 +1,8 @@
 <!--kb
 id: mlflow-tracing-otel-interop
 labels: area:tracing, kind:mechanism, kind:gotcha, version:3.x
-triggers: OTEL_EXPORTER_OTLP_ENDPOINT, OTEL_EXPORTER_OTLP_TRACES_ENDPOINT,
+triggers: my application already sets up opentelemetry and the library changed the global provider; spans are going somewhere I did not configure; the collector endpoint I set receives nothing; thread count keeps growing after I enabled tracing;
+          OTEL_EXPORTER_OTLP_ENDPOINT, OTEL_EXPORTER_OTLP_TRACES_ENDPOINT,
           OTEL_EXPORTER_OTLP_METRICS_ENDPOINT, OTEL_EXPORTER_OTLP_PROTOCOL,
           OTEL_EXPORTER_OTLP_TRACES_PROTOCOL, OTEL_EXPORTER_OTLP_METRICS_PROTOCOL,
           MLFLOW_ENABLE_OTLP_EXPORTER, MLFLOW_USE_DEFAULT_TRACER_PROVIDER,

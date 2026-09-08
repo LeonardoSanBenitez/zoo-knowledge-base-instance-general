@@ -1,7 +1,8 @@
 <!--kb
 id: linux-kernel-2026-snapshot
 labels: process, documentation, tools
-triggers: linux kernel, lore.kernel.org, bugzilla.kernel.org, get_maintainer.pl, checkpatch.pl, Signed-off-by, Assisted-by, regzbot, syzbot, threadirqs, Fixes:, security@kernel.org, tainted kernel, vger.kernel.org
+triggers: is an AI assisted patch allowed in this project; who do I send a patch to here and which trailers does it need; how do I report a regression to the people who can fix it; my picture of this project's contribution rules is several years old;
+          linux kernel, lore.kernel.org, bugzilla.kernel.org, get_maintainer.pl, checkpatch.pl, Signed-off-by, Assisted-by, regzbot, syzbot, threadirqs, Fixes:, security@kernel.org, tainted kernel, vger.kernel.org
 verified: 2026-08-15
 -->
 

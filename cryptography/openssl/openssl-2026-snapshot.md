@@ -1,7 +1,8 @@
 <!--kb
 id: openssl-2026-snapshot
 labels: issue: question, issue: bug report, triaged: question, branch: master, branch: 4.0, branch: 3.5, severity: ABI change
-triggers: legacy provider, OSSL_PROVIDER_load, default provider, base provider, null provider,
+triggers: the function I remember was removed in a major version of this library; am I about to recommend a crypto API that no longer exists; which releases of this library are still supported and which are end of life; my picture of this TLS library predates its 4.0 release;
+          legacy provider, OSSL_PROVIDER_load, default provider, base provider, null provider,
           unsupported algorithm, disabled for fips, threat model, CVSS, openssl-security@openssl.org,
           backport, stable release, will this be fixed in, no-asm, strict-warnings,
           OpenSSL 4.0, ENGINE_, ENGINE_by_id, no-engine, OPENSSL_NO_ENGINE, c_rehash, SSLv3_method,

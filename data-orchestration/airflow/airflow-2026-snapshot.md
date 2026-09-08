@@ -1,7 +1,8 @@
 <!--kb
 id: airflow-2026-snapshot
 labels: area:core, area:task-sdk, area:API, area:upgrade, kind:meta, topic:architecture
-triggers: Task SDK, Execution API, api/v2, api/v1, SubDAG, Dataset, Assets, SimpleAuth,
+triggers: a remembered answer about this scheduler still parses but describes the wrong architecture; what changed between version 2 and version 3 of this orchestrator; where does my task code actually run now and what may it touch; is my knowledge of this workflow tool stale;
+          Task SDK, Execution API, api/v2, api/v1, SubDAG, Dataset, Assets, SimpleAuth,
           execution_date, logical_date, xcom_pull, SequentialExecutor, CeleryKubernetesExecutor,
           SLA, deadline alerts, DAG bundles, catchup, timetable, Session, metadata database,
           airflow 2, upgrading to airflow 3, AGENTS.md, magpie, Drafted-by, breeze, prek

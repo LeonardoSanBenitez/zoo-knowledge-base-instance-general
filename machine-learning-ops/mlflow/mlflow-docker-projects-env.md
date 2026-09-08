@@ -1,7 +1,8 @@
 <!--kb
 id: mlflow-docker-projects-env
 labels: area:projects, area:artifacts, area:docker, kind:gotcha, kind:version-fact, version:3.x
-triggers: mlflow run, docker_env, MLproject, IllegalLocationConstraintException,
+triggers: my code works locally and fails inside the container the tool builds for it; artifact upload fails from inside a project run but works outside it; which credentials are passed into the container and which are silently dropped; the container cannot authenticate to object storage;
+          mlflow run, docker_env, MLproject, IllegalLocationConstraintException,
           "location constraint is incompatible", AWS_DEFAULT_REGION, AWS_SESSION_TOKEN,
           AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, MLFLOW_S3_ENDPOINT_URL, MLFLOW_S3_IGNORE_TLS,
           _get_s3_artifact_cmd_and_envs, _get_docker_command, _artifact_storages,

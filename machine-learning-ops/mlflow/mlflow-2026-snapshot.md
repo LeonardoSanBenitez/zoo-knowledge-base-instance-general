@@ -1,7 +1,8 @@
 <!--kb
 id: mlflow-2026-snapshot
 labels: area:tracking, area:server-infra, area:models, area:tracing, area:artifacts, kind:version-fact, version:3.x
-triggers: mlruns, file store, filesystem backend, MLFLOW_ALLOW_FILE_STORE, migrate-filestore,
+triggers: my knowledge of this experiment tracker is from its 2.x era; what changed in this ML tracking tool since the training cutoff; is the local directory still the default place runs are written; which version of this tracker introduced tracing;
+          mlruns, file store, filesystem backend, MLFLOW_ALLOW_FILE_STORE, migrate-filestore,
           "is in maintenance mode", sqlite:///mlflow.db, FileStore, file:// tracking uri,
           mlflow server, --backend-store-uri, --serve-artifacts, RBAC, permission tables,
           enable_mlserver, MLServer, serialization_format, pt2, skops,

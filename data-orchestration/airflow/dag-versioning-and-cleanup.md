@@ -1,7 +1,8 @@
 <!--kb
 id: airflow-dag-versioning-and-cleanup
 labels: area:core, area:serialization, area:API, kind:bug, topic:dag-versioning, version:3.x
-triggers: dag version keeps increasing, DAG Versioning, dag_version, version_number,
+triggers: our version table has tens of thousands of rows and keeps growing; why does every re-parse create a new version of the same pipeline; the cleanup command ran but did not delete what I expected; a scheduled pipeline is filling the database with serialized copies of itself;
+          dag version keeps increasing, DAG Versioning, dag_version, version_number,
           serialized_dag, source_code_hash, dag_version_id, min_serialized_dag_update_interval,
           airflow db clean, clean-before-timestamp, ForeignKeyViolation,
           "Encountered error when attempting to clean table", "not cleaned due to errors",

@@ -1,7 +1,8 @@
 <!--kb
 id: airflow-log-and-error-strings
 labels: area:core, area:Scheduler, area:logging, area:task-sdk, kind:bug, topic:errors
-triggers: zombie, SIGTERM, SIGKILL, "Task killed!", heartbeat, task_instance_heartbeat_timeout,
+triggers: someone pasted a log line and I cannot find it anywhere in the source; my task was killed and I want to know which component killed it; is this error message still in the current release or did I remember it from an old one;
+          zombie, SIGTERM, SIGKILL, "Task killed!", heartbeat, task_instance_heartbeat_timeout,
           "stuck in queued", "not found in serialized_dag table", DagNotFound,
           "Dependencies not met", "DagBag import timeout", "Dag with id", "Token Expired",
           "Invalid JWT token", "Missing auth token", "Not authenticated", 401, 403,

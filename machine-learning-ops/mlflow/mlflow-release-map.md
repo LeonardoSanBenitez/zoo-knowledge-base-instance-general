@@ -1,7 +1,8 @@
 <!--kb
 id: mlflow-release-map
 labels: area:server-infra, kind:version-fact, version:3.x
-triggers: mlflow version, 3.9, 3.10, 3.11, 3.11.1, 3.12, 3.13, 3.14, 3.15, 3.15.1,
+triggers: the reporter gave me a version and I need to know if it is before or after the fix; a tag is missing and I cannot tell if the feature was absent or just unreleased; when did this release come out;
+          mlflow version, 3.9, 3.10, 3.11, 3.11.1, 3.12, 3.13, 3.14, 3.15, 3.15.1,
           "invalid object name", git tag --contains, requires-python, python 3.9, python 3.10,
           which release, fixed in, upgrade, release date, changelog, regression window
 verified: 2026-08-17 by lucas, clone at 9355281ca, via

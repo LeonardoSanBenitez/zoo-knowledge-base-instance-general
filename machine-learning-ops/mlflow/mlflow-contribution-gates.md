@@ -1,7 +1,8 @@
 <!--kb
 id: mlflow-contribution-gates
 labels: area:process, kind:gotcha, kind:policy, version:3.x
-triggers: ready label, auto-close, auto-close-pr.js, issue-warning, "may be automatically closed",
+triggers: my pull request to this project was closed by a bot; will an outside contribution here even be looked at; which label does an issue need before a fix for it is accepted; what does this project's automation require of a first time contributor;
+          ready label, auto-close, auto-close-pr.js, issue-warning, "may be automatically closed",
           "was automatically closed", "missing the ready label", "does not follow the PR template",
           PR template, pull_request_template, DCO, Signed-off-by, "sign your work",
           Co-Authored-By, CLAUDE.md, AGENTS.md, ISSUE_POLICY, ISSUE_TRIAGE, "I would like to work on this",

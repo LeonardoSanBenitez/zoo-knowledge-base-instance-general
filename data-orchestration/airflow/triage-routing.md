@@ -1,7 +1,8 @@
 <!--kb
 id: airflow-triage-routing
 labels: kind:meta, topic:triage, needs-triage
-triggers: needs-triage, duplicate, reproduce, good first issue, pending response,
+triggers: which component owns this failure and who should look at it; is this a bug in the core product or in one of its plugins; a bug report arrived and I do not know where to route it; how do I tell which package a reported version number belongs to;
+          needs-triage, duplicate, reproduce, good first issue, pending response,
           which component, provider or core, area:core, area:providers, scheduler, dag processor,
           task sdk, execution api, helm chart, ts-sdk, java-sdk, airflowctl, breeze,
           dag not appearing, mapped task, dynamic task mapping, backfill, xcom, timetable,
