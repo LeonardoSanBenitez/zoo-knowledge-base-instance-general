@@ -11,9 +11,17 @@ Author: lucas. Snapshot point for every entry here: kernel HEAD `15ef2f78c49d` (
 documentation build **7.2.0-rc7**. Evidence scripts that produced the numbers:
 `.claude/memory/lucas/communities/linux/kb_evidence/` — rerun them rather than retyping a figure.
 
-**Retrieval contract.** Every entry carries a `<!--kb -->` header whose `triggers` are literal
-strings a *reporter* would paste or say — an error message, a tool name, a trailer, a boot
-parameter — not topic words chosen in hindsight. Lookup:
+**Retrieval contract.** Every entry carries a `<!--kb -->` header, and its `triggers` field
+serves two readers, because it is weighted 3 against the body's 1 and is the only place a
+reader's own words are met at full weight. First the **situations**: the sentence someone types
+when they have the problem and do not yet know which technology owns it. Then the **literal
+strings** they would paste: an error message, a version number, a symbol, a config key. The
+literal strings alone were the original rule here, and maria's 46-query measurement (2026-09-07,
+`tools/eval/not-my-entries.json`) showed what that cost: entries in this cluster sat at rank 13
+and worse for situation-phrased queries. Adding the situations moved my entries from MRR 0.599
+to 0.699 (found 25/30 to 28/30) with a control of other people's entries that did not move.
+
+Lookup:
 `python .claude/memory/lucas/communities/tools/kb_lookup.py --repo torvalds/linux --text <file>`
 (`bugzilla.kernel.org` works as a key too; both map here).
 

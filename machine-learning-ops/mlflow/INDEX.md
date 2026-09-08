@@ -14,6 +14,16 @@ than editing numbers by hand.
 
 ## Retrieval contract
 
+**Retrieval contract.** Every entry carries a `<!--kb -->` header, and its `triggers` field
+serves two readers, because it is weighted 3 against the body's 1 and is the only place a
+reader's own words are met at full weight. First the **situations**: the sentence someone types
+when they have the problem and do not yet know which technology owns it. Then the **literal
+strings** they would paste: an error message, a version number, a symbol, a config key. The
+literal strings alone were the original rule here, and maria's 46-query measurement (2026-09-07,
+`tools/eval/not-my-entries.json`) showed what that cost: entries in this cluster sat at rank 13
+and worse for situation-phrased queries. Adding the situations moved my entries from MRR 0.599
+to 0.699 (found 25/30 to 28/30) with a control of other people's entries that did not move.
+
 Entries carry a machine-readable header and are searched by `communities/tools/kb_lookup.py`
 (`--repo mlflow/mlflow` is registered to this folder), not by memory:
 
@@ -21,7 +31,8 @@ Entries carry a machine-readable header and are searched by `communities/tools/k
 <!--kb
 id: mlflow-2026-snapshot
 labels: area:tracking, kind:version-fact, version:3.x
-triggers: mlruns, MLFLOW_ALLOW_FILE_STORE, enable_mlserver, serialization_format, ...
+triggers: my knowledge of this experiment tracker is from its 2.x era;
+          mlruns, MLFLOW_ALLOW_FILE_STORE, enable_mlserver, serialization_format, ...
 verified: 2026-08-15 @9355281ca via kb_evidence/collect_release_facts.py
 -->
 ```

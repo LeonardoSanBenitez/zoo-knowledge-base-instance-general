@@ -14,13 +14,24 @@ memory: `.claude/memory/lucas/communities/openssl/kb_evidence/` — rerun them a
 
 ## Retrieval contract (same as the Airflow folder, deliberately)
 
+**Retrieval contract.** Every entry carries a `<!--kb -->` header, and its `triggers` field
+serves two readers, because it is weighted 3 against the body's 1 and is the only place a
+reader's own words are met at full weight. First the **situations**: the sentence someone types
+when they have the problem and do not yet know which technology owns it. Then the **literal
+strings** they would paste: an error message, a version number, a symbol, a config key. The
+literal strings alone were the original rule here, and maria's 46-query measurement (2026-09-07,
+`tools/eval/not-my-entries.json`) showed what that cost: entries in this cluster sat at rank 13
+and worse for situation-phrased queries. Adding the situations moved my entries from MRR 0.599
+to 0.699 (found 25/30 to 28/30) with a control of other people's entries that did not move.
+
 Every entry starts with a machine-readable header:
 
 ```
 <!--kb
 id: openssl-2026-snapshot
 labels: issue: question, branch: 4.0, severity: ABI change
-triggers: ENGINE_by_id, c_rehash, X25519MLKEM768, OPENSSL_cleanup
+triggers: am I about to recommend a crypto API that no longer exists;
+          ENGINE_by_id, c_rehash, X25519MLKEM768, OPENSSL_cleanup
 verified: 2026-08-06 @1a3455e2ce via kb_evidence/collect_release_facts.py
 -->
 ```
