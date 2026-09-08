@@ -1,8 +1,8 @@
 <!--kb
 id: the-specification-execution-gap
 labels: measurement, construct-validity, epistemology, meta-research, instruments
-triggers: my instrument measures what people were told to do not what they did; does a requirements file tell me the environment; prescription versus state; protocol fidelity measures the manual; a badge says the artifact was checked once; declared versus executed; why do cheap measures cluster on one side; is my measure of the process a measure of the outcome; text-based measure of a mental practice; the crosswalk rows are untested causal hypotheses; what would change if the specification were followed perfectly and the result were still wrong; instruction space versus state space
-verified: 2026-08-25
+triggers: my instrument measures what people were told to do not what they did; does a requirements file tell me the environment; prescription versus state; protocol fidelity measures the manual; a badge says the artifact was checked once; declared versus executed; why do cheap measures cluster on one side; is my measure of the process a measure of the outcome; text-based measure of a mental practice; the crosswalk rows are untested causal hypotheses; what would change if the specification were followed perfectly and the result were still wrong; instruction space versus state space; does the URL resolving mean the file is there; the check passed and the artifact is dead; git lfs pointer 404; osf link returns 200 but nothing is there; artifact presence versus artifact sufficiency; how do I know my link checker is measuring anything
+verified: 2026-09-08
 -->
 
 # The instrument measures the specification, and the field reads it as the execution
@@ -68,6 +68,90 @@ missing in the same way:
 Two more instances the pattern predicts and which I have not checked:
 **protocol-fidelity instruments** in clinical trials score the manual, and
 **preregistration** scores the plan.
+
+## A third instance, at the smallest possible scale: one HTTP request (added 2026-09-08)
+
+The two instances above are whole fields. The same structure appears inside a
+single check, and there it can be *measured with a control*, which the field-scale
+instances cannot.
+
+**The specification side:** does the identifier resolve? **The execution side:**
+does the thing it points at hold the bytes the paper depends on?
+
+A project in this house (`dev-science-ops/paper-retrospective-reproducibility`)
+had already noticed this and wrote the deciding question into its check:
+
+> Not "does the DOI resolve" but "does the thing it points at still hold bytes".
+
+**It is still on the wrong side, and two archives show it in different ways.**
+
+**OSF.** Four identifiers were fetched on 2026-09-08 — one live deposit, one the
+authors had deleted, and two GUIDs invented as controls:
+
+| GUID | `osf.io/<guid>` | `api.osf.io/v2/guids/<guid>/` |
+|---|---|---|
+| `xerhg` — live | HTTP 200, 4,207 B | **200**, `size: 1301939` |
+| `gb76x` — deleted | HTTP 200, 4,207 B | **410 Gone** |
+| `zzzz9` — invented | HTTP 200, 4,207 B | **404** |
+| `qqqqq` — invented | HTTP 200, 4,207 B | **404** |
+
+All four responses are **byte-identical**, same sha256. OSF serves a
+client-rendered single-page application, so the shell is the same whether or not
+the resource exists. A resolution check on OSF has *zero* discriminating power —
+not weak, zero — and the two invented GUIDs are what proves it.
+
+**GitHub, via Git LFS.** A repository's headline data file, 335 MB by its own
+declaration, is a 134-byte pointer whose object is gone:
+
+| endpoint | result |
+|---|---|
+| `raw.githubusercontent.com/.../<path>` | **HTTP 200, 134 bytes** — the pointer |
+| `media.githubusercontent.com/media/.../<path>` | **HTTP 404** — the object |
+| GitHub tree API `size` | **134** |
+
+**The target holds bytes. They are the wrong bytes.** A pointer is present,
+non-empty, hashable and useless, and every LFS-using repository on GitHub has
+this shape.
+
+### What this instance adds that the field-scale ones could not
+
+**(a) A control is available, and it costs one line.** *Run your check against an
+identifier you invented.* If the invented one passes, the check measures nothing.
+Two fabricated GUIDs demolished a check that had been trusted for a month. At
+field scale nobody can fabricate a paper; at request scale the null case is free.
+This is the cheapest instance of the general rule in
+`the-null-is-a-modelling-choice.md`: **write down what a false pass looks like,
+and then produce one.**
+
+**(b) A partial answer to the residue below — and it is not the comforting one.**
+The closing question of this entry asks whether a field *knows* it has substituted
+a specification measure for an execution measure. Here it did know. The
+substitution was explicitly argued against, in the source file, in the imperative
+mood, by the person who then wrote the check. It happened anyway.
+
+The mechanism is worth naming, because it is not carelessness: **the deciding
+question is host-specific and the wording of a check is host-agnostic.** "Does it
+hold bytes" is a genuine execution-side question in the abstract. Whether a given
+request answers it depends on how *that* host behaves when the answer is no — an
+SPA shell, an LFS pointer, a soft-404 landing page, a login wall returning 200.
+So the specification-side check is not the one someone lazily wrote instead; it is
+what the execution-side question *degrades into* the moment it is expressed
+portably.
+
+**Consequence: an execution-side check is only execution-side on hosts where
+someone has looked.** A check written once and applied to *n* archives is a
+specification measure on every archive but the one it was written against.
+
+**(c) Presence and sufficiency are different properties, and only presence is ever
+checked.** The LFS case has a second half. Everything *derived* from the dead file
+survives — the pair-level tables, the code, the figures — so the paper can be
+**re-executed**. What cannot be done is anything item-level: changing the null
+model, recomputing with a different baseline, deciding whether the deposited table
+is the exact run behind the paper. **The cheap bar passes and the expensive one is
+blocked**, and no badge, validator or availability policy distinguishes them.
+Concretely, in that package four of eight printed numbers reproduce only to the
+last digit, the discrepancy is real and small, and *the artifact that would decide
+it is the one that 404s.*
 
 ## Why the cheap measure always lands on the wrong side
 

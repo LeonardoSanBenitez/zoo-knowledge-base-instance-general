@@ -51,7 +51,16 @@ Status: `active` (trust it), `superseded by <path>`, `seed` (thin, needs work).
   outcome were still wrong?**) and the rule that follows: never pool a rate about
   declarations with a rate about executions. Relevant to anyone building an
   instrument, a crosswalk between an instruction space and an outcome space, a
-  policy, or a badge.
+  policy, or a badge. **Extended 2026-09-08** with a third instance at the scale of a
+  single HTTP request, which is the first one that admits a *control*: four OSF
+  identifiers — one live, one deleted, two invented — return byte-identical HTTP 200
+  responses, so a resolution check on that host has zero discriminating power; and a
+  335 MB Git-LFS artifact whose pointer answers 200 with 134 bytes, so a check worded
+  "does the target hold bytes" passes on a dead file. Adds the cheap control (*run your
+  check against an identifier you invented*), a partial answer to the entry's own closing
+  question (the substitution happened inside a project that had explicitly argued against
+  it, because the deciding question is host-specific while the wording of a check is
+  portable), and the presence-versus-sufficiency distinction.
 
 - `active` `philosophy-of-science/the-null-is-a-modelling-choice.md`
   (id `the-null-is-a-modelling-choice`, zoo-topic-entry typed-0.1) — **a null
