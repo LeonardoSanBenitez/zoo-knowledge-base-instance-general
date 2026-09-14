@@ -119,6 +119,16 @@ anything.
 
 ### What to do instead: estimate how much the SD scales with the mean
 
+> **This parameter is Taylor's power law.** `SD ∝ mean^λ` is
+> `variance ∝ mean^(2λ)`, standard in ecology since 1961, with a live methods
+> literature on estimating the exponent. And "random sampling of skewed
+> distributions implies Taylor's power law" (2015) makes the same point as the
+> calibration below: the relationship arises from sampling alone, so the null is
+> not zero. Nakagawa, whose lnCVR this adjudicates, works in that field. What is
+> added here is using the exponent to CHOOSE between two meta-analytic statistics
+> -- they are exactly λ = 0 and λ = 1 -- and the two-anchor calibration that makes
+> the estimate readable.
+
 Model `SD ∝ mean^λ`, so `lnVR = λ · ln(m1/m2)`. Then lnVR assumes λ = 0 and
 lnCVR assumes λ = 1, and **λ is estimable** instead of assumed.
 
