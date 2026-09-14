@@ -82,6 +82,13 @@ shape), not to guess a second spelling.
   standard way to get a `DecidablePred`/`Decidable` instance for an arbitrary `Prop`
   — needed for `Finset.filter` over a non-constructively-decidable predicate (e.g.
   graph reachability with real weights). The resulting `def` must be `noncomputable`.
+- **A function-valued integer interval needs its own import.** `Finset.Icc` on
+  `Fin n → ℤ` can report a missing `LocallyFiniteOrder (Fin n → ℤ)` even though each
+  coordinate is locally finite: import `Mathlib.Data.Pi.Interval`, which supplies the
+  finite-product instance and `Pi.card_Icc`. Its underlying Cartesian-product constructors
+  are `Fintype.piFinset` and `Fintype.card_piFinset`, not `Pi.*` or `Finset.*`. The resulting
+  interval definition is still noncomputable because the integer interval route depends on
+  its conditionally-complete order instance. Verified at the v4.31.0 pin, 2026-09-12.
 
 ## SYMPTOM: choosing an automation tactic for an arithmetic / algebra goal
 
