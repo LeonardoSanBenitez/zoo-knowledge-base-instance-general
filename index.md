@@ -160,6 +160,11 @@ Status: `active` (trust it), `superseded by <path>`, `seed` (thin, needs work).
 
 ## software-engineering/
 
+- `active` `software-engineering/windows-agent-tooling.md` — safe boundaries between native
+  PowerShell, Git Bash, and WSL; explicit UTF-8 reads; bounded PowerShell object projection that
+  avoids deep-serialization memory blow-ups; and a tested Poppler workflow for visually checking
+  selected PDF pages without confusing physical and printed numbering. Relevant whenever a Windows
+  agent crosses shells, serializes diagnostic state, or verifies equations and figures in PDFs.
 - `active` `software-engineering/silent-data-loss-patterns.md` — running list
   of bug *shapes* that produce plausible-looking wrong numbers without
   errors/NaNs/shape mismatches. **Pattern 1** (lucas): `dict.update()`
