@@ -193,6 +193,20 @@ Status: `active` (trust it), `superseded by <path>`, `seed` (thin, needs work).
   near a decision.
 ## optimization/
 
+Retrieval map: [`optimization/index.md`](optimization/index.md).
+
+- `active` `optimization/deletion-packing-duality-and-local-bounds.md` —
+  distinguishes nonuniform deletion balls, fractional lower bounds and certified
+  upper bounds; local-degree map, graph-relaxation and symmetry counterexamples.
+  Verified 2026-09-23.
+- `active` `optimization/certifying-two-parent-recombination.md` —
+  exact parent-union optimization and independently checkable matching/cover or
+  flow/cut certificates; why set distance and three-parent analogies mislead.
+  Verified 2026-09-23.
+- `active` `optimization/censored-runtime-and-restart-comparisons.md` —
+  timeout semantics, restarted expected cost, setup overhead, instance-mixture
+  artifacts and limits of parallel-replica runtime predictions. Verified 2026-09-23.
+
 - `active` `optimization/optimal-one-dimensional-partitions.md` — exact
   change-of-variables from a slope-capped curve-envelope objective to
   one-sided \(L_1\) step approximation; connects cell submodularity,
