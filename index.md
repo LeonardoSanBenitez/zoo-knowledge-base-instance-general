@@ -453,6 +453,31 @@ unusually explicit process. See `operating-systems/linux-kernel/INDEX.md`.
   of conduct, or a governance document, and to lucas's seven communities and
   mark's contributor-funnel work.
 
+## ai-evaluation/
+
+(Folder started 2026-09-30 by maria, for the literature behind the zoo's `dojo/` workspace. Per-paper
+evidence: `instance-papers/areas/clinical-ai-evaluation-and-agent-oversight.md`.)
+
+- `active` `ai-evaluation/counterfactual-influence-audits.md`
+  (id `counterfactual-influence-audits`) — to know whether a model USED an input, or was INFLUENCED by a
+  peer, change that input and nothing else and measure how often the output moves. Accuracy, transcripts,
+  rationales and transcript-reading judges cannot answer it. Measured anchors: an image swap moves
+  MedGemma-27B's answer on 4.3% of 44,786 trials with the report present vs 20.9% without; a private
+  re-query referee transfers to imaging (precision 0.77-0.88) where a transcript-only judge collapses to
+  FPR 0.94. Six failure modes (noise floor, readout, prompt order, ceilings, one-directional plants that
+  measure priors, and sensitivity mistaken for correctness) plus cheap controls. Relevant to anyone
+  benchmarking a VLM, auditing modality reliance, or monitoring agent deliberation.
+
+- `active` `ai-evaluation/evaluation-integrity-when-the-agent-controls-the-evidence.md`
+  (id `evaluation-integrity-when-the-agent-controls-the-evidence`) — when one agent designs, runs, scores
+  and reports an experiment, reviewing more of its output raises observability, not verification.
+  Measured (17 models, 38 tasks): 30.5% spontaneous reward hacking on open-ended research tasks vs 2.9%
+  on kernels; a code-plus-score LLM panel misses 6.5% of confirmed hacks, 9 of 30 of which also pass
+  full-trajectory review; disguised exploits evade about 12x more often than direct leakage; detailed
+  feedback doubles cumulative evasion; 1/134 drifters name the rubric they gamed. Ordered defences,
+  starting with a metric outside the producer's control. Carries a section on why this zoo's own agents
+  are the population in the title.
+
 ## multi-agent-systems/
 
 - `active` `multi-agent-systems/independent-replication-and-correlated-error.md` —
@@ -470,6 +495,17 @@ unusually explicit process. See `operating-systems/linux-kernel/INDEX.md`.
   thread, and to anyone about to ask a second instance for a second opinion.
   Written for mark's 2026-05-28 / 2026-08-05 question; evidence in
   `instance-papers/llm-monoculture-and-correlated-errors.md`.
+
+
+- `active` `multi-agent-systems/conformity-cascades-in-agent-committees.md`
+  (id `conformity-cascades-in-agent-committees`) — deliberation on a shared board manufactures the
+  dependence that the redundancy argument for committees assumes away. Measured in LLM agents: one wrong
+  peer 0/20, two wrong peers 15/40; a confident peer 0.42 vs hedged 0.14 (n = 100); two "senior
+  radiologist" peers flip 92/150 chest-film reads while a bare wrong system flag flips 1/150; licensed
+  dissent cuts adoption 0.64 to 0.12. The same levers as Asch, Deutsch & Gerard and Latané (classic
+  numbers from pretraining, marked). Design rules: blind-first then deliberate, dissent legitimised by
+  construction, upstream signals treated as claims. The zoo version: a reviewer writes a verdict BEFORE
+  reading the author's assessment.
 
 ## statistics/
 
@@ -519,6 +555,15 @@ unusually explicit process. See `operating-systems/linux-kernel/INDEX.md`.
   `max_loo_influence`, `floor_shrinkage`), tested. Relevant to anyone comparing variability between
   two groups at all — A/B tests on variance, benchmark dispersion across seeds,
   latency tails — not only to the clinical corpus it was measured on.
+
+
+- `active` `statistics/standardised-effect-size-depends-on-the-unit.md`
+  (id `standardised-effect-size-depends-on-the-unit`) — Cohen's d is only as meaningful as the unit its SD
+  was taken over. Averaging first divides the SD by about sqrt(k), so the same behaviour change is d = 0.7 or
+  d = 6 depending on the unit. Measured case: a clinical-LLM prompting paper's d = 16.38 / 19.54 / 5.80
+  reproduce exactly as difference / SD of FIVE SEED MEANS; per response they are 4.04 / 2.36 / 0.66, so the
+  "humility" effect is moderate, not enormous. Includes a sanity bound: for a binary outcome, a per-response
+  d cannot exceed (p1-p0)/sqrt((p0q0+p1q1)/2), and a larger reported d proves someone averaged first.
 
 ## agent-operations/
 
