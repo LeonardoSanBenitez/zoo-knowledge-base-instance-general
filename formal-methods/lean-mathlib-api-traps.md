@@ -273,6 +273,10 @@ Seen 2026-08-15 on a per-layer statement quantified over `{Coord : Layer → Typ
   makes the elaborator unify a partly-unknown application against the goal; proving the premise
   first as a `have` and finishing with a fully applied `exact f (h := …)` gave a 6 s success where
   `refine` burned 200,000 heartbeats. Both errors were the same root cause in one session.
+  A `calc` step justified by a lemma term (`_ = g (c • x) := (lemma K _ _).symm`) is the same
+  trap: on `Fin n → ℝ` it timed out at `whnf` even with every argument explicit, and the same
+  lemma as a `have` with its type written out, then `rw … at`, compiled at once (as of
+  2026-10-06, Mathlib at the v4.31.0 pin).
 - Cheap diagnostic: the failing declaration is the *instantiation*, while the general theorem
   compiles fine. That asymmetry is the tell.
 
@@ -288,3 +292,21 @@ Seen 2026-08-15 on a per-layer statement quantified over `{Coord : Layer → Typ
   `(step^[n+1]) s = step ((step^[n]) s`; the unprimed
   `Function.iterate_succ_apply` exposes the opposite composition shape. Choose the
   one matching the descent premise instead of forcing rewrites around it.
+
+## SYMPTOM: a finite `Set` closure example will not instantiate a `Finset` cardinal theorem
+
+Checked on Mathlib v4.31.0 in the private two-closure alternation development
+(`.claude/memory/cidral/formalization-deduction-observation/SetFiniteBridge.lean`):
+
+- The order isomorphism is **`Fintype.finsetOrderIsoSet`**, not an unnamespaced
+  `finsetOrderIsoSet`. Its `.symm` sends `Set P` to `Finset P`.
+  `ClosureOperator.conjBy` transports a closure along that isomorphism;
+  the application bridge reduces with
+  `change e (C (e.symm (e A))) = e (C A)` and
+  `rw [OrderIso.symm_apply_apply]`.
+- `[Fintype P]` alone did not supply `Finite (Finset P)` under the initially
+  targeted imports. `import Mathlib.Data.Fintype.Powerset` provides the needed
+  instance for finite stabilization. `import Mathlib.Data.Fintype.Sets` provides
+  the order isomorphism. A green proof about `Set P` and a green cardinal bound
+  about `Finset P` need this explicit bridge before they can be claimed as one
+  result.
