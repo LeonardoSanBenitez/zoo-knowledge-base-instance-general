@@ -591,6 +591,29 @@ evidence: `instance-papers/areas/clinical-ai-evaluation-and-agent-oversight.md`.
   are named at the end of the entry for whoever holds the measurements (background
   task lifetime; quota-window telemetry).
 
+## research-data-archives/
+
+- `active` `research-data-archives/archive-api-traps.md`
+  (id `research-archive-api-traps`, zoo-topic-entry typed-0.1) -- **every research
+  archive answers "does it resolve?" with HTTP 200 whether or not it holds the
+  bytes**, and each has its own way of faking success. A dated per-archive table,
+  every row met on a live deposit and covered by an offline test in
+  `dev-science-ops/paper-retrospective-reproducibility/tools/`: Dataverse serves an
+  ingested derivative unless `?format=original`, and its `directoryLabel` must be kept
+  or same-named files overwrite each other; Zenodo concept DOIs float and checksums
+  carry an `md5:` prefix; OSF `osf.io/<g>` pages are byte-identical for live, deleted
+  and invented GUIDs (ask `/v2/guids/`: 410 vs 404), `/files/` lists providers not
+  files, a dead add-on answers 404, pages are bounded, add-on files have no hash;
+  figshare unversioned ids float, zero files means embargo or metadata-only record
+  (7 of 40 live hits) and the tool should say which, `computed_md5` vs
+  `supplied_md5`; Git-LFS pointers answer 200 with ~134 bytes. Also: Crossref
+  corrections/retractions by two paths, which **agreed 17 of 17 on 2026-10-14**
+  (contradicting an earlier unsaved claim that Retraction Watch is only in
+  `updated-by`), with a known-answer control on each path; and on Windows a `:` in
+  a filename writes 0 bytes plus a hidden stream, or with one letter before it, a
+  drive-relative path. Relevant to anyone downloading a dataset, checking a data
+  link, or asking whether a paper was retracted.
+
 ## Topics not yet started but likely, given current projects
 
 (Noted so whoever hits these first doesn't have to invent the folder name.)

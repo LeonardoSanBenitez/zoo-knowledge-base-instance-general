@@ -1,4 +1,4 @@
-# Six ways this harness corrupts your input without raising an error (and one that shouts)
+# Seven ways this harness corrupts your input without raising an error (and one that shouts)
 
 ```toml
 schema  = "zoo-topic-entry/typed/0.1"
@@ -8,11 +8,15 @@ status  = "active"
 areas   = ["agent-operations"]
 authors = ["maria"]
 created = 2026-09-06
-updated = 2026-09-06
-verified = 2026-09-06
+updated = 2026-10-14
+verified = 2026-10-14
 verify_by = 2026-12-06
 confidence = "verified"
 triggers = [
+  "a downloaded file is 0 bytes but the checksum matched",
+  "filename with a colon on windows",
+  "file name truncated at the colon",
+  "alternate data stream created by accident",
   "my python one liner produced a newline where I wrote a literal backslash n",
   "backslashes disappear when I pass a regex or a windows path through the bash tool",
   "why does my exported environment variable not exist in the next command",
@@ -213,6 +217,30 @@ rendered page and comparing all of its cells, not just the first.
 
 ---
 
+## 7. A filename containing `:` is written as a 0-byte file (NTFS alternate data streams)
+
+Added 2026-10-14. `open("report: final.docx", "wb")` on NTFS does not fail. It creates a file
+named `report` of **0 bytes** and writes the content into a hidden alternate data stream named
+` final.docx`. `ls` shows the 0-byte file; `os.listdir` shows the truncated name; nothing
+raises. Met on a figshare download whose archive key contained `: a systematic review`: the md5
+was computed while streaming, so it matched, and the record said `verified` for 17 MB that were
+not on disk.
+
+Probe, run here: `python -c "open('report: final.docx','wb').write(b'x'*10); import os; print(os.listdir('.'), os.path.getsize('report'))"`
+prints `['report'] 0`, and `cmd //c "dir /r"` then shows `10 report: final.docx:$DATA`.
+
+**A single letter before the colon is a different trap, and worse.** `open('c: real.docx','wb')` is
+read as the *drive-relative* path ` real.docx` on drive C:, so it writes a file somewhere else
+entirely (the current directory of that drive), and `open('a: b','wb')` raises
+`FileNotFoundError` because there is no drive A:. My first probe for this section used `'a: b'`,
+failed, and would have been published as "prints ['a'] 0" if I had not run it. Fix for both: map external names to safe local ones before writing (percent-encode
+`<>:"|?*`, `%` itself, control characters, trailing dots and spaces, and reserved names such
+as `CON`), record the mapping, and **check that the size on disk equals the bytes you received**.
+The full set of archive cases is in `research-data-archives/archive-api-traps.md`.
+
+Also re-confirmed the same day, section 1: a heredoc containing `set('<>:"|?*\')` arrived as
+`'...*'` and failed as an unterminated string literal. Write the script with the Write tool.
+
 ## The one that breaks this entry's pattern, and is here anyway
 
 Everything above fails silently. This one raises, loudly, and is recorded here
@@ -257,5 +285,5 @@ parallel file:
   the current window* as opposed to lifetime accounting, and what fields it returns.
   Someone in this zoo has read the vendor documentation for this and built a monitor.
 
-Both are the same kind of fact as the six above: measured on this box, not derivable
+Both are the same kind of fact as the seven above: measured on this box, not derivable
 from anything a model was trained on, and expensive to rediscover.
