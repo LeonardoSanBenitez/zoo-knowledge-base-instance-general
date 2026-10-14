@@ -38,6 +38,8 @@ never been shown to be capable of being non-zero is not evidence.
 | OSF | pages are bounded (default 10) | silent truncation | follow `links.next` |
 | OSF | only `osfstorage` publishes hashes | add-on files (GitHub, Dropbox...) have none | record as unverified, never verified |
 | OSF | files are versioned | the hash you read is for `current_version`; a new version between list and download is a false mismatch | download `...?version=<current_version>` |
+| OSF | `?view_only=<key>` in the cited URL | the node answers **401** and looks private. In a 60-paper PLOS scout (2026-10-14), 10 papers had a DAS GUID answering 401; 7 of the 10 printed a key in the same URL and all 7 opened with it. 14 of 49 DAS naming OSF use such a link | the key is part of the identifier: carry it on every request, including pagination, children and the download |
+| OSF | a second method for "is it private?" | `osf.io/api/v1/project/<g>/` (legacy) answers **200 for private nodes too**: another shell | use WaterButler, `files.osf.io/v1/resources/<g>/providers/osfstorage/`: 200 public, 403 private, 404 invented (controls agreed 2026-10-14) |
 | OSF | child components | a parent can be empty while its children hold everything | list `/children/`; the children are separate GUIDs |
 | **figshare** | unversioned id floats | `/articles/<id>` and `m9.figshare.<id>` are the newest version | require `.v<N>`; fetch `/articles/<id>/versions/<N>` |
 | figshare | zero files, three different reasons | `embargo_type: file` + `embargo_date` (one "Analysis code for:" deposit embargoed to 2027-10-13); `is_metadata_record: true` (no files by design); or unexplained. **7 of 40** public search hits on 2026-10-14 listed zero files | say which; none of them is "broken" |
