@@ -1,13 +1,14 @@
 <!--kb
 id: fastapi-2026-snapshot
 labels: fastapi, python, web, versions, snapshot, breaking-changes
-triggers: what changed in fastapi since the training cutoff; answering a fastapi question from memory is a coin flip; which fastapi version introduced this breaking change; is my knowledge of this web framework stale
-verified: 2026-07-31
+triggers: what changed in fastapi since the training cutoff; answering a fastapi question from memory is a coin flip; which fastapi version introduced this breaking change; is my knowledge of this web framework stale; fastapi app emits opentelemetry traces or metrics without any setup; spans recorded twice with opentelemetry-instrumentation-fastapi; app stopped exporting telemetry after upgrading fastapi
+verified: 2026-10-16
 -->
 
-# FastAPI — what changed since the training cutoff (snapshot 2026-07-31)
+# FastAPI — what changed since the training cutoff (snapshot 2026-10-16)
 
-Author: lucas. Snapshot taken at FastAPI **0.141.1** (released 2026-07-29, commit `95f8322e`).
+Author: lucas. Snapshot taken at FastAPI **0.143.2** (released 2026-10-15, master `0b9198163`).
+First written at 0.141.1 (2026-07-31); sections 3 and 4 were measured then and not re-measured.
 
 **Why this file exists.** A model's pretrained FastAPI knowledge sits around 0.115/0.116
 (mid-2025). FastAPI has shipped ~25 minor versions since, including several *breaking*
@@ -26,7 +27,7 @@ snapshot date is more than ~2 months old, treat the "current version" claims as 
 
 Things that a pretrained answer gets **wrong** today:
 
-| You probably remember | Reality at 0.141 |
+| You probably remember | Reality at 0.143 |
 |---|---|
 | `ORJSONResponse` / `UJSONResponse` are the fast-JSON options | Both **deprecated** since 0.131.0 (`@deprecated` decorators live in `fastapi/responses.py`). Since 0.130.0 FastAPI serializes JSON **with Pydantic (Rust core)** when there is a Pydantic return type or `response_model`. |
 | `from pydantic.v1 import BaseModel` works | Added in 0.119.0, deprecation-warned in 0.127.0, **removed in 0.128.0**. Pydantic v1 models are gone. |
@@ -37,18 +38,24 @@ Things that a pretrained answer gets **wrong** today:
 | A JSON body with a wrong/missing `Content-Type` is accepted | 0.132.0 added `strict_content_type` (default **True**, breaking). Declared on `FastAPI(...)`/`APIRouter(...)`; internally a `Default(True)` placeholder in `fastapi/routing.py`. |
 | Dependencies with `yield` always exit after the response | 0.121.0 added dependency **scopes**: `scope="request"` makes a `yield` dependency exit *before* the response is sent. |
 | `typing_extensions.Doc` annotates the public API | Now the separate **`annotated-doc`** package (`from annotated_doc import Doc`). |
+| Tracing FastAPI needs `opentelemetry-instrumentation-fastapi` | **Native OpenTelemetry since 0.142.0**: request/WebSocket spans, request metrics, error logs, on by default against whatever global providers exist (no-op ones unless an SDK is set up). `opentelemetry-api` is now a hard runtime dependency. Configure with `FastAPI(telemetry={...})` (`TelemetryConfig` in `fastapi/telemetry/_api.py`: `tracer_provider`, `meter_provider`, `logger_provider`, `tracing`, `metrics`, `logs`, `operation_spans`, `auto_configure`, `exclude`). Docs: `docs/en/docs/advanced/opentelemetry.md`. |
+| Setting `OTEL_EXPORTER_OTLP_ENDPOINT` makes FastAPI export | Only in 0.142.x. **Since 0.143.0 exporter setup is opt-in** (breaking): `FASTAPI_OTEL_AUTO_CONFIGURE=true` or `telemetry={"auto_configure": True}`; an explicit value overrides the variable; needs `fastapi[opentelemetry]` or `fastapi[standard]`. Apps that build their own providers need no change. |
+| Using `FastAPIInstrumentor` too gives duplicate spans | No, if it is applied **before the first request**: native spans and metrics then stand down and only the contrib spans are recorded. Applied after the first request, contrib cannot replace the built stack and only native stays live. Source: `tests/test_telemetry/test_integrations.py::test_current_contrib` (modes `app`, `global`, `late`, `uninstrument`); the file's 12 tests passed on 0.143.2, run 2026-10-16. |
 
 **Trap:** the release notes for **0.135.3 (2026-04-01)** advertise `@app.vibe()`. It is an
 April Fools joke — added in PR #15280 and removed in PR #15363 (`🔥 Remove April Fool's
 @app.vibe()`). It does not exist in any sense. Do not repeat a release-note line without
 grepping the package for the symbol.
 
-## 2. Current dependency picture (verified in a synced dev env, 2026-07-31)
+## 2. Current dependency picture (verified in a synced dev env, 2026-10-16)
 
 * Runtime deps: `starlette>=0.46.0`, `pydantic>=2.9.0`, `typing-extensions>=4.8.0`,
-  `typing-inspection>=0.4.2`, `annotated-doc>=0.0.2`.
-* Resolved in the dev env: **starlette 1.3.1** (Starlette reached 1.0 — its own API is
-  post-cutoff too), **pydantic 2.13.4**, Python 3.11.15.
+  `typing-inspection>=0.4.2`, `annotated-doc>=0.0.2`, and since 0.142.0
+  `opentelemetry-api>=1.44.0`. `requires-python = ">=3.10"`.
+* Resolved in the dev env: **starlette 1.7.0** (Starlette reached 1.0 — its own API is
+  post-cutoff too), **pydantic 2.13.5**, opentelemetry-api 1.44.0, Python 3.11.15.
+* New extra `fastapi[opentelemetry]` (`opentelemetry-sdk`, `opentelemetry-exporter-otlp-proto-http`),
+  also included in `standard`, `standard-no-fastapi-cloud-cli` and `all`.
 * `fastapi[standard]` additionally pulls `fastapi-cli[standard]`, `fastar>=0.9.0`, httpx,
   jinja2, python-multipart, email-validator, uvicorn[standard], pydantic-settings,
   pydantic-extra-types.
@@ -122,6 +129,7 @@ Grep targets in the package, for common question shapes:
 | route matching, `include_router`, prefixes, response model handling | `fastapi/routing.py` |
 | app-level config, `frontend()`, exception handlers, middleware | `fastapi/applications.py` |
 | SSE / event streams | `fastapi/sse.py` |
+| native OpenTelemetry (spans, metrics, logs, auto-configuration) | `fastapi/telemetry/` (`_api.py` config, `_runtime.py` exporter setup); `FastAPI.__init__` in `fastapi/applications.py` sets the defaults |
 | serialization of arbitrary objects | `fastapi/encoders.py` (`jsonable_encoder`) |
 | OpenAPI generation | `fastapi/openapi/utils.py` |
 | Pydantic v1/v2 shims (mostly historical now) | `fastapi/_compat/` |
