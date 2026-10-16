@@ -1,8 +1,8 @@
 <!--kb
 id: research-archive-api-traps
 labels: research-data, archives, reproducibility, osf, zenodo, figshare, dataverse, crossref, retraction, git-lfs, checksums, link-rot
-triggers: download a dataset from OSF; does this OSF link have files; OSF node is empty; verify Zenodo checksum; Zenodo concept DOI; figshare file count zero; figshare embargo; Dataverse checksum mismatch; Dataverse csv tab; is this paper retracted; Crossref updated-by; Retraction Watch in Crossref; check correction to a paper; git lfs pointer 134 bytes; is this data link dead; 410 vs 404; file written as 0 bytes on Windows; colon in filename Windows
-verified: 2026-10-14
+triggers: which version of the Zenodo record did the paper use; the record now has a newer version; Hugging Face dataset linked with no revision; find the commit that existed when the paper was published; Hugging Face DOI; huggingface 401 private or deleted; download a dataset from OSF; does this OSF link have files; OSF node is empty; verify Zenodo checksum; Zenodo concept DOI; figshare file count zero; figshare embargo; Dataverse checksum mismatch; Dataverse csv tab; is this paper retracted; Crossref updated-by; Retraction Watch in Crossref; check correction to a paper; git lfs pointer 134 bytes; is this data link dead; 410 vs 404; file written as 0 bytes on Windows; colon in filename Windows
+verified: 2026-10-16
 -->
 
 # Research archives: the ways a fetch reports success without having succeeded
@@ -46,6 +46,10 @@ never been shown to be capable of being non-zero is not evidence.
 | figshare | two md5s | `computed_md5` (figshare's, of what it holds) vs `supplied_md5` (uploader's) | check against `computed_md5`; if the two disagree, that is a claim about the deposit |
 | figshare | `is_link_only` | the "file" is a link elsewhere; figshare holds no bytes | not fetched, not verified |
 | figshare | file list size | the article endpoint embedded all 491 files of one deposit (matched `/files?page_size=1000`) | no truncation seen; not a guarantee |
+| **Hugging Face** | the HF DOI floats | `10.57967/hf/2481`: DataCite stores `version: caa7a91` (a commit), but its `url` -- where doi.org sends you -- is the repo page, i.e. today's `main` (checked by maria and mark, 2026-10-14/16). HF docs: a DOI is minted "for the current revision" | read the commit from DataCite (`api.datacite.org/dois/<doi>` -> `attributes.version`) and fetch `.../resolve/<sha>/...`; same family as a Zenodo concept DOI |
+| Hugging Face | a dataset linked with no revision | the link means `main` *today*. NeurIPS 2024 D&B (mark, 2026-10-14): 94 papers linked their own HF data, 89 cited `main`, 0 cited a revision; **19 of 94 (20%)** had own data files change after camera-ready, 12 of them modifying or deleting files | find the commit at the paper's date from the repo's commit list (`/api/datasets/<id>/commits/main`); `.../commit/<sha>.diff` lists paths per commit anonymously (LFS shows as pointer diffs, small). Numbers: mark's `report_2026-10-14.txt` |
+| Hugging Face | **401** anonymously | answered for private **and** deleted repos alike (`cerebras/SlimPajama-627B`: 401 on API and page). Gated repos answer **200** with a `gated` field | 401 is not "gated" and not "private": it is "cannot tell" |
+| Hugging Face | renamed repo | old id answers **307** to the new one (`rethinlab -> rethinklab/Bench2Drive`) | follow, and record the rename: the printed id is no longer the identity |
 | **GitHub LFS** | pointer served as content | `raw.githubusercontent.com` answers 200 with a ~134-byte pointer while `media.githubusercontent.com` answers 404 (a 335 MB object) | detect pointers by size (100-200 B) and first line, not only via `.gitattributes`: one repository had none |
 
 ## Corrections and retractions (Crossref)
