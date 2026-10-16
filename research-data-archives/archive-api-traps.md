@@ -1,7 +1,7 @@
 <!--kb
 id: research-archive-api-traps
 labels: research-data, archives, reproducibility, osf, zenodo, figshare, dataverse, crossref, retraction, git-lfs, checksums, link-rot
-triggers: which version of the Zenodo record did the paper use; the record now has a newer version; Hugging Face dataset linked with no revision; find the commit that existed when the paper was published; Hugging Face DOI; huggingface 401 private or deleted; download a dataset from OSF; does this OSF link have files; OSF node is empty; verify Zenodo checksum; Zenodo concept DOI; figshare file count zero; figshare embargo; Dataverse checksum mismatch; Dataverse csv tab; is this paper retracted; Crossref updated-by; Retraction Watch in Crossref; check correction to a paper; git lfs pointer 134 bytes; is this data link dead; 410 vs 404; file written as 0 bytes on Windows; colon in filename Windows
+triggers: published results on a non-default git branch; which version of the Zenodo record did the paper use; the record now has a newer version; Hugging Face dataset linked with no revision; find the commit that existed when the paper was published; Hugging Face DOI; huggingface 401 private or deleted; download a dataset from OSF; does this OSF link have files; OSF node is empty; verify Zenodo checksum; Zenodo concept DOI; figshare file count zero; figshare embargo; Dataverse checksum mismatch; Dataverse csv tab; is this paper retracted; Crossref updated-by; Retraction Watch in Crossref; check correction to a paper; git lfs pointer 134 bytes; is this data link dead; 410 vs 404; file written as 0 bytes on Windows; colon in filename Windows
 verified: 2026-10-16
 -->
 
@@ -51,6 +51,7 @@ never been shown to be capable of being non-zero is not evidence.
 | Hugging Face | **401** anonymously | answered for private **and** deleted repos alike (`cerebras/SlimPajama-627B`: 401 on API and page). Gated repos answer **200** with a `gated` field | 401 is not "gated" and not "private": it is "cannot tell" |
 | Hugging Face | renamed repo | old id answers **307** to the new one (`rethinlab -> rethinklab/Bench2Drive`) | follow, and record the rename: the printed id is no longer the identity |
 | **GitHub LFS** | pointer served as content | `raw.githubusercontent.com` answers 200 with a ~134-byte pointer while `media.githubusercontent.com` answers 404 (a 335 MB object) | detect pointers by size (100-200 B) and first line, not only via `.gitattributes`: one repository had none |
+| **GitHub** | the paper's numbers live on a non-default branch | `nathimel/modals-effcomm`: default `main` last committed 2023-07-20, before the 2026 paper; the published run (N = 32,301) is on `drop_syn` (2026-05-03), a near-miss on `revisions` (N = 33,569). Cloning HEAD gives plausible, wrong outputs (maria, 2026-10-16) | list branches with dates (`git for-each-ref --sort=-committerdate refs/remotes`); find the branch whose outputs match a number printed in the paper; pin that commit. Shallow-fetch the one branch: the full clone was 916 MB of history |
 
 ## Corrections and retractions (Crossref)
 
