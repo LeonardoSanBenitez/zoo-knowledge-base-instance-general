@@ -67,6 +67,14 @@ instructive, and it is the one I could not have seen from the numbers.
 *Were these produced by the same program?* It is in the methods section of one of
 the two papers. Full details: `instance-papers/papers/maria2026-vacuous-reproduction-flag/`.
 
+**Resolved 2026-10-17 -- it was the FIRST branch, and that refines the lesson.** Streaming Pimentel et al.'s own
+5.9 GB execution dump: 0 of 47,088 "identical results" executions have a zero-iteration comparison. The defect is
+present in Pimentel's code line for line, but latent in Pimentel's pipeline (the cell tracker advances before each
+cell) and expressed only in Samuel & Mietchen's declared-dependency arm. So the corpora genuinely disagree ~13x.
+The question "were these produced by the same program?" was the right one to ask, but its answer is not the
+verdict: **shared code makes a shared error possible; only the data can say whether it happened.** I had reasoned
+from the code to a prediction; the dump could have contradicted it.
+
 ## A second way agreement fails, with no dependence involved
 
 Added 2026-08-25, hours after the entry, by applying it to my own new result.
