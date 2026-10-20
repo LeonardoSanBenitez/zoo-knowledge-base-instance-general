@@ -1,14 +1,15 @@
 <!--kb
 id: fastapi-2026-snapshot
 labels: fastapi, python, web, versions, snapshot, breaking-changes
-triggers: what changed in fastapi since the training cutoff; answering a fastapi question from memory is a coin flip; which fastapi version introduced this breaking change; is my knowledge of this web framework stale; fastapi app emits opentelemetry traces or metrics without any setup; spans recorded twice with opentelemetry-instrumentation-fastapi; app stopped exporting telemetry after upgrading fastapi
-verified: 2026-10-16
+triggers: what changed in fastapi since the training cutoff; fastapi parameter model default_factory returns 500; fastapi form or query model behaviour changed after upgrading; fastapi breaking changes 0.144 to 0.156; answering a fastapi question from memory is a coin flip; which fastapi version introduced this breaking change; is my knowledge of this web framework stale; fastapi app emits opentelemetry traces or metrics without any setup; spans recorded twice with opentelemetry-instrumentation-fastapi; app stopped exporting telemetry after upgrading fastapi
+verified: 2026-10-20
 -->
 
 # FastAPI — what changed since the training cutoff (snapshot 2026-10-16)
 
 Author: lucas. Snapshot taken at FastAPI **0.143.2** (released 2026-10-15, master `0b9198163`).
 First written at 0.141.1 (2026-07-31); sections 3 and 4 were measured then and not re-measured.
+**2026-10-20 addition:** one row at the end of the section 1 table covers 0.144.0 to 0.156.2; every other section is still as of 0.143.2.
 
 **Why this file exists.** A model's pretrained FastAPI knowledge sits around 0.115/0.116
 (mid-2025). FastAPI has shipped ~25 minor versions since, including several *breaking*
@@ -41,6 +42,7 @@ Things that a pretrained answer gets **wrong** today:
 | Tracing FastAPI needs `opentelemetry-instrumentation-fastapi` | **Native OpenTelemetry since 0.142.0**: request/WebSocket spans, request metrics, error logs, on by default against whatever global providers exist (no-op ones unless an SDK is set up). `opentelemetry-api` is now a hard runtime dependency. Configure with `FastAPI(telemetry={...})` (`TelemetryConfig` in `fastapi/telemetry/_api.py`: `tracer_provider`, `meter_provider`, `logger_provider`, `tracing`, `metrics`, `logs`, `operation_spans`, `auto_configure`, `exclude`). Docs: `docs/en/docs/advanced/opentelemetry.md`. |
 | Setting `OTEL_EXPORTER_OTLP_ENDPOINT` makes FastAPI export | Only in 0.142.x. **Since 0.143.0 exporter setup is opt-in** (breaking): `FASTAPI_OTEL_AUTO_CONFIGURE=true` or `telemetry={"auto_configure": True}`; an explicit value overrides the variable; needs `fastapi[opentelemetry]` or `fastapi[standard]`. Apps that build their own providers need no change. |
 | Using `FastAPIInstrumentor` too gives duplicate spans | No, if it is applied **before the first request**: native spans and metrics then stand down and only the contrib spans are recorded. Applied after the first request, contrib cannot replace the built stack and only native stays live. Source: `tests/test_telemetry/test_integrations.py::test_current_contrib` (modes `app`, `global`, `late`, `uninstrument`); the file's 12 tests passed on 0.143.2, run 2026-10-16. |
+| Request-parameter, form and default handling is as it was in 0.14x | **Rewritten in a run of breaking releases, 2026-10-18 to 10-20 (0.144.0 to 0.156.2, master `44cc7420b`)**, nearly all by tiangolo. Titles from `docs/en/docs/release-notes.md`, not run unless marked: 0.147.0 omitted boolean form fields are `False`; **0.148.0 "Fix default handling for request parameters and models" (#16527)**; 0.149.0 empty scalar values are missing in form models; 0.150.0 unselected browser file inputs are missing; 0.151.0 JSON `null` is distinguished from an omitted body value; 0.154.0 Pydantic validation options on request parameters; 0.155.0 deprecated `**extra` removed from request parameters (0.145.0 removed `openapi_prefix`, `**extra` from `FastAPI`); 0.146.0 deprecates `root_path`; 0.144.0 WebSocket support in security dependencies. **Run: after 0.148.0 a parameter model (`Query`, `Header`, `Cookie`, `Form`) whose field has a data-aware `default_factory` returns 200 with the factory applied, where up to 0.147.0 it was HTTP 500 (`ValueError: The default factory requires the 'validated_data' argument`)**; checked by bisecting `32240026a^` against `32240026a`, Pydantic 2.13.5. An app that relied on the old default or form behaviour needs a re-test on upgrade. A bug report older than 2026-10-18 about these paths must be re-run on a current release before it is cited. |
 
 **Trap:** the release notes for **0.135.3 (2026-04-01)** advertise `@app.vibe()`. It is an
 April Fools joke — added in PR #15280 and removed in PR #15363 (`🔥 Remove April Fool's
