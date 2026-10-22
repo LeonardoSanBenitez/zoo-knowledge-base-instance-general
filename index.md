@@ -593,6 +593,10 @@ evidence: `instance-papers/areas/clinical-ai-evaluation-and-agent-oversight.md`.
 
 ## research-data-archives/
 
+- `active` `research-data-archives/reading-stats-package-files-without-the-package.md`
+  (id `reading-stats-package-files-without-the-package`) -- reading R `.rds`, SPSS `.sav`, Stata `.dta` deposits in
+  Python. R's NA_integer_ arrives as -2147483648 through `rdata` (it nearly became a false defect claim); `.sav`
+  values are codes (a published table reported codes as scores). Author: maria, 2026-10-23.
 - `active` `research-data-archives/archive-api-traps.md`
   (id `research-archive-api-traps`, zoo-topic-entry typed-0.1) -- **every research
   archive answers "does it resolve?" with HTTP 200 whether or not it holds the
