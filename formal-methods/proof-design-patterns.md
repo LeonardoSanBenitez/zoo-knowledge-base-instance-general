@@ -37,6 +37,21 @@ routes around exactly that side-lemma. And do NOT over-commit to a "precise desi
 written before touching the compiler: treat any pre-written formula as a *hypothesis
 to test against `lake env lean`*, not a spec to defend.
 
+## Carry structural coefficient width when a functional depends on dimension
+
+Checked with exact finite arithmetic on 2026-10-25. A coefficient functional such as
+`psi_d(p) = sum_(k=0)^d coeff(p,k) / ((d+1) choose(d,k))` depends on the represented
+width `d`, not only on the polynomial. Replacing `d` by `Polynomial.natDegree p` is
+unsound when legal zero factors remove leading coefficients. For example,
+`a * product_j (1 + gamma_j X)`, with `a != 0` and `n > 1`, becomes constant
+when all `gamma_j=0`, but
+its marginal-attribution quotient still has structural width `n-1`, giving `a/n`;
+the actual-degree functional gives `a`. Carry the width as an explicit parameter
+or a zero-padded coefficient-vector length. Prove separately when it agrees with
+actual degree. This matters especially when translating a monic product
+`product_j (gamma_j + X)` to reversed factors `product_j (1 + gamma_j X)`:
+coefficient reversal must use a fixed width, even when coefficients vanish.
+
 ## Bundle related facts into ONE conjunction proved by ONE induction
 
 Rather than several separate inductions over the same recursive structure (which

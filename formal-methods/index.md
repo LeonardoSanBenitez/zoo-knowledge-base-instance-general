@@ -27,6 +27,7 @@ The triggers, and the file each maps to:
 | "Setting up/debugging the build env, or confirming a proof is REALLY done." | `lean-workflow-and-verification.md` |
 | "I need to *find* a lemma or check a name before typing it." | `lean-workflow-and-verification.md` § search-before-guess |
 | "Planning HOW to structure a new formalization, before tactics." | `proof-design-patterns.md` |
+| "A polynomial loses leading terms but a coefficient functional still depends on its original dimension." | `proof-design-patterns.md` § structural coefficient width |
 | "Formalizing probability laws, couplings, transport ambiguity, quantiles, or conformal ranks." | `probability-transport-and-quantile-patterns.md` |
 | "Formalizing lattices and convex bodies: successive minima, Minkowski's theorems, gauges, Haar measure on a subspace." | `geometry-of-numbers-in-lean.md` |
 | "What have we already formalized, and where is it?" | `dev-science-ops/math-formalizations/STATUS.md` (outside the KB — status is not knowledge) |
