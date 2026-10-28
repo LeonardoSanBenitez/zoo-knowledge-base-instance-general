@@ -1,15 +1,15 @@
 <!--kb
 id: fastapi-2026-snapshot
 labels: fastapi, python, web, versions, snapshot, breaking-changes
-triggers: what changed in fastapi since the training cutoff; fastapi parameter model default_factory returns 500; fastapi form or query model behaviour changed after upgrading; fastapi breaking changes 0.144 to 0.156; answering a fastapi question from memory is a coin flip; which fastapi version introduced this breaking change; is my knowledge of this web framework stale; fastapi app emits opentelemetry traces or metrics without any setup; spans recorded twice with opentelemetry-instrumentation-fastapi; app stopped exporting telemetry after upgrading fastapi
-verified: 2026-10-20
+triggers: what changed in fastapi since the training cutoff; fastapi returns 500 instead of 422 when a json body contains NaN or Infinity; fastapi 500 Out of range float values are not JSON compliant; use_cache=False has no effect in a dependencies list; openapi.json 500 UnboundLocalError status_code with a custom response class; header model with an uppercase alias rejected as extra header; combining or making optional query, header, cookie or form models; fastapi parameter model default_factory returns 500; fastapi form or query model behaviour changed after upgrading; fastapi breaking changes 0.144 to 0.156; answering a fastapi question from memory is a coin flip; which fastapi version introduced this breaking change; is my knowledge of this web framework stale; fastapi app emits opentelemetry traces or metrics without any setup; spans recorded twice with opentelemetry-instrumentation-fastapi; app stopped exporting telemetry after upgrading fastapi
+verified: 2026-10-28
 -->
 
 # FastAPI — what changed since the training cutoff (snapshot 2026-10-16)
 
 Author: lucas. Snapshot taken at FastAPI **0.143.2** (released 2026-10-15, master `0b9198163`).
 First written at 0.141.1 (2026-07-31); sections 3 and 4 were measured then and not re-measured.
-**2026-10-20 addition:** one row at the end of the section 1 table covers 0.144.0 to 0.156.2; every other section is still as of 0.143.2.
+**Later additions:** the last two rows of the section 1 table cover 0.144.0 to 0.156.2 (2026-10-20) and 0.156.3 to 0.162.0 (2026-10-28), and "Open bugs at 0.162.0" was run on 0.162.0 on 2026-10-28; every other section is still as of 0.143.2.
 
 **Why this file exists.** A model's pretrained FastAPI knowledge sits around 0.115/0.116
 (mid-2025). FastAPI has shipped ~25 minor versions since, including several *breaking*
@@ -43,6 +43,35 @@ Things that a pretrained answer gets **wrong** today:
 | Setting `OTEL_EXPORTER_OTLP_ENDPOINT` makes FastAPI export | Only in 0.142.x. **Since 0.143.0 exporter setup is opt-in** (breaking): `FASTAPI_OTEL_AUTO_CONFIGURE=true` or `telemetry={"auto_configure": True}`; an explicit value overrides the variable; needs `fastapi[opentelemetry]` or `fastapi[standard]`. Apps that build their own providers need no change. |
 | Using `FastAPIInstrumentor` too gives duplicate spans | No, if it is applied **before the first request**: native spans and metrics then stand down and only the contrib spans are recorded. Applied after the first request, contrib cannot replace the built stack and only native stays live. Source: `tests/test_telemetry/test_integrations.py::test_current_contrib` (modes `app`, `global`, `late`, `uninstrument`); the file's 12 tests passed on 0.143.2, run 2026-10-16. |
 | Request-parameter, form and default handling is as it was in 0.14x | **Rewritten in a run of breaking releases, 2026-10-18 to 10-20 (0.144.0 to 0.156.2, master `44cc7420b`)**, nearly all by tiangolo. Titles from `docs/en/docs/release-notes.md`, not run unless marked: 0.147.0 omitted boolean form fields are `False`; **0.148.0 "Fix default handling for request parameters and models" (#16527)**; 0.149.0 empty scalar values are missing in form models; 0.150.0 unselected browser file inputs are missing; 0.151.0 JSON `null` is distinguished from an omitted body value; 0.154.0 Pydantic validation options on request parameters; 0.155.0 deprecated `**extra` removed from request parameters (0.145.0 removed `openapi_prefix`, `**extra` from `FastAPI`); 0.146.0 deprecates `root_path`; 0.144.0 WebSocket support in security dependencies. **Run: after 0.148.0 a parameter model (`Query`, `Header`, `Cookie`, `Form`) whose field has a data-aware `default_factory` returns 200 with the factory applied, where up to 0.147.0 it was HTTP 500 (`ValueError: The default factory requires the 'validated_data' argument`)**; checked by bisecting `32240026a^` against `32240026a`, Pydantic 2.13.5. An app that relied on the old default or form behaviour needs a re-test on upgrade. A bug report older than 2026-10-18 about these paths must be re-run on a current release before it is cited. |
+| Parameter models are one model per parameter kind, and `AliasChoices` works where Pydantic says | **0.156.3 to 0.162.0 (2026-10-20 to 10-23), again nearly all tiangolo.** Titles from the release notes, not run unless marked: `AliasChoices` fixed for query/header/cookie (0.156.3, #16555), form models (0.156.4), named JSON body parameters (0.156.4), path parameters (0.156.5); model alias settings respected for query/header/cookie (0.156.6); several query/header/cookie models can be **combined** on one endpoint (0.157.0), form models too (0.158.0), and they can be **optional** (0.158.2 forms, 0.159.0 query/header/cookie) or unions (0.159.1, 0.161.0); 0.160.0 (breaking) applies each parameter model's `extra` setting to sibling fields; 0.162.0 (breaking) restores the earlier default for omitted boolean form fields, reversing part of 0.147.0. **Run: a header model with `Field(alias="X-Token")` and `extra="forbid"` returned 422 `extra_forbidden` for every casing of the header up to 0.156.2 and returns 200 from 0.156.3** (bisected to `dfb3b91b7`, #16555, which lowercases the processed header keys); a lowercase alias was the workaround before. |
+
+### Open bugs at 0.162.0 that look like your own mistake
+
+Each was run on 0.162.0 (Starlette 1.7.0 and 1.10.0, Pydantic 2.13.5 and 2.14.1, Python 3.11) on
+2026-10-28, together with every workaround named. The first, third and fourth are acknowledged
+by a maintainer as "tracked internally"; the second was pointed out by a commenter on #16602 and
+has no maintainer word. All were unfixed at that date, so re-run the case before relying on any.
+
+* **`NaN`/`Infinity` in a JSON body gives 500, not 422, when validation rejects it** (an `int`,
+  `FiniteFloat`, `allow_inf_nan=False`, `gt=0`). `json.loads` accepts the tokens; the default
+  422 handler echoes the float in `input`, and Starlette's `JSONResponse` renders with
+  `allow_nan=False` and raises `ValueError`. `default_response_class=ORJSONResponse` does not
+  help (the handler builds its own `JSONResponse`). Same result on 0.141.1. Workaround: your own
+  `RequestValidationError` handler returning
+  `JSONResponse(status_code=422, content={"detail": jsonable_encoder(exc.errors(), custom_encoder={float: lambda v: v if math.isfinite(v) else repr(v)})})`,
+  which gives `"input": "nan"`. Reports: discussions #10141 (2023), #13388, #16405, #16602.
+* **A non-finite float in a *successful* response gives 500 only when the endpoint has no
+  return annotation.** With a response model, a Pydantic return type, `dict[str, float]` or
+  even `-> Any`, FastAPI serializes through Pydantic and emits `null` (200); with no
+  annotation it goes through `jsonable_encoder` and Starlette's strict renderer (500). An
+  explicit `JSONResponse({"x": math.nan})` is 500 too.
+* **`Depends(dep, use_cache=False)` inside `dependencies=[...]` is ignored**: the dependency runs
+  once. The same option as an endpoint parameter works. Discussion #16623.
+* **`/openapi.json` is 500 (`UnboundLocalError` on `status_code`) for a custom `response_class`
+  whose `__init__` takes `*args, **kwargs`** (or has a non-`int` `status_code` default) when
+  the route sets no `status_code`. The endpoints still work, so it shows up only when someone
+  opens `/docs`. Workaround: set `status_code=` on the route, or re-expose
+  `status_code: int = 200` in the subclass signature. Discussion #16603, older #6192.
 
 **Trap:** the release notes for **0.135.3 (2026-04-01)** advertise `@app.vibe()`. It is an
 April Fools joke — added in PR #15280 and removed in PR #15363 (`🔥 Remove April Fool's
