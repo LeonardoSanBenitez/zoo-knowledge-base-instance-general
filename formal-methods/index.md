@@ -24,6 +24,7 @@ The triggers, and the file each maps to:
 |---|---|
 | "Starting a formalization / which tool / what exists now / is my mental model stale?" | `ecosystem-landscape.md` |
 | "Mid-proof, stuck. Tactic failed / lemma not found / error I don't recognize." | `lean-mathlib-api-traps.md` |
+| "Public module bodies will not unfold, or an if rewrite has a Decidable-instance mismatch." | `lean-mathlib-api-traps.md` § module visibility / conditional elaboration |
 | "Setting up/debugging the build env, or confirming a proof is REALLY done." | `lean-workflow-and-verification.md` |
 | "I need to *find* a lemma or check a name before typing it." | `lean-workflow-and-verification.md` § search-before-guess |
 | "Planning HOW to structure a new formalization, before tactics." | `proof-design-patterns.md` |

@@ -1,11 +1,38 @@
 <!--kb
 id: lean-mathlib-api-traps
 labels: lean, mathlib, api, lemma-names, negative-knowledge, symptom-indexed
-triggers: I reached for a mathlib lemma and it does not exist; confident wrong recall of a lemma name; you will try this and here is why it fails; what just went wrong mid-proof
+triggers: I reached for a mathlib lemma and it does not exist; confident wrong recall of a lemma name; you will try this and here is why it fails; what just went wrong mid-proof; public imported definition bodies will not unfold in module mode; an if rewrite fails with a Decidable-instance mismatch
 verified: 2026-07-18
 -->
 
 # Lean/Mathlib API traps — symptom-indexed negative knowledge
+
+## SYMPTOM: a public definition cannot unfold after a Lean4.35 module import
+
+Verified on Lean4.35.0 / Mathlib56a005855ea17e0b0958f73ec801ae140b0a1679,
+2026-10-29. In a file beginning `module`, `public section` alone exports
+names but does not expose definition bodies to other module-mode files.
+Use `@[expose] public section` when downstream proofs must unfold those
+definitions (matching the pinned Mathlib Beta module). A legacy consumer
+using ordinary `import` can successfully use `rfl` and miss this boundary;
+the consumer check must itself begin `module` and use `public import`.
+Observed failures include `Invalid simp theorem ... Expected a definition
+with an exposed body`, failed `intro` on an imported predicate, and failed
+`unfold`. This is visibility, not a missing rewrite lemma.
+
+## SYMPTOM: an if rewrite prints the expected condition but reports a Decidable mismatch
+
+Observed on Lean4.35.0 / Mathlib56a005855ea17e0b0958f73ec801ae140b0a1679,
+2026-10-29. Rewriting a structure projection inside an if condition can leave
+the decision instance applied to the earlier projection expression. A later
+rewrite then reports that the target is not type-correct under implicit
+transparency, even though the condition prints as expected. Rebuild the
+whole conditional with `change`, so its decision instance is elaborated
+against the new proposition, then split the cases. Likewise, an explicit
+`exact`/`congrArg` can avoid low-transparency rewrite matching when a premise
+type is only definitionally equal to the expected type. These are observed
+tactic/elaboration boundaries, not evidence of a logical failure or a compiler
+bug. Keep the complete error, including the hidden instance mismatch.
 
 Status: **active**. Author: cidral (migrated from `.claude/memory/cidral/lean_knowledge.md`
 2026-07-18, re-keyed from chronological to symptom-indexed). Contributors: cidral.
