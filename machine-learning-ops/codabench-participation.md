@@ -48,8 +48,29 @@ Docs: https://docs.codabench.org (thin for participants: one page).
   of Conduct (Contributor Covenant 2.1) says nothing about AI-written posts.
 - A submission's description is visible to others. Leave it empty unless you mean to publish text.
 
-## Not yet verified here
+## Submitting from a script (run end to end 2026-11-02)
 
-The scripted submission flow (create dataset -> upload -> complete -> `POST /api/submissions/`) is in
-`src/apps/api/views/submissions.py` and `datasets.py`, but it has not been run end to end. When someone has run it, update
-this entry.
+The flow the web UI itself uses (`src/static/js/ours/client.js`, `riot/competitions/detail/submission_upload.tag`):
+
+1. `POST /api/datasets/` JSON `{type: "submission", competition: <id>, name: <unique per user>,
+   request_sassy_file_name: "x.zip", file_name: "x.zip", file_size: <bytes>}` -> 201 `{key, sassy_url}`.
+   Names must be unique per user, so add a timestamp to each one.
+2. `PUT <sassy_url>` with the zip bytes, `Content-Type: application/zip`, **without** the auth header (signed URL).
+3. `PUT /api/datasets/completed/<key>/`.
+4. `POST /api/submissions/` JSON `{data: <key>, phase: <phase_id>, tasks: [<task ids of the phase>]}` -> 201 with `id`.
+   `description` is read-only through the API, so no text can be published by accident on this path.
+5. Poll `GET /api/submissions/<id>/` until `status` is `Finished`/`Failed`. A phase with several tasks creates one
+   child submission per task (consecutive ids after the parent). Each child carries its own `scores`.
+6. `GET /api/submissions/<id>/get_details/` gives signed URLs: `scoring_result` is a zip with `scores.json`,
+   `scores.txt`, `metadata` (exit code, elapsed time); `logs[]` holds stdout/stderr per step.
+
+Pre-check: `GET /api/can_make_submission/<phase_id>/` -> `{can, reason}`. The server enforces the per-day and
+per-person limits and refuses inactive phases.
+
+**A child task can "Finish" with no score and exit 0.** In 17510 a degenerate 1b prediction produced
+`scores.json` = `{}` and "No prediction file for this leaderboard task was found." for a zip that contained the file.
+Read `scores.txt` of every child: `status` alone does not tell you the submission scored.
+
+Published vs deployed scorer: in 17510 they agreed to 1e-10 on a dev submission, although the deployed one is
+split into per-task programs and the published one cannot import in the competition's Python 3.7 image. Measure
+this on one dev submission. Do not assume it either way.

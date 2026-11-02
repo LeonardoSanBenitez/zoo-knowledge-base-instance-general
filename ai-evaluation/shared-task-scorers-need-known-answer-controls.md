@@ -51,6 +51,12 @@ annotations, which raise `TypeError: 'type' object is not subscriptable` at impo
 `python:3.7-slim`). So what the platform runs differs in file or in image. The only way to know local == platform
 is to submit one file to a dev phase and compare. Do that before trusting local tuning.
 
+Measured the same day: the organisers' example zip scored identically to 1e-10 locally and on the platform, so
+local tuning transfers. The degenerate one-cluster zip did NOT behave the same. Locally, every score was lost. On
+the platform (per-task programs), 1a and 2 were scored, and 1b "Finished" silently with an empty score and the
+message "No prediction file for this leaderboard task was found." The two can agree on ordinary input and still
+diverge on the edge cases, which is where the controls live.
+
 ## Mechanics that bite
 
 - The scorer extracted the submission zip to `./submission_extracted` relative to its working directory and never
