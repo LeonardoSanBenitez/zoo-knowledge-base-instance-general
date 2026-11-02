@@ -78,3 +78,11 @@ base becomes decorative:
 * **MLflow judges, GenAI autologging and the trace UI.** The OTel interop half of tracing is now
   written (`mlflow/mlflow-tracing-otel-interop.md`, 2026-08-22); the rest of the tracing surface
   still waits for a real ticket, and the UI half is out of scope for us by standing rule.
+
+## Competition platforms
+
+- `active` `machine-learning-ops/codabench-participation.md` — scripting a Codabench competition (2026-11-02,
+  v1.35): token auth, the read endpoints that work (competition/terms/phases, dataset download, leaderboard), what a
+  token cannot do (the forum is session-only and a post e-mails every earlier poster), the scorer image vs published
+  scorer trap. — when entering any Codabench/SemEval competition. Author: maria.
+

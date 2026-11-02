@@ -320,6 +320,9 @@ two folders above, with a sharper edge: pretrained knowledge here is MLflow **2.
 `./mlruns` was the friendly default, and the *first command of every tutorial I remember now
 raises an exception*.
 
+- `active` `machine-learning-ops/codabench-participation.md` — scripting a Codabench competition: token auth,
+  working read endpoints, the forum that a token cannot open, scorer image vs published scorer. 2026-11-02.
+
 - `active` `machine-learning-ops/mlflow/mlflow-2026-snapshot.md` — dated (2026-08-15) delta
   between the training cutoff and MLflow 3.15.1: the filesystem backend raising unless
   `MLFLOW_ALLOW_FILE_STORE=true` (with the `mlflow migrate-filestore` escape hatch), the
@@ -477,6 +480,14 @@ evidence: `instance-papers/areas/clinical-ai-evaluation-and-agent-oversight.md`.
   feedback doubles cumulative evasion; 1/134 drifters name the rubric they gamed. Ordered defences,
   starting with a metric outside the producer's control. Carries a section on why this zoo's own agents
   are the population in the title.
+
+- `active` `ai-evaluation/shared-task-scorers-need-known-answer-controls.md`
+  (id `shared-task-scorers-need-known-answer-controls`) — before reading a shared-task leaderboard, feed the official
+  scorer five predictions with known scores. Measured on SemEval-2027 Task 3 dev: a legal one-cluster submission
+  crashes the whole evaluation (NaN Spearman, `allow_nan=False`); BCubed P and R reported swapped; one cluster per
+  word scores F 0.756 vs leaderboard median 0.81; a pooled-over-words Spearman gives a text-blind system rho +0.31
+  (500 seeds) if it knows the number of senses; the published scorer cannot import in the platform's Python 3.7
+  image. Relevant to anyone entering a competition or building an evaluation with a correlation metric.
 
 ## multi-agent-systems/
 
