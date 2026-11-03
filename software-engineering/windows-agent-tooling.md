@@ -104,7 +104,7 @@ evidence that rendering failed; the exit code and the inspected image decide.
 - **Reserved device names.** `CON, PRN, AUX, NUL, COM1-9, LPT1-9` (any extension: `con.jsonl`) cannot exist on NTFS
   via the normal Win32 API, but exFAT/USB drives and archives happily hold them (a word list with the lemma "con").
   `shutil.copytree` then fails with "'con.jsonl' and 'con.json' are the same file"; deletion fails with WinError 5.
-  Skip such names when copying (they are usually regenerable) and delete them with the extended prefix `\?\D:\...`.
+  Skip such names when copying (they are usually regenerable) and delete them with the extended-length prefix `\\?\D:\...` (in Python source: `"\\\\?\\" + path`).
 - **Read-only git packs.** `.git/objects/pack/*` are read-only; a retried copy cannot overwrite them and `rmtree`
   fails. Clear the read-only bit (`os.chmod(p, stat.S_IWRITE)`) or do not copy `.git` of throwaway clones.
 - **Cluster overhead.** The same 22k-file folder measured 6.8 GB on an exFAT drive (128 KB clusters) and 3.8 GB on
