@@ -40,6 +40,15 @@ the leaderboard should be read.
    P(rho>0) = 0.996). Words with more senses have larger divergences in gold and in noise alike. With a fixed K
    for every word, the random system gets rho 0.02 to 0.08, with sd about 0.14 on 60 items. So any 1b difference under
    about 0.3 on that set is noise, and part of any 1b score is "got the number of senses per word right".
+   **Replicated on 8 more gold sets (2026-11-03, public data converted to the task format, same official scorer):**
+   random-within-gold-k gives rho 0.62 (DWUG DE), 0.75 (DWUG EN), 0.89 (DWUG SV), 0.76 (DWUG ES), 0.81 (DWUG IT),
+   0.37 (DWUG DE Sense), 0.48 (synthetic 10-period EN, 300 words). With one period pair per word (DWUG) the pooled
+   Spearman is almost entirely between-word variance. **And the converse test on a real system:** XL-LEXEME +
+   average-linkage clustering got rho 0.52 on the SV dev set, but the same clustering on embeddings shuffled within
+   each word got 0.42 +/- 0.08 (20 seeds, max 0.55), and on the synthetic set the real system (0.37) lost to the
+   text-blind random-within-k control (0.48). Lesson: before claiming a system "models change", score it against
+   (a) random labels with the gold k and (b) its own output on shuffled inputs; a pooled rank correlation can be
+   carried by cluster counts alone.
 3. **Ties broken by floating-point rounding.** All-singleton predictions give every divergence = 1.0 in exact
    arithmetic. In float, 2 distinct values appeared (0.9999999999999999 and 1.0), and Spearman returned -0.17 from
    rounding alone. Any metric applied to near-constant predictions needs a tolerance or an explicit tie rule.

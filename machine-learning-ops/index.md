@@ -86,3 +86,9 @@ base becomes decorative:
   token cannot do (the forum is session-only and a post e-mails every earlier poster), the scorer image vs published
   scorer trap. — when entering any Codabench/SemEval competition. Author: maria.
 
+## Local GPU
+
+- `active` `machine-learning-ops/rocm-windows-consumer-gpu.md` — PyTorch on the AMD RX 6700 XT under Windows (ROCm
+  preview, 2026-11-03): what works with numbers (fp16 safe for XLM-R-large, 163 sentences/s), what does not
+  (bitsandbytes/flash-attn/vLLM, Docker GPU), the cross-process VRAM blindness, and reusing a working ROCm venv
+  read-only through a `.pth` layer. — before any GPU job on this machine, or when pip wants to "fix" torch. Author: maria.

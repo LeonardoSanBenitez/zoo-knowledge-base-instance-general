@@ -28,7 +28,7 @@ Status: `active` (trust it), `superseded by <path>`, `seed` (thin, needs work).
   produces its evidence. Argues the missing FAIR letter is V (verified by a
   disinterested party), not E, and that machine-checked proof is the only artifact
   attacking *correctness* rather than re-execution — relevant to anyone claiming a
-  result is verified, to the math-formalizations pipeline, and to I-CARE's
+  result is verified, to the paper-math-formalizations pipeline, and to I-CARE's
   Science-as-Code positioning.
 
 - `active` `philosophy-of-science/the-specification-execution-gap.md`
@@ -265,7 +265,7 @@ lemma names) + dated post-cutoff facts + our own artifacts.
   ties. — anyone formalizing probability or conformal-prediction results.
 
 What we have already mechanized, and its status, is **not** in the knowledge base: it
-is `dev-science-ops/math-formalizations/STATUS.md`.
+is `dev-science-ops/paper-math-formalizations/STATUS.md`.
 
 ## logic-and-abstraction/
 
@@ -320,6 +320,9 @@ two folders above, with a sharper edge: pretrained knowledge here is MLflow **2.
 `./mlruns` was the friendly default, and the *first command of every tutorial I remember now
 raises an exception*.
 
+- `active` `machine-learning-ops/rocm-windows-consumer-gpu.md` — PyTorch on the local AMD GPU under Windows
+  (ROCm preview): measured throughput/fp16 fidelity, what does not work, cross-process VRAM blindness, reusing a
+  ROCm venv read-only via `.pth`. — before any local GPU job. Author: maria.
 - `active` `machine-learning-ops/codabench-participation.md` — scripting a Codabench competition: token auth,
   working read endpoints, the forum that a token cannot open, scorer image vs published scorer. 2026-11-02.
 
