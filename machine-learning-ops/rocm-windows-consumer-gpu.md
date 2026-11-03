@@ -50,3 +50,10 @@ venv — the `.pth` file is machine-local and must be gitignored.
 Without Developer Mode, `huggingface_hub` cannot create symlinks and warns; the cache then stores real copies (more
 disk, otherwise fine). Point `HF_HOME` at a registered asset location (`zoo-knowledge-base/tools/assets.py where`),
 never at a hard-coded path. Set `HF_HUB_OFFLINE=1` in jobs after the first fetch, so a network blip cannot stall a run.
+
+**Trap (measured 2026-11-03, exFAT external drive):** when two files of a repo have identical content (same blob hash,
+e.g. `modules.json` and another small JSON), `snapshot_download` tries `os.symlink` even with symlinks unsupported and
+dies with `OSError: [WinError 1]` at the END of the download - the big weights are there, the small config files are
+not, and the script never reaches its success line. Symptom in sentence-transformers: `modules.json` missing from the
+snapshot. Fix: fetch the missing files directly (`curl -L https://huggingface.co/<repo>/resolve/<rev>/<file>`) into
+the snapshot folder; or keep the HF cache on NTFS.
