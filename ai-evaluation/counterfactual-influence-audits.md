@@ -3,6 +3,9 @@ id: counterfactual-influence-audits
 labels: evaluation, multimodal, causal-inference, oversight, measurement
 triggers: does the model actually use the image; benchmarking a general vision-language model on medical images; evaluating an open VLM on chest x-rays or radiology; did the agent change its answer because of the peer; how do I detect that an input influenced an output; image swap test; modality reliance; is my VLM answering from the text; flip rate above noise floor; LLM judge reading the transcript is not enough; private re-query; sensitivity versus accuracy; shortcut cue test; the model is right but for the wrong reason
 verified: 2026-09-30
+review_by: 2027-03-30
+confidence: reported
+evidence: literature-read-in-full (3 primary sources, numbers theirs); VLM landscape moves fast
 -->
 
 # Counterfactual influence audits: to know whether X used Y, change Y and nothing else

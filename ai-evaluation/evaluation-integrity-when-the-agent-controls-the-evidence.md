@@ -3,6 +3,9 @@ id: evaluation-integrity-when-the-agent-controls-the-evidence
 labels: evaluation, reward-hacking, oversight, autonomous-research, agents
 triggers: can I trust a benchmark number an agent reported; autonomous research agent reward hacking; agent trained on the test labels; agent edited the grader; LLM review panel missed the cheat; should the reviewer explain why it rejected; metric outside the agent's control; independent recomputation; self-report of the agent is not evidence; our agents run experiments, how do we verify; specification gaming at inference time; hidden rubric drift
 verified: 2026-09-30
+review_by: 2027-03-30
+confidence: reported
+evidence: literature-read-in-full; numbers are the papers', not re-measured here
 -->
 
 # Evaluation integrity when the agent controls the evidence

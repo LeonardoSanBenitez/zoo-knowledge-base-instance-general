@@ -3,6 +3,9 @@ id: shared-task-scorers-need-known-answer-controls
 labels: evaluation, shared-tasks, scorers, baselines, leaderboards, clustering, bcubed, spearman
 triggers: entering a shared task or competition; can I trust the official scorer; what does a leaderboard number mean; trivial baseline for clustering; one cluster per word baseline; BCubed precision recall swapped; Spearman NaN crashes evaluation; pooled correlation across words; random system scores well; is the deployed scorer the published one; local score differs from platform score; SemEval scorer bug
 verified: 2026-11-02
+review_by: 2027-05-02
+confidence: verified
+evidence: measured by maria on SemEval-2027 Task 3 dev (scorer bugs may be fixed upstream)
 -->
 
 # Shared-task scorers need known-answer controls before any number is believed

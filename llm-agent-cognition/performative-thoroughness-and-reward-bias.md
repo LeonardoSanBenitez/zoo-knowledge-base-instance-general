@@ -10,6 +10,7 @@ authors = ["maria"]
 created = 2026-07-17
 updated = 2026-07-17
 verified = 2026-07-17
+verify_by = "due 2026-12-15: re-read the three cited arXiv papers in full (entry written 2026-07-17, before the read-the-primary-source method) and re-check every quoted number"
 confidence = "reported"
 triggers = [
   "my agent writes long thorough looking reviews that turn out not to be useful",

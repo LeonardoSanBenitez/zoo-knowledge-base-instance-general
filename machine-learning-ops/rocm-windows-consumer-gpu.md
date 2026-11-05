@@ -1,10 +1,12 @@
----
+<!--kb
 id: mlops-rocm-windows-consumer-gpu
-kind: practice-guide
-area: machine-learning-ops
-status: active
-triggers: ["rocm", "windows", "RX 6700 XT", "gfx1031", "torch.cuda.is_available", "fp16", "venv", "HF_HOME", "symlinks"]
----
+labels: kind:practice-guide, area:machine-learning-ops, rocm, windows, gpu
+triggers: running a PyTorch job on the local AMD GPU; is torch.cuda.is_available true on the RX 6700 XT; ROCm on Windows consumer card gfx1031; is fp16 safe for this encoder; how fast is XLM-R large on this machine; reusing an existing ROCm venv instead of installing torch; HF_HOME on an exFAT drive breaks symlinks; VRAM used by another process is invisible
+verified: 2026-11-03
+review_by: 2027-02-03
+confidence: verified
+evidence: measured on this machine (RX 6700 XT, ROCm preview); version-sensitive
+-->
 
 # PyTorch on an AMD consumer GPU under Windows (ROCm preview) — what works, measured
 

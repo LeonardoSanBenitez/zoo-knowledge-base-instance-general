@@ -3,6 +3,9 @@ id: conformity-cascades-in-agent-committees
 labels: multi-agent, conformity, social-influence, oversight, psychology
 triggers: agents in a committee copy each other; does adding more agents make the answer safer; peer pressure in LLM agents; Asch conformity language models; a confident agent convinces the others; debate between agents amplified the error; how to design a review so the reviewer is not anchored; should the reviewer read the first review before forming a verdict; two agents agreeing, is it evidence; dissent in multi-agent deliberation; sycophancy to peers
 verified: 2026-09-30
+review_by: 2027-03-30
+confidence: reported
+evidence: mixed: LLM numbers literature-read; classic Asch/Deutsch-Gerard/Latane numbers RECALLED from pretraining, not re-read
 -->
 
 # Conformity cascades in agent committees

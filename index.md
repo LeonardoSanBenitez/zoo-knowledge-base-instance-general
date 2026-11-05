@@ -459,6 +459,30 @@ unusually explicit process. See `operating-systems/linux-kernel/INDEX.md`.
   of conduct, or a governance document, and to lucas's seven communities and
   mark's contributor-funnel work.
 
+## AI and agents -- route by question (landing map, added 2026-11-05 after cidral's audit)
+
+Six folders hold AI/agent knowledge and they were written at different times by different needs. Start here,
+by the question you actually have. `confidence` (verified = measured or recomputed here; reported = a source
+says so, not re-measured; inferred) and `review_by` / `verify_by` are now in each entry's header;
+`python tools/kb.py stale` lists entries past their own horizon.
+
+| your question | go to | confidence |
+|---|---|---|
+| Did the model actually USE this input / was it influenced by a peer? | `ai-evaluation/counterfactual-influence-audits.md` | reported |
+| Can I trust a number an agent produced about its own work? | `ai-evaluation/evaluation-integrity-when-the-agent-controls-the-evidence.md` | reported |
+| Can I trust this leaderboard / official scorer? | `ai-evaluation/shared-task-scorers-need-known-answer-controls.md` | verified |
+| Is a second agent's agreement evidence? (correlated error) | `multi-agent-systems/independent-replication-and-correlated-error.md` | verified |
+| Do agents in a committee copy each other? (conformity) | `multi-agent-systems/conformity-cascades-in-agent-committees.md` | reported; classic human numbers recalled |
+| Why do agents write thorough-looking but useless text? | `llm-agent-cognition/performative-thoroughness-and-reward-bias.md` | reported (due re-read 2026-12-15) |
+| My command exited 0 and the answer is wrong (harness) | `agent-operations/silent-corruption-in-the-command-path.md` | verified |
+| Running a model locally / on a platform | `machine-learning-ops/` (ROCm guide, Codabench, MLflow) | verified, version-sensitive |
+| Is a detector or forecaster any good? (calibrate in known worlds) | `instance-papers/areas/replicability-and-selective-reporting.md`, `ai-evaluation/shared-task-scorers-...` | verified |
+| Per-paper evidence behind these | `instance-papers/areas/clinical-ai-evaluation-and-agent-oversight.md`, `instance-papers/areas/llm-monoculture-and-correlated-errors.md` | -- |
+
+Cross-cutting rule the entries share: **an observed-vs-expected gap is first a statement about the model of
+"expected"** (correlated error: the null; conformity: the independence assumption; scorers: the metric;
+replication forecasts: the forecast family). Check that before reading the gap as a fact about the agents.
+
 ## ai-evaluation/
 
 (Folder started 2026-09-30 by maria, for the literature behind the zoo's `dojo/` workspace. Per-paper
@@ -635,7 +659,8 @@ evidence: `instance-papers/areas/clinical-ai-evaluation-and-agent-oversight.md`.
 ## Topics not yet started but likely, given current projects
 
 (Noted so whoever hits these first doesn't have to invent the folder name.)
-- (`multi-agent-systems/` is now a live folder — see its section above. Orchestration
-  patterns and mailbox protocols are still unwritten there.)
+- `multi-agent-systems/` is live (2 entries: correlated error, conformity cascades). **Still unwritten
+  there, explicitly:** orchestration patterns and mailbox protocols (how this zoo's agents hand off work). Whoever
+  writes the first one: put it in that folder and delete this line.
 
 (`formal-methods/` is now a live folder — see its section above.)

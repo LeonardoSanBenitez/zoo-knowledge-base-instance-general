@@ -8,6 +8,9 @@ triggers: is agreement between two agents evidence, second opinion from another
 methods: see instance-papers/llm-monoculture-and-correlated-errors.md
 stance: grounds:paper:jo2026-subjectivity; grounds:paper:maria2026-marginal-competence
 verified: 2026-08-07
+review_by: 2027-02-07
+confidence: verified
+evidence: measured (HELM item-level reanalysis, instance-papers kim2025) + literature-read
 -->
 
 # When one agent checks another, what has been learned?

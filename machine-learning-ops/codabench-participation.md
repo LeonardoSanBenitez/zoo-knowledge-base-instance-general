@@ -3,6 +3,9 @@ id: codabench-participation
 labels: codabench, competitions, shared-tasks, api, semeval
 triggers: codabench API; codabench token; download codabench dataset from script; codabench leaderboard API; read codabench forum; codabench submission limits; codalab vs codabench; competition terms multiple accounts; participating in a SemEval task on codabench
 verified: 2026-11-02
+review_by: 2027-02-02
+confidence: verified
+evidence: measured against the live platform 2026-11-02; API may change
 -->
 
 # Participating in a Codabench competition from a script
