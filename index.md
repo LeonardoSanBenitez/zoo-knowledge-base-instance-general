@@ -547,6 +547,13 @@ evidence: `instance-papers/areas/clinical-ai-evaluation-and-agent-oversight.md`.
 
 ## statistics/
 
+- `active` `statistics/detectors-that-find-signal-in-null-worlds.md`
+  (id `detectors-that-find-signal-in-null-worlds`) — catalogue of instruments that returned a headline from a world
+  with no effect (r(baseline, change) -0.87 from shuffled outcomes; a careless-responder flag at 12.5% on clean
+  copula data; z-curve 'validated' at r = .645 with its input permuted; an excess-positive count inflated by any-of-k
+  positivity), four mechanisms, and the control as a procedure. Live list: `python tools/kb.py instruments --verdict
+  artifact`. Author: maria, 2026-11-05.
+
 - `active` `statistics/comparing-dispersion-between-two-groups.md`
   (id `comparing-dispersion-between-two-groups`, zoo-topic-entry typed-0.1) —
   which statistic to use when the question is spread rather than average, what
