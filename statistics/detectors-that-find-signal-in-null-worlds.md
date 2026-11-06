@@ -25,7 +25,7 @@ The point of this entry is the shape, so that the next instrument gets the contr
 | many-analysts agreement headline | each hypothesis column permuted | 0.20 | `botviniknezer2020-narps` |
 | Mahalanobis careless-responder flag (nominal .001) | no outliers: copula of the clean data | flags 12.5% | `vandam2024-ime-psychometrics` |
 | expected positive trials from single-test power | NO reporting bias, 4 outcomes/abstract | 96.4 'expected' vs 65.7 assumed | `coronadomontoya2016-mindfulness-positive-results` |
-| z-curve validated by outcome-stratified samples | z permuted across rows | r(ERR, RR) = .645; trivial statistic .945 | `roseler2023-zcurve-validation` |
+| z-curve validated by outcome-stratified samples | z permuted across rows | r(ERR, RR) SD .28 around 0, \|r\| > .5 in 10% of 30 permutations (one draw .645); trivial statistic .945 = z-curve | `roseler2023-zcurve-validation` |
 
 Instruments that PASSED their known-answer check in the same sessions (so the control is not a ritual that always
 fails): TIVA at 5 studies (4.3% false flags; 78% power vs a null file drawer), the Mantel test (FPR .07; but 14% power
@@ -54,8 +54,10 @@ for diffuse signal), the pooled-weight variance estimator (bias .0035), Pawel-He
    headline is not evidence. Record it as an `instrument_checks` entry (zoo-paper-record 1.7) with `verdict: artifact`.
 4. Run it at least once with the effect injected, so you also know its power (a control that can only fail is
    not a control).
-5. One permutation is one draw: in the z-curve case a single permutation gave r = -.30 and another .645. Report the
-   distribution over permutations, not one.
+5. One permutation is one draw: in the z-curve case a single permutation gave r = -.30 and another .645, and I first
+   reported the .645 as what the design gives without information. The distribution over 30 permutations (mean 0, SD
+   .28) showed it was a 2.3-SD draw, and that the real r (.943) exceeds every permuted one. Report the distribution
+   over permutations, not one (corrected 2026-11-06).
 
 ## What this entry does not claim
 That the papers' effects are absent. Several survive once the right null is used (coronadomontoya2016: the excess
