@@ -1,8 +1,8 @@
 <!--kb
 id: detectors-that-find-signal-in-null-worlds
 labels: kind:synthesis, area:statistics, area:replicability-and-selective-reporting, known-answer-controls, meta-science
-triggers: before I trust this detector or validation; my statistic says there is an effect, could it say that with no effect; how to test an estimator with a known answer; a correlation that validates a predictor looks too good; baseline change correlation; excess significance count; replication forecast calibration; z-curve validation; careless responder flag rate; which instruments in the KB have measured operating characteristics
-verified: 2026-11-05
+triggers: best-so-far curve rises under noise; cumulative coverage over iterations; before I trust this detector or validation; my statistic says there is an effect, could it say that with no effect; how to test an estimator with a known answer; a correlation that validates a predictor looks too good; baseline change correlation; excess significance count; replication forecast calibration; z-curve validation; careless responder flag rate; which instruments in the KB have measured operating characteristics
+verified: 2026-11-07
 review_by: 2027-05-05
 confidence: verified
 evidence: every number below was recomputed by maria in the linked instance-papers records; none is quoted from a paper
@@ -26,12 +26,13 @@ The point of this entry is the shape, so that the next instrument gets the contr
 | Mahalanobis careless-responder flag (nominal .001) | no outliers: copula of the clean data | flags 12.5% | `vandam2024-ime-psychometrics` |
 | expected positive trials from single-test power | NO reporting bias, 4 outcomes/abstract | 96.4 'expected' vs 65.7 assumed | `coronadomontoya2016-mindfulness-positive-results` |
 | z-curve validated by outcome-stratified samples | z permuted across rows | r(ERR, RR) SD .28 around 0, \|r\| > .5 in 10% of 30 permutations (one draw .645); trivial statistic .945 = z-curve | `roseler2023-zcurve-validation` |
+| cumulative 'tasks ever won unanimously' as evidence that workflow search improves | no improvement: every iteration a fresh draw at the iteration-0 win probability | expected 11.5 of 12 tasks by i=10 vs 9 observed (L0); predicts all three generation curves within ~1 task; first-hit hazard falls (beta-hat -0.2); with task heterogeneity a real trend of +0.3 logit/iter is detected 3.5% of the time | `lee2026-mass-self-supervision` |
 
 Instruments that PASSED their known-answer check in the same sessions (so the control is not a ritual that always
 fails): TIVA at 5 studies (4.3% false flags; 78% power vs a null file drawer), the Mantel test (FPR .07; but 14% power
 for diffuse signal), the pooled-weight variance estimator (bias .0035), Pawel-Held SH forecasts under honest selection.
 
-## Four mechanisms, and which cases they explain
+## Five mechanisms, and which cases they explain
 
 1. **The statistic shares a term with the outcome.** change = Y - X correlated with X; a ratio regressed on its own
    numerator; an inverse-variance weight that contains the effect. (proportional recovery, heterogeneous response,
@@ -44,6 +45,11 @@ for diffuse signal), the pooled-weight variance estimator (bias .0035), Pawel-He
 4. **The validation sample is constructed from the outcome.** Mixing two fixed pools in a chosen ratio makes ANY
    statistic that differs between the pools track the ratio with r near 1. (z-curve.) Check: permute the input,
    substitute a trivial statistic, and validate where the outcome varies naturally.
+5. **The statistic is a running maximum over noisy draws.** "Best so far", "ever reached", "tasks won at least once by
+   iteration i" all rise with i even when every draw comes from the same distribution, and rise faster when the
+   per-draw success rate is higher for reasons unrelated to the search (a better executor). (MASS coverage curves.)
+   Check: estimate the per-draw rate at iteration 0 and plot 1-(1-q)^(i+1); test the HAZARD of first success for a
+   rising trend instead of the cumulative count; and measure repeated runs of one unchanged configuration.
 
 ## The control, as a procedure
 
