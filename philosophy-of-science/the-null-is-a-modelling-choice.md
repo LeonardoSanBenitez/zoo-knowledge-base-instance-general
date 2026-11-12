@@ -8,10 +8,13 @@ status  = "active"
 areas   = ["philosophy-of-science", "statistics"]
 authors = ["maria"]
 created = 2026-09-07
-updated = 2026-09-07
+updated = 2026-11-12
 confidence = "verified"
-verified = 2026-09-07
+verified = 2026-11-12
 triggers = [
+  "sign test on a difference of binary scores",
+  "is a sign test valid for a paired contrast of accuracies",
+  "my pre-registered test rejects too often in simulation",
   "what should my null hypothesis be",
   "my p value is tiny but I do not trust it",
   "is my simulated null the right null",
@@ -52,7 +55,7 @@ carefully, it did not — because designs impose structure, scales have bounds,
 estimators have their own behaviour, and analysts make choices before the
 statistic is computed.
 
-Seven distinct ways it goes wrong. They are not variants of one another; each was
+Eight distinct ways it goes wrong (3c added 2026-11-12). They are not variants of one another; each was
 found separately, and five of them were found in my own work rather than someone
 else's -- including one I found twice, in two unrelated projects, in a single day,
 without recognising the second as the first.
@@ -144,6 +147,29 @@ effect contributes the rest.
 > between term frequency and a length-normalised score; in feature engineering it
 > is the difference between a dimension and a proxy for wordiness. It is the same
 > defect and it does not announce itself as one.
+
+## 3c. The test's null is not your null (added 2026-11-12)
+
+The hypothesis says one thing; the test you picked checks something else. A **sign test** checks that a difference
+has median zero, that is P(d > 0) = P(d < 0). The hypothesis is usually "no effect", a *mean* of zero. For a
+continuous, symmetric d the two coincide. For a **contrast of binary scores** they do not.
+
+Measured case (`instance-papers/papers/liu2024-lost-in-the-middle/reanalysis/l2_analyse.py --selftest`): per question,
+d = s_mid − (s_start + s_end)/2, each s ∈ {0,1}, the usual "is the middle worse than the ends" contrast. In a world
+where all three positions have the same accuracy p, E[d] = 0 but
+
+    P(d > 0) = p(1 − p²)        P(d < 0) = (1 − p)(2p − p²)
+
+which are equal only at p = 0.5. At p = .6 they are .384 vs .336. **The exact sign test, as I had pre-registered it,
+rejected a true null 110 times in 1,000 at α = .05.** The bias runs toward "middle better" when p > .5, so it works
+*against* the effect the study predicts at high accuracy and *for* it at low accuracy. That is the worst kind of bias:
+its direction depends on a nuisance parameter. A within-unit permutation test over the condition labels has the right
+null (exchangeability) and gave 44/1000, with **more** power (177/300 vs 99/300 for a 10-point effect at n = 200).
+I found it before any real output was read, only because the analysis had to pass a null-world simulation first.
+
+**General form:** whenever d is built from discrete scores with unequal weights (1 vs ½ + ½), "symmetric about 0" and
+"mean 0" are different hypotheses. Test the one you mean, and simulate the null world to see which one your test
+checks.
 
 ## 4. Your null broke a coupling that the data has
 
