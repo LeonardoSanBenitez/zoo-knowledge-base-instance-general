@@ -1,11 +1,11 @@
 <!--kb
 id: shared-task-scorers-need-known-answer-controls
 labels: evaluation, shared-tasks, scorers, baselines, leaderboards, clustering, bcubed, spearman
-triggers: entering a shared task or competition; can I trust the official scorer; what does a leaderboard number mean; trivial baseline for clustering; one cluster per word baseline; BCubed precision recall swapped; Spearman NaN crashes evaluation; pooled correlation across words; random system scores well; is the deployed scorer the published one; local score differs from platform score; SemEval scorer bug
-verified: 2026-11-02
+triggers: entering a shared task or competition; can I trust the official scorer; what does a leaderboard number mean; trivial baseline for clustering; one cluster per word baseline; BCubed precision recall swapped; Spearman NaN crashes evaluation; pooled correlation across words; random system scores well; is the deployed scorer the published one; local score differs from platform score; SemEval scorer bug; the organisers changed the metric mid-competition; my old scores no longer match the new scorer; binary vs macro F1 changed the ranking
+verified: 2026-11-12
 review_by: 2027-05-02
 confidence: verified
-evidence: measured by maria on SemEval-2027 Task 3 dev (scorer bugs may be fixed upstream)
+evidence: measured by maria on SemEval-2027 Task 3 dev; both bugs fixed upstream 2026-11-08 (0e69238), which also changed S2 to macro F1 (lesson 4)
 -->
 
 # Shared-task scorers need known-answer controls before any number is believed
@@ -31,12 +31,15 @@ the leaderboard should be read.
 | one singleton cluster per item | precision 1, recall small | **reported precision and recall swapped**: `bcubed.precision(cdict, ldict)` takes the SYSTEM clustering first; the scorer passed gold first. F is symmetric, so only P and R were wrong |
 | random labels, many seeds | a null distribution, not one number | see "pooled correlation" below |
 
-## Three general lessons the case made concrete
+## Four general lessons the case made concrete
 
 1. **Know the trivial baseline before reading the leaderboard.** One cluster per word scored BCubed F 0.756 on
    the dev set, while the public dev leaderboard had median 0.81 and maximum 0.84 (13 entries, 2026-11-02). Most of
    the visible score is the baseline. Subtask 2 (binary): all-positive gives macro F1 0.47 vs leaderboard median
-   0.64.
+   0.64. **[CORRECTED 2026-11-12: that 0.47 is the across-word mean of per-word BINARY F1 (scorer 9763564). On
+   2026-11-08 the organisers made per-word F1 macro over classes (0e69238): all-positive is now 0.236 on SV dev
+   (exactly half), and the trivial floor is all-NEGATIVE at 0.361. The leaderboard median above was read under the
+   old metric. See lesson 4.]**
 2. **A correlation pooled across groups rewards between-group variance.** Subtask 1b computes ONE Spearman over all
    (word, consecutive period pair) items in a language. A system that ignores the text but assigns random labels
    within the gold number of senses per word gets mean rho +0.31 (500 seeds; 95% range +0.10 to +0.50;
@@ -55,6 +58,20 @@ the leaderboard should be read.
 3. **Ties broken by floating-point rounding.** All-singleton predictions give every divergence = 1.0 in exact
    arithmetic. In float, 2 distinct values appeared (0.9999999999999999 and 1.0), and Spearman returned -0.17 from
    rounding alone. Any metric applied to near-constant predictions needs a tolerance or an explicit tie rule.
+4. **The scorer is versioned, so every logged score must name its commit** (added 2026-11-12). Mid-competition the
+   organisers changed one keyword in Subtask 2: `f1_score(gold, pred)` became `f1_score(gold, pred, average='macro')`
+   (sklearn's default is binary F1 on label 1). Nothing else about the task changed. On the same prediction files:
+   - the trivial floor moved: all-positive went from .472 to .236, and all-negative from 0 to .361 (SV dev);
+   - the ranking of 6 systems reordered (Kendall tau 0.33 between the two metrics): the baseline fell from 3rd to
+     last and now ties all-negative;
+   - **a held-out verdict reversed.** On held-out Finnish (133 words), "no system beats all-positive" (+0.011
+     [-0.025, +0.044]) became "the best system beats every trivial baseline" (vs all-negative +0.082 [+0.036, +0.130]).
+   A results log that records only the metric NAME silently relabels its history when the code under the name
+   changes. Fix: record the scorer commit in every score line, and give a changed metric a new name, so the two
+   units can never be pooled. Both bugs in the table above (the NaN crash and the swapped P/R) were fixed upstream in
+   the same commits, 0e69238, on 2026-11-08. Also re-check which trivial predictor is the floor after any metric
+   change: macro averaging moves it from "always yes" to "always no" whenever positives are the minority.
+   Evidence: `.claude/memory/maria/arena-lsc/tickets/2026-11-12-ScorerResync/OUTCOME.md`.
 
 ## The deployed scorer is not necessarily the published one
 
