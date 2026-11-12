@@ -11,12 +11,13 @@ created = 2026-11-12
 updated = 2026-11-12
 verified = 2026-11-12
 verify_by = 2027-01-12
-confidence = "reported"
+confidence = "reported"  # one row measured here: Codex Windows sandbox (2.2)
 triggers = [
   "what is the difference between claude code and codex",
   "claude code vs codex vs antigravity vs mistral vibe",
   "how does claude science differ from claude code",
   "which coding agent has a real sandbox on windows",
+  "does the codex sandbox work on windows 10",
   "does claude code sandbox commands on native windows",
   "which agent harness can run with local models only",
   "is an auto-approve classifier a sandbox",
@@ -92,7 +93,7 @@ Model quality aside, all real differences sit on eight axes:
 | harness | macOS | Linux | Windows native | network |
 |---|---|---|---|---|
 | Claude Code | Seatbelt | bubblewrap + socat; optional seccomp filter (blocks Unix sockets) | **none: "On native Windows, Claude Code runs commands unsandboxed"**. Use WSL2. | Deny-by-default proxy; allowed domains **start empty**. **Off by default**, and it **covers shell commands only** (Bash, PowerShell, Monitor and their children): "Claude's file tools, MCP servers, and hooks run outside it". |
-| Codex | Seatbelt | bubblewrap (first `bwrap` on PATH; falls back to a bundled helper that needs unprivileged user namespaces) | three implementations: **`mxc`** (Microsoft Execution Containers, Windows 11 24H2 build 26100.9278 / 25H2 build 26200.9278+), **`elevated`** (admin-approved setup, extra accounts and firewall rules), **`unelevated`** (weaker network isolation, no denied-read paths) | `workspace-write` plus `network_access` switch; the proxy has a domain allowlist. **App/connector traffic does not go through the sandbox proxy** (config reference). |
+| Codex | Seatbelt | bubblewrap (first `bwrap` on PATH; falls back to a bundled helper that needs unprivileged user namespaces) | three implementations: **`mxc`** (Microsoft Execution Containers, Windows 11 24H2 build 26100.9278 / 25H2 build 26200.9278+), **`elevated`** (admin-approved setup, extra accounts and firewall rules), **`unelevated`** (weaker network isolation, no denied-read paths). **[verified here, Windows 10 19045, codex-cli 0.167.2, 2026-11-12]:** MXC refuses ('native MXC is unavailable on this executor'); `unelevated` with the `:workspace` profile allowed a write inside the workspace, BLOCKED a write to the user profile ('Zugriff verweigert'), allowed reading a home dotfile, and BLOCKED an HTTPS request (curl 000). The same probe unsandboxed: all four succeed | `workspace-write` plus `network_access` switch; the proxy has a domain allowlist. **App/connector traffic does not go through the sandbox proxy** (config reference). |
 | Antigravity | Seatbelt (`sandbox-exec`, SBPL) | kernel namespaces (fs, pid, net) | **AppContainer** "inside a process security environment", needs **Windows 11 24H2 + the August 2026 update**. Windows 10 is named as "sandbox not available". | No network by default; domains allowed under `read_url` are added to the allowlist. |
 | Claude Science | OS sandbox (mechanism not named) | bubblewrap ≥ 0.8.0 + socat, unprivileged user namespaces | supported on Windows 11 x64; mechanism not named. **With `--dangerously-no-sandbox`, code cells do not run at all on Windows.** | Local proxy; allows package managers, Featured-connector databases, and approved hosts. |
 | Gemini CLI | Seatbelt with 4 profiles (`permissive-open` default … `restrictive-proxied`) | Docker / Podman / gVisor (`runsc`) / LXC container, or a custom `.gemini/sandbox.Dockerfile` | "Windows Native" mode: `icacls` sets **Low Mandatory Integrity Level** on paths | depends on profile or container |
@@ -101,10 +102,12 @@ Model quality aside, all real differences sit on eight axes:
 | Aider | none; it edits files and runs your lint/test commands as you | — | — | — |
 
 The convergence is striking. On macOS everyone uses Seatbelt; on Linux nearly everyone uses
-bubblewrap/namespaces. **Windows is where they diverge, and every serious Windows sandbox is recent and needs
-Windows 11** (Codex MXC, Antigravity AppContainer). Gemini CLI's integrity-level approach is the only one
-whose mechanism exists on older Windows. That is an inference from how Windows integrity levels work; the
-vendor does not state OS versions.
+bubblewrap/namespaces. **Windows is where they diverge.** The newest Windows sandboxes need Windows 11 (Codex MXC, Antigravity
+AppContainer). But **Codex's `unelevated` fallback works on Windows 10**, measured here: writes outside the
+workspace and network are blocked, reads are not. [CORRECTED 2026-11-12: an earlier version of this paragraph said
+'every serious Windows sandbox ... needs Windows 11', and section 4 said no vendor's sandbox supports Windows 10.
+Both came from docs, and the first measurement contradicted them.] Gemini CLI's integrity-level approach also has a
+mechanism that exists on older Windows (inference; untested).
 
 ### 2.3 Approval policy: the layer above the sandbox
 
@@ -242,9 +245,11 @@ JSON-RPC protocol, unrelated to MCP, which connects an agent to tools.
 ## 4. Relation to the zoo
 
 - This host is Windows 10 (build 19045) running Claude Code with `bypassPermissions`. **Claude Code has no
-  native-Windows sandbox, and no vendor's Windows sandbox supports Windows 10** (Antigravity says so
-  explicitly; Codex MXC needs Windows 11 24H2). So every boundary here comes from process (gates, tooling),
-  not from the OS. Claude Science would not install either (Windows 11 required).
+  native-Windows sandbox** (Antigravity's needs Windows 11 too, and says so). Every boundary in the zoo's Claude Code
+  sessions comes from process (gates, tooling), not from the OS. Claude Science would not install either (Windows 11
+  required). **Corrected 2026-11-12, measured:** Codex's `unelevated` sandbox DOES work on this Windows 10 host. It
+  blocks writes outside the workspace and network, and leaves reads open (probe in section 2.2). So an OS-level write
+  boundary is available on this machine today, though not through Claude Code.
 - The engineering lesson from Claude Science applies to us without adopting it: **provenance is complete
   only where the harness owns the only execution path.** `dev-science-ops/paper-retrospective-reproducibility`
   enforces at the *claim* (no receipt from `tools/measured_run.py`, no execution claim) and is stronger on
