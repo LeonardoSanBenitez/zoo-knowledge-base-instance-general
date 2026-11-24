@@ -59,3 +59,30 @@ dies with `OSError: [WinError 1]` at the END of the download - the big weights a
 not, and the script never reaches its success line. Symptom in sentence-transformers: `modules.json` missing from the
 snapshot. Fix: fetch the missing files directly (`curl -L https://huggingface.co/<repo>/resolve/<rev>/<file>`) into
 the snapshot folder; or keep the HF cache on NTFS.
+
+**Same trap, NTFS variant (measured 2026-11-24, C: drive, no Developer Mode):** `snapshot_download` died with `OSError: [WinError 1314]`
+(client lacks the symlink privilege) on the FIRST small file, `config.json`; the weights had been downloaded as real copies, `config.json` was
+missing, and the job that loaded the model failed with "couldn't connect to huggingface.co" because `HF_HUB_OFFLINE=1` was set. If a pipeline
+script pipes the loader through `grep`, the failure is invisible and the script can print its own "OK". Fix: `curl -L` the missing file into the
+snapshot folder, and make loops abort when the success marker is absent.
+
+## A newer `transformers` than the shared venv has, without touching it (measured 2026-11-24)
+
+Qwen3 needs transformers >= 4.51; the shared ROCm venv had 4.44. `pip install --no-deps --target <asset dir>/pylibs transformers==4.51.3
+tokenizers==0.21.1 huggingface_hub==0.30.2` and put that directory first on `sys.path` inside the job script. On this ROCm-Windows torch build
+`import transformers.models.qwen3.modeling_qwen3` then fails with `No module named 'torch._C._distributed_c10d'` because `modeling_utils` does an
+unconditional `import torch.distributed.tensor`; stub it before the import (`sys.modules["torch.distributed.tensor"] = types.ModuleType(...)`;
+also set `torch.distributed.is_available = lambda: False`). Hidden states of a 4B fp16 decoder (`output_hidden_states=True`, batch 16) ran at
+5 to 16 usages/s on the RX 6700 XT depending on text length; Qwen2.5-3B 5 to 9/s.
+
+## llama.cpp (Vulkan build b12065) as a local LLM server on the same GPU: three measured traps (2026-11-24)
+
+- **Throughput decays within about 30 minutes of service when the host is short of RAM** (16 GB with ~12 Electron/Claude processes open: free RAM 1.8 GB,
+  pagefile 13 GB used). `llama-server` showed private bytes 10.6 GB and working set 17 MB; prefill fell from ~200-300 tokens/s to ~45. A fresh server was
+  about 2x faster for ~15 minutes, then degraded again. A watch on the job's own counter (cache lines per minute) and a restart of the server when the rate drops
+  below ~60% of its start rate recovered it; all jobs must be resumable for this.
+- **`-fa off` (no flash attention) hung the server** (146 s for the first 143-token prompts, then no progress). Keep `-fa on`, even though the server logs
+  "Flash Attention ... assigned to device CPU".
+- **Parallel long prompts overrun the per-slot context.** `-c 8192 -np 4 --kv-unified` leaves ~2048 tokens per slot when all four are busy; four concurrent
+  40-usage induction prompts (~3-4k tokens each, German and Swedish) returned HTTP 500 while the same prompts run one at a time worked, and a threaded client that
+  swallowed the error produced empty inventories downstream. Use one request at a time for long prompts, or a larger `-c`.
