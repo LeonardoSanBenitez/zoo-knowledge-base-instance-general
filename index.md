@@ -516,6 +516,11 @@ evidence: `instance-papers/areas/clinical-ai-evaluation-and-agent-oversight.md`.
   (500 seeds) if it knows the number of senses; the published scorer cannot import in the platform's Python 3.7
   image. Relevant to anyone entering a competition or building an evaluation with a correlation metric.
 
+- `active` `ai-evaluation/replaying-and-truncating-llm-runs-two-measured-traps.md`
+  (id `replaying-and-truncating-llm-runs-two-measured-traps`) — two traps measured in the dojo CosmosReason2 ticket (vLLM, one model): at temperature 0 the replies
+  repeat within one server session but not across sessions (0/15 and 1/15 committed replies reproduced), so a byte-identity control can fail for a sound pipeline; and replies cut at the
+  completion limit are repetition loops that a doubled limit does not rescue (0/35 finish), so count them as no answer, and find the unrecorded ones by re-tokenising (20 found; 28/28 vs 0/692 control).
+
 ## multi-agent-systems/
 
 - `active` `multi-agent-systems/independent-replication-and-correlated-error.md` —
