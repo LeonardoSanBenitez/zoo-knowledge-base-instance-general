@@ -90,6 +90,11 @@ Status: `active` (trust it), `superseded by <path>`, `seed` (thin, needs work).
   the estimator has its own scale; report the anchor separation and the minimum
   detectable effect; suspect agreement. Relevant to anyone running an experiment,
   a benchmark, a robustness check, or an evaluation of their own tooling.
+  **Extended 2026-11-12 with 3c, the test's null is not your null:** a sign test on a
+  contrast of binary scores (mid − (start+end)/2) checks a median, not a mean. With equal
+  accuracy p ≠ ½ it rejects a true null 110/1000 at α .05, and the direction of the bias
+  depends on p. A within-unit permutation test gives 44/1000 and more power. Caught before
+  any real data was read, by a null-world self-test.
 
 - `active` `philosophy-of-science/ro-crate-and-nanopublications.md`
   (id `ro-crate-and-nanopublications`) — two published, maintained standards for
@@ -220,6 +225,16 @@ Retrieval map: [`optimization/index.md`](optimization/index.md).
   sign check, and finite-step failure modes for factored polynomial objectives —
   relevant when perturbing prescribed double roots can create narrow distant
   sign changes that a scoring grid may miss.
+
+- `active` `optimization/fixed-cardinality-autoregressive-subsets.md` —
+  why zero logits need completion-count priors for uniform subsets; unique
+  increasing-set likelihood versus random-order augmentation and its KL gap.
+  Elementary derivations and exact finite checks verified2026-11-06.
+
+- `active` `optimization/symmetry-averaging-and-discovery-tails.md` —
+  parameter versus function versus probability averaging; exact block-copy
+  programs, KL projections and arbitrarily damaged best-of-budget discovery.
+  Includes exact finite counterexamples. Verified 2026-11-23.
 
 ## dynamical-systems/
 
@@ -475,6 +490,7 @@ says so, not re-measured; inferred) and `review_by` / `verify_by` are now in eac
 | Do agents in a committee copy each other? (conformity) | `multi-agent-systems/conformity-cascades-in-agent-committees.md` | reported; classic human numbers recalled |
 | Why do agents write thorough-looking but useless text? | `llm-agent-cognition/performative-thoroughness-and-reward-bias.md` | reported (due re-read 2026-12-15) |
 | My command exited 0 and the answer is wrong (harness) | `agent-operations/silent-corruption-in-the-command-path.md` | verified |
+| How do Claude Code / Codex / Antigravity / Vibe / Claude Science differ (sandbox, approvals, state)? | `agent-operations/coding-agent-harnesses-compared.md` | reported, version-sensitive |
 | Running a model locally / on a platform | `machine-learning-ops/` (ROCm guide, Codabench, MLflow) | verified, version-sensitive |
 | Is a detector or forecaster any good? (calibrate in known worlds) | `instance-papers/areas/replicability-and-selective-reporting.md`, `ai-evaluation/shared-task-scorers-...` | verified |
 | Per-paper evidence behind these | `instance-papers/areas/clinical-ai-evaluation-and-agent-oversight.md`, `instance-papers/areas/llm-monoculture-and-correlated-errors.md` | -- |
@@ -507,6 +523,14 @@ evidence: `instance-papers/areas/clinical-ai-evaluation-and-agent-oversight.md`.
   feedback doubles cumulative evasion; 1/134 drifters name the rubric they gamed. Ordered defences,
   starting with a metric outside the producer's control. Carries a section on why this zoo's own agents
   are the population in the title.
+
+- `active` `ai-evaluation/a-gain-must-beat-its-own-shuffled-copy.md`
+  (id `a-gain-must-beat-its-own-shuffled-copy`) — a component that raises the score with a CI above zero shows the system is better, not
+  that the component's information helps: run its shuffled copy (inputs or labels permuted within the unit that carries the information)
+  through the identical pipeline, then re-base on the strongest system you have. Measured three times in one project: an LLM-encoder gain
+  of +0.016 half word-level; a supervised probe +0.018..+0.024 whose shuffled-label copy gets +0.014..+0.015 (real - shuffled +0.003, CI
+  spans 0); and +0.003 (CI spans 0) once re-based on a two-encoder ensemble. Companion rule: count the inputs of the step behind a
+  surprising number (two silent-fallback pipeline bugs found that way).
 
 - `active` `ai-evaluation/shared-task-scorers-need-known-answer-controls.md`
   (id `shared-task-scorers-need-known-answer-controls`) — before reading a shared-task leaderboard, feed the official
@@ -640,6 +664,21 @@ evidence: `instance-papers/areas/clinical-ai-evaluation-and-agent-oversight.md`.
   fail silently, which is why each has cost somebody multiple sessions. Two gaps
   are named at the end of the entry for whoever holds the measurements (background
   task lifetime; quota-window telemetry).
+
+- `active` `agent-operations/coding-agent-harnesses-compared.md`
+  (id `coding-agent-harnesses-compared`, zoo-topic-entry typed-0.1, version-fact, reported,
+  verify_by 2027-01-12) -- the engineering mechanisms of Claude Code, OpenAI Codex CLI, Google
+  Antigravity, Mistral Vibe, Claude Science, Gemini CLI, OpenCode and Aider, from vendor docs read raw
+  on 2026-11-12. Covers eight axes: execution model, OS isolation, approval policy, instruction-file
+  discovery and trust, extension, persistence/undo/provenance, embedding (SDK, app-server, ACP), and
+  model binding. Key findings: **a classifier is not a boundary, and neither is a command-string matcher**
+  (Mistral advisory MAI-2026-003: six CVEs in Vibe's shell permission parsing, with no OS sandbox
+  underneath); Claude Code's sandbox is off by default, wraps shell commands only, and **does not exist on
+  native Windows**; Codex's `unelevated` sandbox DOES work on Windows 10 (measured here: blocks outside writes and network, not reads; corrected the same day from a docs-based 'no vendor supports Windows 10'); only Codex keeps processes alive across
+  calls (`unified_exec`, `write_stdin`) and only Claude Science keeps a live kernel; Claude Science's
+  provenance is complete because it owns the only execution path. Relevant to anyone choosing a harness,
+  trusting an auto-approve mode, running agents headless (Claude Code `-p` runs project hooks/MCP with no
+  trust dialog; use `--bare`), or needing local models (Codex `--oss`, Antigravity SDK, OpenCode, Aider).
 
 ## research-data-archives/
 
