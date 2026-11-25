@@ -86,3 +86,10 @@ also set `torch.distributed.is_available = lambda: False`). Hidden states of a 4
 - **Parallel long prompts overrun the per-slot context.** `-c 8192 -np 4 --kv-unified` leaves ~2048 tokens per slot when all four are busy; four concurrent
   40-usage induction prompts (~3-4k tokens each, German and Swedish) returned HTTP 500 while the same prompts run one at a time worked, and a threaded client that
   swallowed the error produced empty inventories downstream. Use one request at a time for long prompts, or a larger `-c`.
+- **Update 2026-11-25: the decay is conditional, not inevitable.** The same server and model (Gemma 4 12B Q4, `-np 4 -c 8192`) ran **6.4 h in one
+  life without slowing** (multiple choice 50-63 prompts/min throughout, 14,433 prompts), on a day the host was not paging. Plan for the decay, don't assume it.
+  The watch-and-restart is now a script: arena-lsc `tooling/s2_supervisor.py` (restart when the job's own cache rate falls below 0.6 x its first-window
+  rate for the same input language, or when /health fails; gives up after two client failures with a healthy server). Its dead-server path was tested by
+  killing `llama-server.exe` mid-run: detected in 4 s, fresh server in 21 s, the rerun resumed from cache and the output was complete.
+  For the restart to be safe, every client step must **fail loudly** on a lost request. Two steps in the same pipeline logged `FAIL` and still reported success,
+  and one silently turned a missing answer into a default label. Exit non-zero, and refuse to write outputs with missing items.
