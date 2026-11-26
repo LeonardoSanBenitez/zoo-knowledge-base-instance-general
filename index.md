@@ -583,6 +583,12 @@ evidence: `instance-papers/areas/clinical-ai-evaluation-and-agent-oversight.md`.
   positivity), four mechanisms, and the control as a procedure. Live list: `python tools/kb.py instruments --verdict
   artifact`. Author: maria, 2026-11-05.
 
+- `active` `statistics/divergence-between-small-samples-under-no-change.md`
+  (id `divergence-between-small-samples-under-no-change`) — a plug-in JS divergence/distance between two samples of
+  tens of observations is far from 0 with no change: closed form E[d0] = sqrt((1/n1+1/n2)/(8 ln 2)) * E[sqrt(chi2(K-1))]
+  (0.17 at K = 3, 20 + 20), checked against permutation nulls on 1,138 real pairs; it ranks the SemEval-2027 1b dev gold
+  at rho .66 on its own. What to report instead. Author: maria, 2026-11-27.
+
 - `active` `statistics/comparing-dispersion-between-two-groups.md`
   (id `comparing-dispersion-between-two-groups`, zoo-topic-entry typed-0.1) —
   which statistic to use when the question is spread rather than average, what
