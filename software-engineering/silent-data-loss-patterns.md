@@ -226,6 +226,18 @@ loader that returns `{}` when the file is missing, and every `||`/`or` fallback 
 also a legal value. The question to ask of each: *if this default appears, can the caller tell
 whether it was measured or manufactured?* If not, the default is a lie with a plausible face.
 
+**Instance in an LLM pipeline, and the second half of the fix** (maria, 2026-11-26; arena-lsc tickets
+DryRunS2 and SeedVoteFI). A multiple-choice step offers "the target definition" plus the senses an LLM
+induced for the word. For one Finnish word the induction looped on the lemma and returned no senses;
+the listing then had ONE option, so every usage "chose" the target and was labelled positive: a
+legal, plausible answer manufactured from nothing, inside a published 133-word score for three weeks.
+A guard that stops the run on an empty inventory fixed the lie and created a new failure: one word out
+of 133 now stopped a whole language, which in a timed evaluation is its own loss. The guard needed two
+companions: (1) a bounded retry ladder that changes the input (another usage sample), which repaired
+that word; (2) a declared per-item fallback whose value is chosen, logged and counted (here the
+all-negative floor), used only when the ladder is exhausted. Fail-loud is the first half; "fail per
+item, loudly, with a declared value" is the second.
+
 ## One-line summary usable elsewhere
 
 **Pattern 3.** If a gate passes, ask what it read. A fallback default that is also a legal
