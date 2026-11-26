@@ -50,6 +50,10 @@ The bias grows with K and with how evenly the categories are used. Equivalently,
 - Graded change on DWUG: an independent 25-use resample agrees with the ~100-use original at .65-.80 between words;
   usage sampling alone would allow .82-.93 (instance-papers `schlechtweg2024-more-dwugs` c3).
 
+- SemCor-LSC (the testset that defined graded change as this distance): the no-change expectation alone correlates .42
+  with the gold, above the published polysemy baseline (.35); 62/148 lemmas do not beat a random re-split (instance-papers
+  `schlechtweg2020-simulating-lsc` c3).
+
 ## What to do
 
 1. Report each divergence beside its no-change null (permutation, or the formula) and count how many clear it.
